@@ -1,0 +1,182 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>sort_Y36_icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="LiberiDalsa\DALSA.SaperaLT.SapClassBasic.dll" />
+    <None Remove="LiberiDalsa\ZedGraph.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="LiberiDalsa\DALSA.SaperaLT.SapClassBasic.dll" />
+    <Content Include="LiberiDalsa\ZedGraph.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Emgu.CV" Version="4.5.4.4788" />
+    <PackageReference Include="Emgu.CV.Bitmap" Version="4.5.4.4788" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.4.4788" />
+    <PackageReference Include="Emgu.CV.UI" Version="4.5.4.4788" />
+    <PackageReference Include="HidSharp" Version="2.1.0" />
+    <PackageReference Include="LiveCharts.WinForms.NetCore3" Version="0.9.7" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WinForms" Version="2.0.0-beta.710" />
+    <PackageReference Include="SciSharp.TensorFlow.Redist-Windows-GPU" Version="2.6.0" />
+    <PackageReference Include="TensorFlow.Keras" Version="0.10.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DALSA.SaperaLT.SapClassBasic.Core">
+      <HintPath>FileDalsa\Lyb\DALSA.SaperaLT.SapClassBasic.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="SapNETCSharpCameraEvents">
+      <HintPath>FileDalsa\Lyb\SapNETCSharpCameraEvents.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="LiberiDalsa\AbortDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\AbortDlg.Designer.cs">
+      <DependentUpon>AbortDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\AcqConfigDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\AcqConfigDlg.Designer.cs">
+      <DependentUpon>AcqConfigDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\AviFileDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\AviFileDlg.designer.cs">
+      <DependentUpon>AviFileDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\BayerDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\BayerDlg.Designer.cs">
+      <DependentUpon>BayerDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\BufDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\BufDlg.Designer.cs">
+      <DependentUpon>BufDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\ColorConvDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\ColorConvDlg.Designer.cs">
+      <DependentUpon>ColorConvDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\FlatFieldDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\FlatFieldDlg.designer.cs">
+      <DependentUpon>FlatFieldDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\HighFrameDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\HighFrameDlg.Designer.cs">
+      <DependentUpon>HighFrameDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\ImageBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\ImageBox.designer.cs">
+      <DependentUpon>ImageBox.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\JpegFileDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\JpegFileDlg.Designer.cs">
+      <DependentUpon>JpegFileDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\RawFileDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\RawFileDlg.Designer.cs">
+      <DependentUpon>RawFileDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\TiffFileDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\TiffFileDlg.Designer.cs">
+      <DependentUpon>TiffFileDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="LiberiDalsa\ViewDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="LiberiDalsa\ViewDlg.designer.cs">
+      <DependentUpon>ViewDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="LiberiDalsa\AbortDlg.resx">
+      <DependentUpon>AbortDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\AcqConfigDlg.resx">
+      <DependentUpon>AcqConfigDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\AviFileDlg.resx">
+      <DependentUpon>AviFileDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\BayerDlg.resx">
+      <DependentUpon>BayerDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\BufDlg.resx">
+      <DependentUpon>BufDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\ColorConvDlg.resx">
+      <DependentUpon>ColorConvDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\FlatFieldDlg.resx">
+      <DependentUpon>FlatFieldDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\HighFrameDlg.resx">
+      <DependentUpon>HighFrameDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\ImageBox.resx">
+      <DependentUpon>ImageBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\JpegFileDlg.resx">
+      <DependentUpon>JpegFileDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\RawFileDlg.resx">
+      <DependentUpon>RawFileDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\TiffFileDlg.resx">
+      <DependentUpon>TiffFileDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="LiberiDalsa\ViewDlg.resx">
+      <DependentUpon>ViewDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
