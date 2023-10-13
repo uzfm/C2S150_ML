@@ -10,6 +10,10 @@ using DALSA.SaperaLT.SapClassGui;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
+
+using AUTOLOADER = C2S150_ML.USB_HID.PLC_C2S150.AUTOLOADER;
+using SEPARATOR = C2S150_ML.USB_HID.PLC_C2S150.SEPARATOR;
+
 namespace C2S150_ML
 {
     class Flow
@@ -202,7 +206,8 @@ namespace C2S150_ML
                     //HID.HID_Send_Comand(HID.LIGHT, 500);  // "ON LIGHT TEST";
                     //
                     //HID.OutputHRD_Set(20);  // ON Cooling
-                    //HID.OutputHRD_Set(24);  // Metal separator
+                    SEPARATOR.ON();  // Metal separator
+                    AUTOLOADER.ON();  // Autoloder
                     //HID.OutputHRD_Set(19);  // ON Ionizer
                     ///Thread.Sleep(200);
                     //Start Cameras
@@ -230,7 +235,10 @@ namespace C2S150_ML
                     //HID.OutputHRD_Res(32);
                     //HID.OutputHRD_Set(31);             // "ЖОВТИЙ ПОПЕРЕДЖУВАЛЬНИЙ ДО СТАРТУ ЗУПИНКИ";
                     //HID.OutputHRD_Res(12);             // OFF Sensor Level
-                    //HID.OutputHRD_Res(23);             // OFF Scru feeder
+
+                    SEPARATOR.OFF();  // Metal separator
+                    AUTOLOADER.OFF();  // Autoloder
+
                     //HID.HID_Send_Comand(HID.REG_5, 0); //Start Table
                     //HID.OutputHRD_Res(24);  // Metal separator
                     //Thread.Sleep(7000);

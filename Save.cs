@@ -115,16 +115,23 @@ namespace C2S150_ML
             // Camera Getings
             public bool CameraAnalis_1 { get; set; }
             public bool CameraAnalis_2 { get; set; }
-            public decimal GEIN1 { get; set; }
-            public decimal GEIN2 { get; set; }
-          
+            public decimal GEIN1       { get; set; }
+            public decimal GEIN2       { get; set; }
+            public bool    AnalisLock  { get; set; }
+            //ACQ
+            public decimal ACQGEIN1       { get; set; }
+            public decimal ACQGEIN2       { get; set; }
+            public string  ACQ_Pach       { get; set; }
+
+
+
             public bool SetingsCameraStart { get; set; }  // Setings cameras if start program
 
             //Pash Simuletion IMG
             public string PashTestIMG { get; set; }
 
-            // Camera Setings
-            public bool LiveViewCam { get; set; }
+            //ID (Master - Slave) Camera Setings
+            public bool ID_CAM { get; set; }
 
         }
     }

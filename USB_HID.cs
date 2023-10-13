@@ -335,7 +335,7 @@ namespace C2S150_ML
             {
                 //22 OUT
                 static public void OFF() {
-                     OUTPUT2_BIT |= BIT5_RES;
+                    OUTPUT2_BIT &= BIT5_RES;
                     Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
 
@@ -343,6 +343,50 @@ namespace C2S150_ML
 
                 static public void ON() {
                     OUTPUT2_BIT |= BIT5_SET;
+                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    HID_Write();
+                }
+
+
+
+            }
+
+
+            public class SEPARATOR
+            {
+                //22 OUT
+                static public void OFF()
+                {
+                    OUTPUT2_BIT &= BIT7_RES;
+                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    HID_Write();
+
+                }
+
+                static public void ON()
+                {
+                    OUTPUT2_BIT |= BIT7_SET;
+                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    HID_Write();
+                }
+
+            }
+
+
+            public class AUTOLOADER 
+            {
+                //22 OUT
+                static public void OFF()
+                {
+                    OUTPUT2_BIT &= BIT6_RES;
+                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    HID_Write();
+
+                }
+
+                static public void ON()
+                {
+                    OUTPUT2_BIT |= BIT6_SET;
                     Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
                 }

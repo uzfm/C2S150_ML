@@ -13,6 +13,8 @@ using VIBR_TABLE = C2S150_ML.USB_HID.PLC_C2S150.VIBRATING;
 using LIGHT = C2S150_ML.USB_HID.PLC_C2S150.LIGHT;
 using FLAPS = C2S150_ML.USB_HID.PLC_C2S150.FLAPS;
 using CAMERA = C2S150_ML.USB_HID.PLC_C2S150.CAMERA;
+using AUTOLOADER = C2S150_ML.USB_HID.PLC_C2S150.AUTOLOADER;
+using SEPARATOR = C2S150_ML.USB_HID.PLC_C2S150.SEPARATOR;
 
 using Emgu.CV.CvEnum;
 using System.Threading.Tasks;
@@ -90,7 +92,14 @@ namespace C2S150_ML
 
             //************************    запустити поток      ********************************/
             Flow.AnalisBlobs();
-            Flow.BlobsPredict();         //запустити поток на аналіз Img
+            Flow.BlobsPredict();
+            Flow.BlobsPredict();
+            Flow.BlobsPredict();
+            Flow.BlobsPredict();
+            Flow.BlobsPredict();
+            Flow.BlobsPredict();
+
+            //запустити поток на аналіз Img
             //********************************************************************************/
 
             AnalisPredict.MosaicaEvent += MosaicaEvent;
@@ -391,10 +400,9 @@ namespace C2S150_ML
             // buttonStartAnalic.Enabled = false;
             FlowAnalis.StartAnais = true;//включення живого відео
 
-            if (buttonStartAnalic.Text == "Start Analysis")
-            {
-
-
+            if (buttonStartAnalic.Text == "Start Analysis"){
+                
+               buttonStartAnalic.BackColor = Color.Red;
 
                 LIGHT.ON();
         
@@ -408,9 +416,10 @@ namespace C2S150_ML
                 Flow.STARTsorting = true;
                 Flow.StartSorting();
                 VIBR_TABLE.SET(VIBR_TABLE.Typ.ON);
-            }
-            else
-            {
+            }else {
+
+                buttonStartAnalic.BackColor = Color.GreenYellow;
+                
 
                 VIBR_TABLE.SET(VIBR_TABLE.Typ.OFF);
                 Flow.StartSorting();
@@ -430,58 +439,7 @@ namespace C2S150_ML
         }
 
 
-        void RefreshSetings()
-        {
-            try
-            {
-
-                SetingsCameraStart.Checked = SETS.Data.SetingsCameraStart;
-                checkBox4.Checked = SETS.Data.CameraAnalis_1;
-                checkBox3.Checked = SETS.Data.CameraAnalis_2;
-                textBox1.Text = SETS.Data.PashTestIMG;
-                radioButtonCam1.Checked = SETS.Data.LiveViewCam;
-                //---------------------------------------------------
-
-                GreyScaleMax_.Value = EMGU.Data.GreyScaleMax[ID];
-                GreyScaleMin_.Value = EMGU.Data.GreyScaleMin[ID];
-
-                GreyMax_.Value = (decimal)EMGU.Data.GreySizeMax[ID];
-                GreyMin_.Value = (decimal)EMGU.Data.GreySizeMin[ID];
-
-                Hz_Table.Value = USB_HID.Data.Hz_Table;
-                PWM_Table.Value = USB_HID.Data.PWM_Table;
-                OutputDelay.Value = USB_HID.Data.Fleps_Time_OFF;
-                FLAPS.Time_OFF(OutputDelay.Value);
-
-                if (SETS.Data != null) { checkBox13.Checked = SETS.Data.LiveVideoOFF; } else {
-                    SETS.Data = new SETS.DATA_Save();
-                    Help.ErrorMesag("saved data setings not correct !");
-                }
-
-                numericUpDown1.Value = SETS.Data.DoublingFlaps; //
-                numericUpDown6.Value = SETS.Data.LimitinGraphPoints;
-                numericUpDown7.Value = SETS.Data.UpdateVisibleArea;
-                numericUpDown8.Value = SETS.Data.AxisYMaxValue;
-
-                  GAIN1.Value = SETS.Data.GEIN1;
-                  GAIN2.Value = SETS.Data.GEIN2;
-                 InvertBlobs.Checked = SETS.Data.BlobsInvert;
-
-                 LockIR.Checked     = USB_HID.Data.Light_IR;
-                 LockTop.Checked    = USB_HID.Data.Light_Top;
-                 LockBack.Checked   = USB_HID.Data.Light_Back;
-                 LockBottom.Checked = USB_HID.Data.Light_Bottom;
-
-            }
-            catch
-            {
-
-                EMGU.Data = new EMGU.DATA_Save();
-                USB_HID.Data = new USB_HID.DATA_Save();
-                Help.ErrorMesag("saved data not correct !");
-            }
-        }
-
+   
 
         /// <summary>
         /// -----------------------    SAVE VALUE   ----------------------------------------+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -499,13 +457,21 @@ namespace C2S150_ML
 
         void SaveSetValue()
         {
-            SETS.Data.GEIN1 = GAIN1.Value;
-            SETS.Data.GEIN2 = GAIN2.Value;
+              //CAMERA
+            SETS.Data.GEIN1    = GAIN1.Value;
+            SETS.Data.GEIN2    = GAIN2.Value;
+            if (SETS.Data.ID_CAM) { 
+                SETS.Data.ACQGEIN1 = numericACQ_Gain.Value;} else {
+                SETS.Data.ACQGEIN2 = numericACQ_Gain.Value;}
+                SETS.Data.ACQ_Pach = textBox5.Text;
+                SETS.Data.AnalisLock = AnalisLock.Checked;
+            //-----------------------------------
+
             SETS.Data.SetingsCameraStart = SetingsCameraStart.Checked;
-            SETS.Data.CameraAnalis_1 = checkBox4.Checked;
-            SETS.Data.CameraAnalis_2 = checkBox3.Checked;
-            SETS.Data.PashTestIMG = textBox1.Text;
-            SETS.Data.LiveViewCam = radioButtonCam1.Checked;
+            SETS.Data.CameraAnalis_1     = checkBox4.Checked;
+            SETS.Data.CameraAnalis_2     = checkBox3.Checked;
+            SETS.Data.PashTestIMG        = textBox1.Text;
+            SETS.Data.ID_CAM             = radioButtonCam1.Checked;
 
             SETS.Data.BlobsInvert = InvertBlobs.Checked;
 
@@ -514,8 +480,74 @@ namespace C2S150_ML
             USB_HID.Data.Light_Back   = LockBack.Checked;
             USB_HID.Data.Light_Bottom = LockBottom.Checked;
 
+
+
         }
 
+        void RefreshSetings()
+        {
+            try
+            {
+
+                SetingsCameraStart.Checked = SETS.Data.SetingsCameraStart;
+                checkBox4.Checked = SETS.Data.CameraAnalis_1;
+                checkBox3.Checked = SETS.Data.CameraAnalis_2;
+                textBox1.Text = SETS.Data.PashTestIMG;
+                if (SETS.Data.ID_CAM) { radioButtonCam1.Checked = true; }
+                else
+                { radioButtonCam2.Checked = true; }
+
+                //---------------------------------------------------
+
+                GreyScaleMax_.Value = EMGU.Data.GreyScaleMax[ID];
+                GreyScaleMin_.Value = EMGU.Data.GreyScaleMin[ID];
+
+                GreyMax_.Value = (decimal)EMGU.Data.GreySizeMax[ID];
+                GreyMin_.Value = (decimal)EMGU.Data.GreySizeMin[ID];
+
+                Hz_Table.Value = USB_HID.Data.Hz_Table;
+                PWM_Table.Value = USB_HID.Data.PWM_Table;
+                OutputDelay.Value = USB_HID.Data.Fleps_Time_OFF;
+                FLAPS.Time_OFF(OutputDelay.Value);
+
+                if (SETS.Data != null) { checkBox13.Checked = SETS.Data.LiveVideoOFF; }
+                else
+                {
+                    SETS.Data = new SETS.DATA_Save();
+                    Help.ErrorMesag("saved data setings not correct !");
+                }
+
+                numericUpDown1.Value = SETS.Data.DoublingFlaps; //
+                numericUpDown6.Value = SETS.Data.LimitinGraphPoints;
+                numericUpDown7.Value = SETS.Data.UpdateVisibleArea;
+                numericUpDown8.Value = SETS.Data.AxisYMaxValue;
+
+                GAIN1.Value        = SETS.Data.GEIN1;
+                GAIN2.Value        = SETS.Data.GEIN2;
+                textBox5.Text      = SETS.Data.ACQ_Pach;
+                AnalisLock.Checked = SETS.Data.AnalisLock;
+
+                if (SETS.Data.ID_CAM) { numericACQ_Gain.Value = SETS.Data.ACQGEIN1; }
+                else { numericACQ_Gain.Value = SETS.Data.ACQGEIN2; }
+
+
+
+                InvertBlobs.Checked = SETS.Data.BlobsInvert;
+
+                LockIR.Checked = USB_HID.Data.Light_IR;
+                LockTop.Checked = USB_HID.Data.Light_Top;
+                LockBack.Checked = USB_HID.Data.Light_Back;
+                LockBottom.Checked = USB_HID.Data.Light_Bottom;
+
+            }
+            catch
+            {
+
+                EMGU.Data = new EMGU.DATA_Save();
+                USB_HID.Data = new USB_HID.DATA_Save();
+                Help.ErrorMesag("saved data not correct !");
+            }
+        }
 
 
 
@@ -1328,5 +1360,74 @@ namespace C2S150_ML
         {
  DLS.SetGain((double)GAIN2.Value, DLS.Slave);
         }
+
+        private void button55_Click(object sender, EventArgs e)
+        {
+            DLS.button_Load_FF_Click(DLS.Master);
+        }
+
+        private void button56_Click(object sender, EventArgs e)
+        {
+            DLS.checkBox_FaltField_Click(DLS.Master,true);
+        }
+
+        private void button57_Click(object sender, EventArgs e)
+        {
+            DLS.Acq_Bright_Click(DLS.Master);
+        }
+
+        private void Acq_Dark_Click(object sender, EventArgs e)
+        {
+            DLS. Acq_Dark_Click(DLS.Master);
+        }
+
+        private void button59_Click(object sender, EventArgs e)
+        {
+            DLS.Save_Acq_File(DLS.Master);
+        }
+
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+            DLS.checkBox_FaltField_Click(DLS.Master, checkBox1.Checked);
+        }
+
+        private void zcheckBox1_Click(object sender, EventArgs e)
+        {
+               if (button44.Text == "ON Metal separator")
+            { SEPARATOR.ON(); button44.Text = "OFF Metal separator"; } else 
+            { SEPARATOR.OFF(); button44.Text = "ON Metal separator"; }
+        }
+
+        private void button43_Click(object sender, EventArgs e)
+        {
+            if (button43.Text == "ON Autoloader")
+            { AUTOLOADER.ON(); ; button43.Text = "OFF Autoloader"; } else 
+            { AUTOLOADER.OFF(); button43.Text = "ON Autoloader"; }
+
+                
+        }
+
+        private void radioButtonCam1_Click(object sender, EventArgs e)
+        { SETS.Data.ID_CAM = true; RefreshSetings(); }
+
+        private void radioButtonCam2_Click(object sender, EventArgs e)
+        { SETS.Data.ID_CAM = false; RefreshSetings(); }
+
+        private void ACQ_PachButton(object sender, EventArgs e)
+        {
+            try
+            {
+                FolderBrowserDialog FBD = new FolderBrowserDialog();
+                if (FBD.ShowDialog() == DialogResult.OK) {
+
+                    textBox5.Text = FBD.SelectedPath;
+                }else { MessageBox.Show("Choose directory please", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+
+
+
+
     }
 }

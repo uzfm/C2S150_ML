@@ -24,8 +24,7 @@ using Emgu.Util.TypeEnum;
 using Emgu.Util;
 using System.Collections.Concurrent;
 using System.Collections;
-
-
+using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
 namespace C2S150_ML
 {
@@ -269,7 +268,9 @@ namespace C2S150_ML
                 }
 
 
-
+                DalsaVal.m_FlatField[ID_Cam] = new SapFlatField(DalsaVal.m_Acquisition[ID_Cam]);
+                
+         
 
                 /////////////////////////////////////
 
@@ -586,6 +587,10 @@ namespace C2S150_ML
 
         private bool CreateObjects(int ID_Cam)
         {
+
+
+
+
             // Create acquisition object
             //Xtium-CL_MX4_1 [ CameraLink Medium Color RGB ]
             if (DalsaVal.m_Acquisition[ID_Cam] != null && !DalsaVal.m_Acquisition[ID_Cam].Initialized)
@@ -663,6 +668,20 @@ namespace C2S150_ML
 
                 DalsaVal.m_nFramesOnBoard[ID_Cam] = DalsaVal.m_Xfer[ID_Cam].Pairs[0].FramesOnBoard;
             }
+
+
+            // Create flat field object
+            if (DalsaVal.m_FlatField[ID_Cam] != null && !DalsaVal.m_FlatField[ID_Cam].Initialized)
+            {
+                if (!DalsaVal.m_FlatField[ID_Cam].Create())
+                {
+                    DestroyObjects(ID_Cam);
+                    return false;
+                }
+            }
+
+
+
             return true;
         }
 
@@ -676,6 +695,9 @@ namespace C2S150_ML
                 DalsaVal.m_Buffers[ID_Cam].Destroy();
             if (DalsaVal.m_Acquisition[ID_Cam] != null && DalsaVal.m_Acquisition[ID_Cam].Initialized)
                 DalsaVal.m_Acquisition[ID_Cam].Destroy();
+            if (DalsaVal.m_FlatField != null && DalsaVal.m_FlatField[ID_Cam].Initialized)
+            {DalsaVal.m_FlatField[ID_Cam].Destroy();}
+
         }
         private void DisposeObjects(int ID_Cam)
         {
@@ -687,6 +709,9 @@ namespace C2S150_ML
             { DalsaVal.m_Buffers[ID_Cam].Dispose(); DalsaVal.m_Buffers[ID_Cam] = null; }
             if (DalsaVal.m_Acquisition[ID_Cam] != null)
             { DalsaVal.m_Acquisition[ID_Cam].Dispose(); DalsaVal.m_Acquisition[ID_Cam] = null; }
+
+            if (DalsaVal.m_FlatField[ID_Cam] != null)
+            { DalsaVal.m_FlatField[ID_Cam].Dispose(); DalsaVal.m_FlatField[ID_Cam] = null; }
         }
 
 
@@ -937,7 +962,8 @@ namespace C2S150_ML
 
         private const String DEFAULT_FFC_FILENAME = "FFC.tif";
         private const String STANDARD_FILTER = "TIFF Files (*.tif)|*.tif||";
-        private void button_Load_FF_Click (int ID_Cam)
+
+        public void button_Load_FF_Click (int ID_Cam)
         {
             System.Windows.Forms.OpenFileDialog dlg = new System.Windows.Forms.OpenFileDialog();
             dlg.Title = "Open Flat Field Correction";
@@ -956,12 +982,9 @@ namespace C2S150_ML
         }
 
 
-        private void checkBox_FaltField_Click(int ID_Cam ,bool FaltField_Checked)
-        {
+        public void checkBox_FaltField_Click(int ID_Cam ,bool FaltField_Checked) {
            
-
-            if (DalsaVal.m_FlatField[ID_Cam] != null && DalsaVal.m_FlatField[ID_Cam].Initialized)
-            {
+            if (DalsaVal.m_FlatField[ID_Cam] != null && DalsaVal.m_FlatField[ID_Cam].Initialized){
                 // To enable/disable flat field correction, the transfer object must first be disconnected from the hardware
                 if (DalsaVal.m_Xfer[ID_Cam] != null && DalsaVal.m_Xfer[ID_Cam].Initialized)
                     DalsaVal.m_Xfer[ID_Cam].Destroy();
@@ -979,7 +1002,7 @@ namespace C2S150_ML
                     // Recreate the transfer object to reconnect it to the hardware
                     DalsaVal.m_Xfer[ID_Cam].Create();
                     DalsaVal.m_Xfer[ID_Cam].Init(true);
-                   // m_Pro.Init();
+           
                 }
 
                /// UpdateControls();
@@ -993,8 +1016,511 @@ namespace C2S150_ML
 
 
 
+       int textBox_Frame_Avg = 10;
+        int textBox_Line_Avg = 128;
+        int textBox_Max_Dev = 64;
+        int textBox_Vert_Offset = 0;
+        bool ClippedCoefsDefects_checkbox = true;
+
+        //
+        // Step 1: Snap a Dark image to calculate the gain coefficients
+        //
 
 
+        public void Acq_Dark_Click(int ID_Cam)
+        {
+            int nbImagesUsed = DalsaVal.m_FlatField[ID_Cam].CorrectionType == SapFlatField.ScanCorrectionType.Field ? textBox_Frame_Avg : 1;
+
+            // Set correction type
+            //DalsaVal.m_FlatField[ID_Cam].CorrectionType = DalsaVal.m_CorrectionType[ID_Cam];
+
+            // Set video type
+            //DalsaVal.m_FlatField[ID_Cam].SetVideoType(DalsaVal.m_VideoType[ID_Cam], SapBayer.AlignMode.BGGR);
+
+            // Встановіть максимальне відхилення від середнього значення пікселя для темного зображення
+            DalsaVal.m_FlatField[ID_Cam].DeviationMaxBlack = textBox_Max_Dev;
+
+            // Set number of lines to average and vertical offset
+            DalsaVal.m_FlatField[ID_Cam].NumLinesAverage = textBox_Line_Avg;
+            DalsaVal.m_FlatField[ID_Cam].VerticalOffset = textBox_Vert_Offset;
+
+            // Set wether to declare pixels with clipped coefficient as defective
+            DalsaVal.m_FlatField[ID_Cam].ClippedGainOffsetDefects = ClippedCoefsDefects_checkbox;
+
+            //Multi flat-field not implemented in .NET
+            // Set calibration index
+            //m_FlatField->SetIndex(m_CalibrationIndex);
+
+            /////////LogMessageBox.ResetText();
+          
+            if (DalsaVal.m_Xfer[ID_Cam] != null && DalsaVal.m_Xfer[ID_Cam].Initialized)
+            {
+                DalsaVal.m_pLocalBuffer[ID_Cam] = new SapBuffer(nbImagesUsed, DalsaVal.m_Buffers[ID_Cam], SapBuffer.MemoryType.Default);
+                DalsaVal.m_pLocalBuffer[ID_Cam].Create();
+
+                // Acquire an image
+                if (!Snap(ID_Cam))
+                {
+                    LogMessage(LogTypes.Error, "Unable to acquire an image");
+                    if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                    {
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Destroy();
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Dispose();
+                        DalsaVal.m_pLocalBuffer[ID_Cam] = null;
+                    }
+                    return;
+                }
+            }
+            else
+            {
+                // Load an image
+
+                DalsaVal.m_pLocalBuffer[ID_Cam] = new SapBuffer(1, DalsaVal.m_Buffers[ID_Cam], SapBuffer.MemoryType.Default);
+                DalsaVal.m_pLocalBuffer[ID_Cam].Create();
+
+                LoadSaveDlg dlg = new LoadSaveDlg(null, true, false);
+                if (dlg.ShowDialog() != DialogResult.OK)
+                {
+                    if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                    {
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Destroy();
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Dispose();
+                        DalsaVal.m_pLocalBuffer[ID_Cam] = null;
+                    }
+                    return;
+                }
+
+                String path = dlg.PathName;
+
+                // Create a temporary buffer in order to know the selected file's native format and pixel depth
+
+                SapBuffer loadBuffer = new SapBuffer(path, SapBuffer.MemoryType.Default);
+                loadBuffer.Create();
+
+                if (loadBuffer.Format != DalsaVal.m_Buffers[ID_Cam].Format || loadBuffer.PixelDepth != DalsaVal.m_Buffers[ID_Cam].PixelDepth)
+                {
+                    LogMessage(LogTypes.Warning, "Image file has a different format than expected.  Pixel values may get shifted.");
+                }
+
+                if (loadBuffer.Width != DalsaVal.m_Buffers[ID_Cam].Width || loadBuffer.Height != DalsaVal.m_Buffers[ID_Cam].Height)
+                {
+                    LogMessage(LogTypes.Error, "Image file selected doesn't have same dimensions as buffer.");
+                    if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                    {
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Destroy();
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Dispose();
+                        DalsaVal.m_pLocalBuffer[ID_Cam] = null;
+                    }
+                    return;
+                }
+
+                //loadBuffer.Load(path,1);
+                DalsaVal.m_pLocalBuffer[ID_Cam].Copy(loadBuffer);
+
+                String str;
+                str = String.Format("Loaded dark image: {}", path.ToString());
+                LogMessage(LogTypes.Info, str);
+            }
+            DarkImage(ID_Cam);
+        }
+
+
+
+        //
+        // Step 2: Snap a bright image to calculate the gain coefficients
+        //
+ 
+        public void Acq_Bright_Click(int ID_Cam)
+        {
+            int nbImagesUsed = DalsaVal.m_FlatField[ID_Cam].CorrectionType == SapFlatField.ScanCorrectionType.Field ? textBox_Frame_Avg : 1;
+
+            // Set maximum deviation from average pixel value for bright image
+            DalsaVal.m_FlatField[ID_Cam].DeviationMaxWhite = textBox_Max_Dev;
+
+            // Set number of lines to average and vertical offset
+            DalsaVal.m_FlatField[ID_Cam].NumLinesAverage = textBox_Line_Avg;
+            DalsaVal.m_FlatField[ID_Cam].VerticalOffset = textBox_Vert_Offset;
+
+            // Set wether to declare pixels with clipped coefficient as defective
+            DalsaVal.m_FlatField[ID_Cam].ClippedGainOffsetDefects = ClippedCoefsDefects_checkbox;
+            
+            if (DalsaVal.m_Xfer[ID_Cam] != null && DalsaVal.m_Xfer[ID_Cam].Initialized)
+            {
+                DalsaVal.m_pLocalBuffer[ID_Cam] = new SapBuffer(nbImagesUsed, DalsaVal.m_Buffers[ID_Cam], SapBuffer.MemoryType.Default); ///<- SapBuffer m_pBuffer;
+                DalsaVal.m_pLocalBuffer[ID_Cam].Create();
+
+                // Acquire an image
+                if (!Snap(ID_Cam))
+                {
+                    Console.WriteLine( "Unable to acquire an image");
+                    if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                    {
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Destroy();
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Dispose();
+                        DalsaVal.m_pLocalBuffer[ID_Cam] = null;
+                    }
+                    return;
+                }
+            }
+            else
+            {
+                // Load an image
+                DalsaVal.m_pLocalBuffer[ID_Cam] = new SapBuffer(1, DalsaVal.m_Buffers[ID_Cam], SapBuffer.MemoryType.Default); ///<- SapBuffer m_pBuffer;
+                DalsaVal.m_pLocalBuffer[ID_Cam].Create();
+
+
+                LoadSaveDlg dlg = new LoadSaveDlg(null, true, false);
+                if (dlg.ShowDialog() != DialogResult.OK)
+                {
+                    if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                    {
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Destroy();
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Dispose();
+                        DalsaVal.m_pLocalBuffer[ID_Cam] = null;
+                    }
+                    return;
+                }
+
+                String path = dlg.PathName;
+
+                // Create a temporary buffer in order to know the selected file's native format and pixel depth
+
+                SapBuffer loadBuffer = new SapBuffer(path, SapBuffer.MemoryType.Default);
+                loadBuffer.Create();
+
+                if (loadBuffer.Format != DalsaVal.m_Buffers[ID_Cam].Format || loadBuffer.PixelDepth != DalsaVal.m_Buffers[ID_Cam].PixelDepth) ///<- SapBuffer m_pBuffer;
+                {
+                    Console.WriteLine(  "Image file has a different format than expected.  Pixel values may get shifted.");
+                }
+
+                if (loadBuffer.Width != DalsaVal.m_Buffers[ID_Cam].Width || loadBuffer.Height != DalsaVal.m_Buffers[ID_Cam].Height)         ///<- SapBuffer m_pBuffer;
+                {
+                    Console.WriteLine( "Image file selected doesn't have same dimensions as buffer.");
+                    if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                    {
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Destroy();
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Dispose();
+                        DalsaVal.m_pLocalBuffer[ID_Cam] = null;
+                    }
+                    return;
+                }
+
+                loadBuffer.Load(path, 0);
+                DalsaVal.m_pLocalBuffer[ID_Cam].Copy(loadBuffer);
+
+                String str;
+                str = String.Format("Loaded bright image: '{0}'", path);
+                Console.WriteLine( str);
+            }
+
+            BrightImage(ID_Cam);
+        }
+
+        //
+        // Step 3: SAVE image to calculate the gain coefficients
+        //
+
+        public void Save_Acq_File(int ID_Cam)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Title = "Save Flat Field Correction";
+            dlg.FileName = DEFAULT_FFC_FILENAME;
+            dlg.Filter = STANDARD_FILTER;
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                // Save flat field offset correction file
+                DalsaVal.m_FlatField[ID_Cam].Save(dlg.FileName);
+                LogMessage(LogTypes.Info, "File saved successfully.");
+
+            }
+        }
+
+        private void DarkImage(int ID_Cam)
+        {
+            String str;
+            SapFlatFieldStats stats = new SapFlatFieldStats();
+
+            str = String.Format("Correction type: {0}", DalsaVal.m_CorrectionType[ID_Cam]);
+            LogMessage(LogTypes.Info, str);
+
+            str = String.Format("Video type: {0}", DalsaVal.m_VideoType[ID_Cam]);
+            LogMessage(LogTypes.Info, str);
+
+            if (DalsaVal.m_Xfer[ID_Cam] != null)
+            {
+                str = String.Format("Number of frames to average: {0}", textBox_Frame_Avg.ToString());
+                LogMessage(LogTypes.Info, str);
+            }
+
+            if (DalsaVal.m_CorrectionType[ID_Cam] == SapFlatField.ScanCorrectionType.Line)
+            {
+                str = String.Format("Number of lines to average: {0}", textBox_Line_Avg.ToString());
+                LogMessage(LogTypes.Info, str);
+
+                str = String.Format("Vertical offset from top: {0}", textBox_Vert_Offset.ToString());
+                LogMessage(LogTypes.Info, str);
+            }
+
+            LogMessage(LogTypes.Info, "Dark image calibration");
+
+            if (!DalsaVal.m_FlatField[ID_Cam].GetStats(DalsaVal.m_pLocalBuffer[ID_Cam], stats))
+            {
+                LogMessage(LogTypes.Error, "   Unable to get image statistics");
+                return;
+            }
+
+            bool tooManyBadPixels = false;
+            int numComponents = stats.NumComponents;
+
+            for (int i = 0; i < numComponents; i++)
+            {
+                if (stats.get_Average(i) > m_RecommendedDark)
+                {
+                    tooManyBadPixels = true;
+                    break;
+                }
+            }
+
+            if (tooManyBadPixels && DalsaVal.m_FlatField[ID_Cam].ClippedGainOffsetDefects)
+            {
+                str = "The following statistics have been computed on the dark image: \n";
+                str += String.Format("The average pixel value is {0}\n", stats.Average.ToString());
+                str += String.Format("\nThis yields too many bad pixels above the hardware limit of {0}\n", m_RecommendedDark);
+                str += String.Format("\nTo disable bad pixels, uncheck the \'Consider as defective ...\'\n");
+                str += String.Format("checkbox, then acquire the dark image again\n");
+
+                MessageBox.Show(str, "", MessageBoxButtons.OK);
+                return;
+            }
+            else
+            {
+                str = "The following statistics have been computed on the dark image: \n";
+                str += String.Format("The average pixel value is {0}\n", stats.Average.ToString());
+                str += String.Format("\nWe recommend an average pixel value of less than {0}\n", m_RecommendedDark);
+                str += String.Format("\nDo you want to use this image?");
+
+                if (MessageBox.Show(str, "", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+            }
+
+            // Log pixel statistics
+            str = String.Format("    Average pixel value: {0}", stats.Average.ToString());
+            LogMessage(LogTypes.Info, str);
+
+            str = String.Format("    Maximum deviation allowed from average pixel value: {0}", textBox_Max_Dev);
+            LogMessage(LogTypes.Info, str);
+
+            // Compute offset coefficients using last acquired image
+            DalsaVal.m_FlatField[ID_Cam].NumFramesAverage = DalsaVal.m_pLocalBuffer[ID_Cam].Count;
+            if (DalsaVal.m_FlatField[ID_Cam].ComputeOffset(DalsaVal.m_pLocalBuffer[ID_Cam]))
+            {
+                //button_Acq_Dark.Enabled = false;
+                //button_Acq_Bright.Enabled = true;
+
+                //comboBox_Correction_Type.Enabled = false;
+                //comboBox_Video_Type.Enabled = false;
+                //comboBox_Calibration_Index.Enabled = false;
+
+                LogMessage(LogTypes.Info, "Calibration with a dark image has been done successfully");
+               /// textBox_Max_Dev.Text = m_pFlatField.DeviationMaxWhite.ToString();
+
+            }
+        }
+
+        private void BrightImage(int ID_Cam)
+        {
+            String str;
+            SapFlatFieldStats stats = new SapFlatFieldStats();
+
+            if (DalsaVal.m_Xfer[ID_Cam] != null)
+            {
+                str = String.Format("Number of frames to average: {0}", textBox_Frame_Avg);
+                LogMessage(LogTypes.Info, str);
+            }
+
+        
+                str = String.Format("Number of lines to average: {0}", textBox_Line_Avg);
+                LogMessage(LogTypes.Info, str);
+
+                str = String.Format("Vertical offset from top: {0}", textBox_Vert_Offset);
+                LogMessage(LogTypes.Info, str);
+            
+
+            LogMessage(LogTypes.Info, "Bright image calibration");
+
+            // Get statistics on the (bright - dark) image
+            if (!DalsaVal.m_FlatField[ID_Cam].GetStats(DalsaVal.m_pLocalBuffer[ID_Cam], stats))
+            {
+                LogMessage(LogTypes.Error, "Unable to get image statistic");
+                return;
+            }
+
+            str = "The following statistics have been computed on the bright image\n";
+            str += "after the substraction of the dark image:\n\n";
+            str += String.Format("    The average pixel value is {0}levels.\n", GetAverageStr(stats));
+           // str += String.Format("    The highest peak has been detected at {0}.\n", GetPeakPositionStr(stats));
+           // str += String.Format("    {0} pixels {1} have a luminance value between {2} to {3}\n", GetNumPixelsStr(stats), GetPixelRatioStr(stats), GetLowStr(stats), GetHighStr(stats));
+            str += String.Format("\nWe recommend at least {0} levels for the highest peak value\n", m_RecommendedBright);
+           // str += String.Format("with {0}% pixels lying between the lower and the higher bound.\n", SapDefFlatFieldPixelRatio);
+            str += "\nDo you want to use this image?";
+
+            if (MessageBox.Show(str, "", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+
+            // Log average pixel value, lower and higher bounds and pixel ratio
+            str = String.Format("    Average pixel value: {0}", GetAverageStr(stats));
+            LogMessage(LogTypes.Info, str);
+            str = String.Format("    Maximum deviation allowed from average pixel value: {0}", textBox_Max_Dev);
+            LogMessage(LogTypes.Info, str);
+            //str = String.Format("    Highest peak position: {0}", GetPeakPositionStr(stats));
+            LogMessage(LogTypes.Info, str);
+            //str = String.Format("    Lower bound: {0}", GetLowStr(stats));
+            LogMessage(LogTypes.Info, str);
+            //str = String.Format("    Upper bound: {0}", GetHighStr(stats));
+            //LogMessage(LogTypes.Info, str);
+            //str = String.Format("    Number of pixels inside bounds: {0} ({1})", GetNumPixelsStr(stats), GetPixelRatioStr(stats));
+            LogMessage(LogTypes.Info, str);
+
+            SapFlatFieldDefects defects = new SapFlatFieldDefects();
+
+            // Compute gain coefficient using last acquired image
+
+            DalsaVal.m_FlatField[ID_Cam].NumFramesAverage = DalsaVal.m_pLocalBuffer[ID_Cam].Count;
+            if (DalsaVal.m_FlatField[ID_Cam].ComputeGain(DalsaVal.m_pLocalBuffer[ID_Cam], defects, true))
+            {
+                // Check for the presence of cluster (adjacent defective pixels)
+                if (defects.NumClusters != 0)
+                {
+                    str = String.Format("{0} pixels ({1} %) have been identified as being defective\n", defects.NumDefects, defects.DefectRatio);
+                    str += String.Format("with {0} clusters.\n", defects.NumClusters);
+                    //str += String.Format("\nWe recommend less than {0}% of defective pixels with no cluster.\n", SapDefFlatFieldDefectRatio);
+                    str += String.Format("\nDo you still want to use this image?\n");
+
+                    if (MessageBox.Show(str, "", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                        return;
+                }
+
+                // Log number of defective pixels detected
+                str = String.Format("    Number of defective pixels detected: {0} ({1})", defects.NumDefects, defects.DefectRatio);
+                LogMessage(LogTypes.Info, str);
+
+                // Log number of cluster detected
+                str = String.Format("    Number of clusters detected: {0}", defects.NumClusters);
+                LogMessage(LogTypes.Info, str);
+
+                //button_Acq_Dark.Enabled = true;
+                //button_Acq_Bright.Enabled = false;
+                //button_OK.Enabled = true;
+                bool isOnline = (DalsaVal.m_Xfer[ID_Cam] != null && DalsaVal.m_Xfer[ID_Cam].Initialized);
+                //comboBox_Correction_Type.Enabled = !isOnline && m_VideoType == SapAcquisition.VideoType.Mono;
+                //comboBox_Video_Type.Enabled = m_pXfer == null;
+                //textBox_Frame_Avg.Enabled = m_pXfer != null;
+                //textBox_Line_Avg.Enabled = m_CorrectionType == SapFlatField.ScanCorrectionType.Line;
+                //textBox_Vert_Offset.Enabled = m_CorrectionType == SapFlatField.ScanCorrectionType.Line;
+                //textBox_Max_Dev.Enabled = true;
+                //button_Save_and_Upload.Enabled = true;
+                //comboBox_FlatField_Selector.Enabled = true;
+
+                //Multi flat-field not implemented in .NET
+                //m_CalibrationIndexCtrl.EnableWindow( m_pFlatField->GetNumFlatField() > 1);
+
+                LogMessage(LogTypes.Info, "Calibration with a bright image has been done successfully");
+
+                //textBox_Max_Dev.Text = m_pFlatField.DeviationMaxBlack.ToString();
+            }
+        }
+
+
+        String GetAverageStr(SapFlatFieldStats stats)
+        {
+            String str = "";
+
+            if (stats.NumComponents > 1)
+            {
+                str += "[ ";
+                for (int iComponent = 0; iComponent < stats.NumComponents; iComponent++)
+                {
+                    String szComponent;
+                    szComponent = String.Format("{0}", stats.get_Average(iComponent));
+                    str += szComponent;
+
+                    if (iComponent != stats.NumComponents - 1)
+                        str += ", ";
+                }
+                str += " ]";
+            }
+            else
+            {
+                str = String.Format("{0}", stats.Average);
+            }
+
+            return str;
+        }
+
+        public bool Snap(int ID_Cam)
+        {
+            // Check if the transfer object is available
+            if (DalsaVal.m_Xfer[ID_Cam] == null || !DalsaVal.m_Xfer[ID_Cam].Initialized)
+                return false;
+
+            for (int iFrame = 0; iFrame < DalsaVal.m_pLocalBuffer[ID_Cam].Count; iFrame++)
+            {
+                // Acquire one image
+                DalsaVal.m_Xfer[ID_Cam].Snap();
+
+                // Wait until the acquired image has been transferred into system memory
+                AbortDlg abort = new AbortDlg(DalsaVal.m_Xfer[ID_Cam]);
+                if (abort.ShowDialog() != DialogResult.OK)
+                {
+                    DalsaVal.m_Xfer[ID_Cam].Abort();
+                    return false;
+                }
+
+                //Add a short delay to ensure the transfer callback has time to arrive
+                System.Threading.Thread.Sleep(100);
+
+                if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                {
+                    DalsaVal.m_pLocalBuffer[ID_Cam].Index = iFrame;
+                    DalsaVal.m_pLocalBuffer[ID_Cam].Copy(DalsaVal.m_Buffers[ID_Cam]);  ///<- SapBuffer m_pBuffer;
+                }
+            }
+            return true;
+        }
+        int m_RecommendedDark=64;
+        int m_RecommendedBright;
+        enum LogTypes
+        {
+            Error,
+            Warning,
+            Info
+        };
+        private void LogMessage(LogTypes messageType, String str)
+        {
+            String message = "";
+
+            // Message header
+            switch (messageType)
+            {
+                case LogTypes.Error:
+                    message = "[Err] ";
+                    break;
+                case LogTypes.Warning:
+                    message = "[Wrn] ";
+                    break;
+                case LogTypes.Info:
+                    message = "[Msg] ";
+                    break;
+            }
+
+            message += str;
+            //LogMessageBox.BeginUpdate();
+            //LogMessageBox.Items.Add(message);
+            //LogMessageBox.EndUpdate();
+            Console.WriteLine(message);
+
+        }
 
 
         //DLS EXIT
@@ -1025,8 +1551,16 @@ namespace C2S150_ML
 
     public class DalsaVal
     {
-                public SapFlatField  [] m_FlatField = new SapFlatField [2];
-        private SapTransfer []m_Xfer2 = new SapTransfer[2];
+      
+
+        public SapFlatField  [] m_FlatField = new SapFlatField [2];
+        //public SapTransfer [] m_pXfer = new SapTransfer[2];    ///
+        public SapBuffer [] m_pLocalBuffer = new SapBuffer[2] ; /// <summary>
+
+
+
+      //  SapBuffer m_pBuffer;
+        /// </summary>
 
 
         static  public  SapAcqDevice [] device = new SapAcqDevice[2];
@@ -1038,6 +1572,9 @@ namespace C2S150_ML
         public SapView[] m_View = new SapView[2];
         public bool[] m_IsSignalDetected = new bool[2];
         public bool[] m_online = new bool[2];
+        public SapFlatField.ScanCorrectionType[] m_CorrectionType = new SapFlatField.ScanCorrectionType[2];
+        public SapAcquisition.VideoType [] m_VideoType = new SapAcquisition.VideoType[2];
+
 
         static public SapLocation[] m_ServerLocation = new SapLocation[2];
 

@@ -99,6 +99,9 @@ namespace C2S150_ML
             this.button1 = new System.Windows.Forms.Button();
             this.NabrMosaicVisul = new System.Windows.Forms.Label();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.radioButtonCam2 = new System.Windows.Forms.RadioButton();
+            this.radioButtonCam1 = new System.Windows.Forms.RadioButton();
             this.buttonStartAnalic = new System.Windows.Forms.Button();
             this.button40 = new System.Windows.Forms.Button();
             this.OnLight = new System.Windows.Forms.Button();
@@ -110,9 +113,6 @@ namespace C2S150_ML
             this.Save = new System.Windows.Forms.Button();
             this.USER = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.radioButtonCam2 = new System.Windows.Forms.RadioButton();
-            this.radioButtonCam1 = new System.Windows.Forms.RadioButton();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.label23 = new System.Windows.Forms.Label();
             this.numericUpDown8 = new System.Windows.Forms.NumericUpDown();
@@ -146,22 +146,20 @@ namespace C2S150_ML
             this.MakeReportButton = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.WorkTable = new System.Windows.Forms.GroupBox();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.AnalisLock = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.checkBox13 = new System.Windows.Forms.CheckBox();
             this.InvertBlobs = new System.Windows.Forms.CheckBox();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
             this.GreyScaleMin_ = new System.Windows.Forms.NumericUpDown();
             this.GreyScaleMin = new System.Windows.Forms.TrackBar();
-            this.label16 = new System.Windows.Forms.Label();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.URL_file_Setings = new System.Windows.Forms.RichTextBox();
             this.button37 = new System.Windows.Forms.Button();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.button36 = new System.Windows.Forms.Button();
             this.button34 = new System.Windows.Forms.Button();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox13 = new System.Windows.Forms.CheckBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -179,13 +177,17 @@ namespace C2S150_ML
             this.button9 = new System.Windows.Forms.Button();
             this.button25 = new System.Windows.Forms.Button();
             this.button24 = new System.Windows.Forms.Button();
+            this.label16 = new System.Windows.Forms.Label();
             this.button23 = new System.Windows.Forms.Button();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button22 = new System.Windows.Forms.Button();
             this.button21 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
             this.CauntListImages = new System.Windows.Forms.TextBox();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.SaveImgList = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -208,12 +210,22 @@ namespace C2S150_ML
             this.Hz_Table = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.button56 = new System.Windows.Forms.Button();
+            this.numericACQ_Gain = new System.Windows.Forms.NumericUpDown();
+            this.button59 = new System.Windows.Forms.Button();
+            this.label33 = new System.Windows.Forms.Label();
+            this.button57 = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button58 = new System.Windows.Forms.Button();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.label32 = new System.Windows.Forms.Label();
             this.GAIN1 = new System.Windows.Forms.NumericUpDown();
             this.GAIN2 = new System.Windows.Forms.NumericUpDown();
             this.label31 = new System.Windows.Forms.Label();
             this.SetingsCameraStart = new System.Windows.Forms.CheckBox();
+            this.button55 = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.label43 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -290,9 +302,9 @@ namespace C2S150_ML
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.USER.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.groupBox10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
@@ -303,10 +315,9 @@ namespace C2S150_ML
             this.groupBox12.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.WorkTable.SuspendLayout();
+            this.groupBox15.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin_)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GreyMin)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GreyMax)).BeginInit();
@@ -314,6 +325,8 @@ namespace C2S150_ML
             ((System.ComponentModel.ISupportInitialize)(this.GreyMax_)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMax_)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMax)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.groupBox17.SuspendLayout();
             this.groupBox13.SuspendLayout();
@@ -324,6 +337,8 @@ namespace C2S150_ML
             ((System.ComponentModel.ISupportInitialize)(this.PWM_Table)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Hz_Table)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox14.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericACQ_Gain)).BeginInit();
             this.groupBox11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GAIN1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GAIN2)).BeginInit();
@@ -1148,6 +1163,7 @@ namespace C2S150_ML
             // 
             // splitContainer3.Panel1
             // 
+            this.splitContainer3.Panel1.Controls.Add(this.groupBox3);
             this.splitContainer3.Panel1.Controls.Add(this.button10);
             this.splitContainer3.Panel1.Controls.Add(this.buttonStartAnalic);
             this.splitContainer3.Panel1.Controls.Add(this.button40);
@@ -1165,6 +1181,41 @@ namespace C2S150_ML
             this.splitContainer3.Size = new System.Drawing.Size(1904, 252);
             this.splitContainer3.SplitterDistance = 710;
             this.splitContainer3.TabIndex = 0;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.radioButtonCam2);
+            this.groupBox3.Controls.Add(this.radioButtonCam1);
+            this.groupBox3.Location = new System.Drawing.Point(436, 16);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(117, 88);
+            this.groupBox3.TabIndex = 2019;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Live View";
+            // 
+            // radioButtonCam2
+            // 
+            this.radioButtonCam2.AutoSize = true;
+            this.radioButtonCam2.Location = new System.Drawing.Point(6, 53);
+            this.radioButtonCam2.Name = "radioButtonCam2";
+            this.radioButtonCam2.Size = new System.Drawing.Size(75, 19);
+            this.radioButtonCam2.TabIndex = 1;
+            this.radioButtonCam2.TabStop = true;
+            this.radioButtonCam2.Text = "Camera 2";
+            this.radioButtonCam2.UseVisualStyleBackColor = true;
+            this.radioButtonCam2.Click += new System.EventHandler(this.radioButtonCam2_Click);
+            // 
+            // radioButtonCam1
+            // 
+            this.radioButtonCam1.AutoSize = true;
+            this.radioButtonCam1.Location = new System.Drawing.Point(6, 24);
+            this.radioButtonCam1.Name = "radioButtonCam1";
+            this.radioButtonCam1.Size = new System.Drawing.Size(75, 19);
+            this.radioButtonCam1.TabIndex = 0;
+            this.radioButtonCam1.TabStop = true;
+            this.radioButtonCam1.Text = "Camera 1";
+            this.radioButtonCam1.UseVisualStyleBackColor = true;
+            this.radioButtonCam1.Click += new System.EventHandler(this.radioButtonCam1_Click);
             // 
             // buttonStartAnalic
             // 
@@ -1220,6 +1271,7 @@ namespace C2S150_ML
             this.button44.TabIndex = 2022;
             this.button44.Text = "ON Metal separator";
             this.button44.UseVisualStyleBackColor = false;
+            this.button44.Click += new System.EventHandler(this.zcheckBox1_Click);
             // 
             // button2
             // 
@@ -1251,8 +1303,9 @@ namespace C2S150_ML
             this.button43.Name = "button43";
             this.button43.Size = new System.Drawing.Size(125, 31);
             this.button43.TabIndex = 2021;
-            this.button43.Text = "ON Screw Feeder";
+            this.button43.Text = "ON Autoloader";
             this.button43.UseVisualStyleBackColor = false;
+            this.button43.Click += new System.EventHandler(this.button43_Click);
             // 
             // Save
             // 
@@ -1287,7 +1340,6 @@ namespace C2S150_ML
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Controls.Add(this.groupBox10);
             this.tabPage2.Controls.Add(this.groupBox5);
             this.tabPage2.Controls.Add(this.groupBox2);
@@ -1298,39 +1350,6 @@ namespace C2S150_ML
             this.tabPage2.TabIndex = 5;
             this.tabPage2.Text = "USER";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.radioButtonCam2);
-            this.groupBox3.Controls.Add(this.radioButtonCam1);
-            this.groupBox3.Location = new System.Drawing.Point(623, 29);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(200, 100);
-            this.groupBox3.TabIndex = 2019;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Live View";
-            // 
-            // radioButtonCam2
-            // 
-            this.radioButtonCam2.AutoSize = true;
-            this.radioButtonCam2.Location = new System.Drawing.Point(102, 48);
-            this.radioButtonCam2.Name = "radioButtonCam2";
-            this.radioButtonCam2.Size = new System.Drawing.Size(83, 20);
-            this.radioButtonCam2.TabIndex = 1;
-            this.radioButtonCam2.TabStop = true;
-            this.radioButtonCam2.Text = "Camera 2";
-            this.radioButtonCam2.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonCam1
-            // 
-            this.radioButtonCam1.AutoSize = true;
-            this.radioButtonCam1.Location = new System.Drawing.Point(102, 22);
-            this.radioButtonCam1.Name = "radioButtonCam1";
-            this.radioButtonCam1.Size = new System.Drawing.Size(83, 20);
-            this.radioButtonCam1.TabIndex = 0;
-            this.radioButtonCam1.TabStop = true;
-            this.radioButtonCam1.Text = "Camera 1";
-            this.radioButtonCam1.UseVisualStyleBackColor = true;
             // 
             // groupBox10
             // 
@@ -1745,13 +1764,17 @@ namespace C2S150_ML
             this.tabPage1.Controls.Add(this.button9);
             this.tabPage1.Controls.Add(this.button25);
             this.tabPage1.Controls.Add(this.button24);
+            this.tabPage1.Controls.Add(this.label16);
             this.tabPage1.Controls.Add(this.button23);
+            this.tabPage1.Controls.Add(this.numericUpDown3);
             this.tabPage1.Controls.Add(this.textBox2);
+            this.tabPage1.Controls.Add(this.label10);
             this.tabPage1.Controls.Add(this.textBox1);
             this.tabPage1.Controls.Add(this.button22);
             this.tabPage1.Controls.Add(this.button21);
             this.tabPage1.Controls.Add(this.button20);
             this.tabPage1.Controls.Add(this.CauntListImages);
+            this.tabPage1.Controls.Add(this.numericUpDown2);
             this.tabPage1.Controls.Add(this.SaveImgList);
             this.tabPage1.Controls.Add(this.label11);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
@@ -1764,22 +1787,16 @@ namespace C2S150_ML
             // 
             // WorkTable
             // 
+            this.WorkTable.Controls.Add(this.groupBox15);
             this.WorkTable.Controls.Add(this.InvertBlobs);
             this.WorkTable.Controls.Add(this.checkBox7);
             this.WorkTable.Controls.Add(this.GreyScaleMin_);
             this.WorkTable.Controls.Add(this.GreyScaleMin);
-            this.WorkTable.Controls.Add(this.label16);
-            this.WorkTable.Controls.Add(this.numericUpDown3);
-            this.WorkTable.Controls.Add(this.label10);
-            this.WorkTable.Controls.Add(this.checkBox3);
             this.WorkTable.Controls.Add(this.richTextBox1);
             this.WorkTable.Controls.Add(this.URL_file_Setings);
             this.WorkTable.Controls.Add(this.button37);
-            this.WorkTable.Controls.Add(this.numericUpDown2);
             this.WorkTable.Controls.Add(this.button36);
             this.WorkTable.Controls.Add(this.button34);
-            this.WorkTable.Controls.Add(this.checkBox4);
-            this.WorkTable.Controls.Add(this.checkBox13);
             this.WorkTable.Controls.Add(this.groupBox9);
             this.WorkTable.Controls.Add(this.button6);
             this.WorkTable.Controls.Add(this.СontourSelect);
@@ -1793,6 +1810,67 @@ namespace C2S150_ML
             this.WorkTable.Size = new System.Drawing.Size(715, 202);
             this.WorkTable.TabIndex = 375;
             this.WorkTable.TabStop = false;
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.AnalisLock);
+            this.groupBox15.Controls.Add(this.checkBox3);
+            this.groupBox15.Controls.Add(this.checkBox4);
+            this.groupBox15.Controls.Add(this.checkBox13);
+            this.groupBox15.Location = new System.Drawing.Point(554, 72);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(155, 121);
+            this.groupBox15.TabIndex = 2018;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "Lock";
+            // 
+            // AnalisLock
+            // 
+            this.AnalisLock.AutoSize = true;
+            this.AnalisLock.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.AnalisLock.Location = new System.Drawing.Point(61, 64);
+            this.AnalisLock.Name = "AnalisLock";
+            this.AnalisLock.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.AnalisLock.Size = new System.Drawing.Size(77, 20);
+            this.AnalisLock.TabIndex = 2012;
+            this.AnalisLock.Text = "Analysis";
+            this.AnalisLock.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.checkBox3.Location = new System.Drawing.Point(54, 43);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.checkBox3.Size = new System.Drawing.Size(84, 20);
+            this.checkBox3.TabIndex = 2011;
+            this.checkBox3.Text = "Camera 2";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.checkBox4.Location = new System.Drawing.Point(54, 21);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.checkBox4.Size = new System.Drawing.Size(84, 20);
+            this.checkBox4.TabIndex = 383;
+            this.checkBox4.Text = "Camera 1";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
+            // checkBox13
+            // 
+            this.checkBox13.AutoSize = true;
+            this.checkBox13.Location = new System.Drawing.Point(55, 87);
+            this.checkBox13.Name = "checkBox13";
+            this.checkBox13.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.checkBox13.Size = new System.Drawing.Size(83, 20);
+            this.checkBox13.TabIndex = 357;
+            this.checkBox13.Text = "Live View";
+            this.checkBox13.UseVisualStyleBackColor = true;
+            this.checkBox13.Click += new System.EventHandler(this.checkBox13_Click);
             // 
             // InvertBlobs
             // 
@@ -1844,62 +1922,6 @@ namespace C2S150_ML
             this.GreyScaleMin.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.GreyScaleMin.Scroll += new System.EventHandler(this.GreyScaleMin_Scroll);
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label16.Location = new System.Drawing.Point(484, 132);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(114, 20);
-            this.label16.TabIndex = 2013;
-            this.label16.Text = "Chart updating";
-            // 
-            // numericUpDown3
-            // 
-            this.numericUpDown3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.numericUpDown3.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.numericUpDown3.Location = new System.Drawing.Point(604, 130);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDown3.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(77, 26);
-            this.numericUpDown3.TabIndex = 2012;
-            this.numericUpDown3.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label10.Location = new System.Drawing.Point(495, 161);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(103, 20);
-            this.label10.TabIndex = 394;
-            this.label10.Text = "Show Mosaic";
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.checkBox3.Location = new System.Drawing.Point(554, 94);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkBox3.Size = new System.Drawing.Size(138, 20);
-            this.checkBox3.TabIndex = 2011;
-            this.checkBox3.Text = "Camera Analysis 2";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            // 
             // richTextBox1
             // 
             this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
@@ -1940,30 +1962,6 @@ namespace C2S150_ML
             this.button37.Text = "Delete";
             this.button37.UseVisualStyleBackColor = false;
             // 
-            // numericUpDown2
-            // 
-            this.numericUpDown2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.numericUpDown2.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.numericUpDown2.Location = new System.Drawing.Point(604, 160);
-            this.numericUpDown2.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.numericUpDown2.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(77, 26);
-            this.numericUpDown2.TabIndex = 393;
-            this.numericUpDown2.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            // 
             // button36
             // 
             this.button36.BackColor = System.Drawing.Color.Transparent;
@@ -1983,30 +1981,6 @@ namespace C2S150_ML
             this.button34.TabIndex = 391;
             this.button34.Text = "\\\\...";
             this.button34.UseVisualStyleBackColor = false;
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.checkBox4.Location = new System.Drawing.Point(554, 72);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkBox4.Size = new System.Drawing.Size(138, 20);
-            this.checkBox4.TabIndex = 383;
-            this.checkBox4.Text = "Camera Analysis 1";
-            this.checkBox4.UseVisualStyleBackColor = true;
-            // 
-            // checkBox13
-            // 
-            this.checkBox13.AutoSize = true;
-            this.checkBox13.Location = new System.Drawing.Point(452, 108);
-            this.checkBox13.Name = "checkBox13";
-            this.checkBox13.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkBox13.Size = new System.Drawing.Size(83, 20);
-            this.checkBox13.TabIndex = 357;
-            this.checkBox13.Text = "Live View";
-            this.checkBox13.UseVisualStyleBackColor = true;
-            this.checkBox13.Click += new System.EventHandler(this.checkBox13_Click);
             // 
             // groupBox9
             // 
@@ -2208,6 +2182,16 @@ namespace C2S150_ML
             this.button24.UseVisualStyleBackColor = true;
             this.button24.Click += new System.EventHandler(this.button24_Click);
             // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label16.Location = new System.Drawing.Point(759, 150);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(114, 20);
+            this.label16.TabIndex = 2013;
+            this.label16.Text = "Chart updating";
+            // 
             // button23
             // 
             this.button23.Location = new System.Drawing.Point(1088, 14);
@@ -2218,6 +2202,30 @@ namespace C2S150_ML
             this.button23.UseVisualStyleBackColor = true;
             this.button23.Click += new System.EventHandler(this.button23_Click);
             // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.numericUpDown3.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.numericUpDown3.Location = new System.Drawing.Point(879, 148);
+            this.numericUpDown3.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(77, 26);
+            this.numericUpDown3.TabIndex = 2012;
+            this.numericUpDown3.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -2225,6 +2233,16 @@ namespace C2S150_ML
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(62, 26);
             this.textBox2.TabIndex = 382;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label10.Location = new System.Drawing.Point(770, 179);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(103, 20);
+            this.label10.TabIndex = 394;
+            this.label10.Text = "Show Mosaic";
             // 
             // textBox1
             // 
@@ -2274,6 +2292,30 @@ namespace C2S150_ML
             this.CauntListImages.Size = new System.Drawing.Size(98, 26);
             this.CauntListImages.TabIndex = 377;
             // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.numericUpDown2.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.numericUpDown2.Location = new System.Drawing.Point(879, 178);
+            this.numericUpDown2.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(77, 26);
+            this.numericUpDown2.TabIndex = 393;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            // 
             // SaveImgList
             // 
             this.SaveImgList.AutoSize = true;
@@ -2315,7 +2357,7 @@ namespace C2S150_ML
             this.groupBox17.Controls.Add(this.groupBox6);
             this.groupBox17.Location = new System.Drawing.Point(13, 11);
             this.groupBox17.Name = "groupBox17";
-            this.groupBox17.Size = new System.Drawing.Size(1161, 189);
+            this.groupBox17.Size = new System.Drawing.Size(1161, 205);
             this.groupBox17.TabIndex = 292;
             this.groupBox17.TabStop = false;
             // 
@@ -2380,7 +2422,7 @@ namespace C2S150_ML
             this.groupBox7.Controls.Add(this.numericUpDown4);
             this.groupBox7.Controls.Add(this.TimHoperOff);
             this.groupBox7.Controls.Add(this.label22);
-            this.groupBox7.Location = new System.Drawing.Point(677, 21);
+            this.groupBox7.Location = new System.Drawing.Point(280, 17);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.groupBox7.Size = new System.Drawing.Size(227, 93);
@@ -2490,10 +2532,10 @@ namespace C2S150_ML
             this.groupBox4.Controls.Add(this.PWM_Table);
             this.groupBox4.Controls.Add(this.Hz_Table);
             this.groupBox4.Controls.Add(this.label1);
-            this.groupBox4.Location = new System.Drawing.Point(156, 18);
+            this.groupBox4.Location = new System.Drawing.Point(110, 17);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.groupBox4.Size = new System.Drawing.Size(162, 94);
+            this.groupBox4.Size = new System.Drawing.Size(162, 83);
             this.groupBox4.TabIndex = 291;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Settings vibration table  ";
@@ -2538,7 +2580,7 @@ namespace C2S150_ML
             | System.Windows.Forms.AnchorStyles.Left)));
             this.Hz_Table.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Hz_Table.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.Hz_Table.Location = new System.Drawing.Point(80, 54);
+            this.Hz_Table.Location = new System.Drawing.Point(80, 49);
             this.Hz_Table.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -2567,14 +2609,126 @@ namespace C2S150_ML
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.groupBox14);
             this.groupBox1.Controls.Add(this.groupBox11);
             this.groupBox1.Controls.Add(this.SetingsCameraStart);
-            this.groupBox1.Location = new System.Drawing.Point(937, 18);
+            this.groupBox1.Controls.Add(this.button55);
+            this.groupBox1.Location = new System.Drawing.Point(527, 18);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(201, 165);
+            this.groupBox1.Size = new System.Drawing.Size(611, 181);
             this.groupBox1.TabIndex = 375;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Cameras Settings";
+            // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.textBox5);
+            this.groupBox14.Controls.Add(this.button56);
+            this.groupBox14.Controls.Add(this.numericACQ_Gain);
+            this.groupBox14.Controls.Add(this.button59);
+            this.groupBox14.Controls.Add(this.label33);
+            this.groupBox14.Controls.Add(this.button57);
+            this.groupBox14.Controls.Add(this.checkBox1);
+            this.groupBox14.Controls.Add(this.button58);
+            this.groupBox14.Location = new System.Drawing.Point(264, 23);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(341, 152);
+            this.groupBox14.TabIndex = 383;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "ACQ";
+            // 
+            // textBox5
+            // 
+            this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox5.Location = new System.Drawing.Point(6, 120);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(182, 26);
+            this.textBox5.TabIndex = 384;
+            // 
+            // button56
+            // 
+            this.button56.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.button56.Location = new System.Drawing.Point(194, 120);
+            this.button56.Name = "button56";
+            this.button56.Size = new System.Drawing.Size(38, 26);
+            this.button56.TabIndex = 383;
+            this.button56.Text = "//...";
+            this.button56.UseVisualStyleBackColor = true;
+            this.button56.Click += new System.EventHandler(this.ACQ_PachButton);
+            // 
+            // numericACQ_Gain
+            // 
+            this.numericACQ_Gain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.numericACQ_Gain.DecimalPlaces = 2;
+            this.numericACQ_Gain.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.numericACQ_Gain.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.numericACQ_Gain.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.numericACQ_Gain.Location = new System.Drawing.Point(47, 15);
+            this.numericACQ_Gain.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericACQ_Gain.Name = "numericACQ_Gain";
+            this.numericACQ_Gain.Size = new System.Drawing.Size(69, 26);
+            this.numericACQ_Gain.TabIndex = 42;
+            // 
+            // button59
+            // 
+            this.button59.Location = new System.Drawing.Point(237, 78);
+            this.button59.Name = "button59";
+            this.button59.Size = new System.Drawing.Size(98, 23);
+            this.button59.TabIndex = 382;
+            this.button59.Text = "Acq Save";
+            this.button59.UseVisualStyleBackColor = true;
+            this.button59.Click += new System.EventHandler(this.button59_Click);
+            // 
+            // label33
+            // 
+            this.label33.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(6, 20);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(35, 16);
+            this.label33.TabIndex = 44;
+            this.label33.Text = "Gain";
+            // 
+            // button57
+            // 
+            this.button57.Location = new System.Drawing.Point(237, 46);
+            this.button57.Name = "button57";
+            this.button57.Size = new System.Drawing.Size(98, 23);
+            this.button57.TabIndex = 380;
+            this.button57.Text = "Acq Bright";
+            this.button57.UseVisualStyleBackColor = true;
+            this.button57.Click += new System.EventHandler(this.button57_Click);
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(135, 21);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(73, 20);
+            this.checkBox1.TabIndex = 380;
+            this.checkBox1.Text = "Acq Set";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.Click += new System.EventHandler(this.checkBox1_Click);
+            // 
+            // button58
+            // 
+            this.button58.Location = new System.Drawing.Point(237, 20);
+            this.button58.Name = "button58";
+            this.button58.Size = new System.Drawing.Size(98, 23);
+            this.button58.TabIndex = 381;
+            this.button58.Text = "Acq Dark";
+            this.button58.UseVisualStyleBackColor = true;
+            this.button58.Click += new System.EventHandler(this.Acq_Dark_Click);
             // 
             // groupBox11
             // 
@@ -2582,7 +2736,7 @@ namespace C2S150_ML
             this.groupBox11.Controls.Add(this.GAIN1);
             this.groupBox11.Controls.Add(this.GAIN2);
             this.groupBox11.Controls.Add(this.label31);
-            this.groupBox11.Location = new System.Drawing.Point(46, 58);
+            this.groupBox11.Location = new System.Drawing.Point(23, 68);
             this.groupBox11.Name = "groupBox11";
             this.groupBox11.Size = new System.Drawing.Size(149, 88);
             this.groupBox11.TabIndex = 377;
@@ -2660,12 +2814,22 @@ namespace C2S150_ML
             // SetingsCameraStart
             // 
             this.SetingsCameraStart.AutoSize = true;
-            this.SetingsCameraStart.Location = new System.Drawing.Point(79, 25);
+            this.SetingsCameraStart.Location = new System.Drawing.Point(23, 18);
             this.SetingsCameraStart.Name = "SetingsCameraStart";
             this.SetingsCameraStart.Size = new System.Drawing.Size(104, 20);
             this.SetingsCameraStart.TabIndex = 0;
             this.SetingsCameraStart.Text = "Camera Start";
             this.SetingsCameraStart.UseVisualStyleBackColor = true;
+            // 
+            // button55
+            // 
+            this.button55.Location = new System.Drawing.Point(29, 42);
+            this.button55.Name = "button55";
+            this.button55.Size = new System.Drawing.Size(98, 23);
+            this.button55.TabIndex = 378;
+            this.button55.Text = "Load FF File";
+            this.button55.UseVisualStyleBackColor = true;
+            this.button55.Click += new System.EventHandler(this.button55_Click);
             // 
             // groupBox6
             // 
@@ -2673,9 +2837,9 @@ namespace C2S150_ML
             this.groupBox6.Controls.Add(this.label2);
             this.groupBox6.Controls.Add(this.OutputDelay);
             this.groupBox6.Controls.Add(this.numericUpDown1);
-            this.groupBox6.Location = new System.Drawing.Point(330, 18);
+            this.groupBox6.Location = new System.Drawing.Point(280, 120);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(214, 91);
+            this.groupBox6.Size = new System.Drawing.Size(214, 79);
             this.groupBox6.TabIndex = 373;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Flaps Settings";
@@ -2684,7 +2848,7 @@ namespace C2S150_ML
             // 
             this.label43.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(94, 64);
+            this.label43.Location = new System.Drawing.Point(94, 52);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(81, 16);
             this.label43.TabIndex = 381;
@@ -2694,7 +2858,7 @@ namespace C2S150_ML
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(94, 31);
+            this.label2.Location = new System.Drawing.Point(94, 19);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(98, 16);
             this.label2.TabIndex = 384;
@@ -2705,7 +2869,7 @@ namespace C2S150_ML
             this.OutputDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.OutputDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.OutputDelay.ForeColor = System.Drawing.Color.Maroon;
-            this.OutputDelay.Location = new System.Drawing.Point(12, 59);
+            this.OutputDelay.Location = new System.Drawing.Point(12, 47);
             this.OutputDelay.Maximum = new decimal(new int[] {
             200,
             0,
@@ -2726,7 +2890,7 @@ namespace C2S150_ML
             this.numericUpDown1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.numericUpDown1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.numericUpDown1.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.numericUpDown1.Location = new System.Drawing.Point(12, 26);
+            this.numericUpDown1.Location = new System.Drawing.Point(12, 14);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(72, 26);
             this.numericUpDown1.TabIndex = 383;
@@ -3167,10 +3331,10 @@ namespace C2S150_ML
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
-            this.USER.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.USER.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
@@ -3186,10 +3350,10 @@ namespace C2S150_ML
             this.tabPage1.PerformLayout();
             this.WorkTable.ResumeLayout(false);
             this.WorkTable.PerformLayout();
+            this.groupBox15.ResumeLayout(false);
+            this.groupBox15.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin_)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GreyMin)).EndInit();
@@ -3198,6 +3362,8 @@ namespace C2S150_ML
             ((System.ComponentModel.ISupportInitialize)(this.GreyMax_)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMax_)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMax)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.groupBox17.ResumeLayout(false);
@@ -3213,6 +3379,9 @@ namespace C2S150_ML
             ((System.ComponentModel.ISupportInitialize)(this.Hz_Table)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox14.ResumeLayout(false);
+            this.groupBox14.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericACQ_Gain)).EndInit();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GAIN1)).EndInit();
@@ -3460,5 +3629,17 @@ namespace C2S150_ML
         private System.Windows.Forms.CheckBox LockTop;
         private System.Windows.Forms.CheckBox LockIR;
         private System.Windows.Forms.CheckBox LockBack;
+        private System.Windows.Forms.Button button55;
+        private System.Windows.Forms.Button button57;
+        private System.Windows.Forms.Button button58;
+        private System.Windows.Forms.Button button59;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.NumericUpDown numericACQ_Gain;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.Button button56;
+        private System.Windows.Forms.GroupBox groupBox15;
+        private System.Windows.Forms.CheckBox AnalisLock;
     }
 }
