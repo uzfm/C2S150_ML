@@ -206,8 +206,7 @@ namespace C2S150_ML
                     //HID.HID_Send_Comand(HID.LIGHT, 500);  // "ON LIGHT TEST";
                     //
                     //HID.OutputHRD_Set(20);  // ON Cooling
-                    SEPARATOR.ON();  // Metal separator
-                    AUTOLOADER.ON();  // Autoloder
+
                     //HID.OutputHRD_Set(19);  // ON Ionizer
                     ///Thread.Sleep(200);
                     //Start Cameras

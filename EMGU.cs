@@ -39,7 +39,7 @@ namespace C2S150_ML
 {
 
 
-    class EMGU
+   public class EMGU
     {
 
         //  HID HID = new HID();

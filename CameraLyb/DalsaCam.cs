@@ -981,9 +981,28 @@ namespace C2S150_ML
             //UpdateControls();
         }
 
+        public bool button_Load_FF_Click(string PathName)
+        {
 
-        public void checkBox_FaltField_Click(int ID_Cam ,bool FaltField_Checked) {
-           
+            if (PathName != "")
+            { 
+               string PathNameMaster= PathName+"\\"+  "CAM_" + Master + DEFAULT_FFC_FILENAME;
+                string PathNameSlave = PathName + "\\" + "CAM_" + Slave + DEFAULT_FFC_FILENAME;
+                // Load flat field correction file
+                if (!DalsaVal.m_FlatField[Master].Load(PathNameMaster))
+                if (!DalsaVal.m_FlatField[Master].Load(PathNameSlave))
+                        return true;
+            }
+            else { Help.ErrorMesag("Camera Background Alignment (FFC) file not found!!!"); }
+            return false;
+            //UpdateControls();
+        }
+
+
+        public void checkBox_FaltField_Click(int ID_Cam, bool FaltField_Checked) {
+
+
+
             if (DalsaVal.m_FlatField[ID_Cam] != null && DalsaVal.m_FlatField[ID_Cam].Initialized){
                 // To enable/disable flat field correction, the transfer object must first be disconnected from the hardware
                 if (DalsaVal.m_Xfer[ID_Cam] != null && DalsaVal.m_Xfer[ID_Cam].Initialized)
@@ -1016,19 +1035,31 @@ namespace C2S150_ML
 
 
 
-       int textBox_Frame_Avg = 10;
-        int textBox_Line_Avg = 128;
-        int textBox_Max_Dev = 64;
-        int textBox_Vert_Offset = 0;
-        bool ClippedCoefsDefects_checkbox = true;
+       int textBox_Frame_Avg = 10;                  // Визначається кількість зображень, які використовуються для розрахунку Flat Field 
+        int textBox_Line_Avg = 128;                 // Кількість ліній для усереднення
+        int textBox_Max_Dev = 100;                   // Встановіть максимальне відхилення від середнього значення пікселя для темного зображення
+        int textBox_Vert_Offset = 0;                // вертикальний зсув
+        bool ClippedCoefsDefects_checkbox = false;   // вказує, чи слід вважати пікселі з обрізаними коефіцієнтами як дефектні.
 
         //
         // Step 1: Snap a Dark image to calculate the gain coefficients
         //
 
 
-        public void Acq_Dark_Click(int ID_Cam)
-        {
+        public void Acq_Dark_Click(int ID_Cam) {
+
+     
+
+
+
+
+                if (ID_Cam==Master) {SetGain((double)SETS.Data.ACQGEIN1, Master); }else {
+                                     SetGain((double)SETS.Data.ACQGEIN2, Slave);  }
+
+
+             System.Threading.Thread.Sleep(500);
+
+
             int nbImagesUsed = DalsaVal.m_FlatField[ID_Cam].CorrectionType == SapFlatField.ScanCorrectionType.Field ? textBox_Frame_Avg : 1;
 
             // Set correction type
@@ -1132,6 +1163,16 @@ namespace C2S150_ML
  
         public void Acq_Bright_Click(int ID_Cam)
         {
+         
+
+            System.Threading.Thread.Sleep(100);
+
+            if (ID_Cam == Master) { SetGain((double)SETS.Data.ACQGEIN1, Master); }
+            else
+            {
+                SetGain((double)SETS.Data.ACQGEIN2, Slave);
+            }
+
             int nbImagesUsed = DalsaVal.m_FlatField[ID_Cam].CorrectionType == SapFlatField.ScanCorrectionType.Field ? textBox_Frame_Avg : 1;
 
             // Set maximum deviation from average pixel value for bright image
@@ -1220,24 +1261,31 @@ namespace C2S150_ML
         // Step 3: SAVE image to calculate the gain coefficients
         //
 
-        public void Save_Acq_File(int ID_Cam)
+        public void Save_Acq_File(int ID_Cam, string PachSave )
         {
+  
+
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.Title = "Save Flat Field Correction";
-            dlg.FileName = DEFAULT_FFC_FILENAME;
+            dlg.FileName ="CAM_"+ ID_Cam.ToString()+ DEFAULT_FFC_FILENAME;
             dlg.Filter = STANDARD_FILTER;
 
-            if (dlg.ShowDialog() == DialogResult.OK)
-            {
-                // Save flat field offset correction file
-                DalsaVal.m_FlatField[ID_Cam].Save(dlg.FileName);
-                LogMessage(LogTypes.Info, "File saved successfully.");
+            if (PachSave == "") {
 
-            }
+                if (dlg.ShowDialog() == DialogResult.OK) {
+
+                    // Save flat field offset correction file
+                    DalsaVal.m_FlatField[ID_Cam].Save(dlg.FileName);
+                    LogMessage(LogTypes.Info, "File saved successfully.");
+                }
+            } else {
+                PachSave = PachSave + "\\"+ "CAM_" + ID_Cam.ToString() + DEFAULT_FFC_FILENAME;
+                DalsaVal.m_FlatField[ID_Cam].Save(PachSave); }
         }
 
-        private void DarkImage(int ID_Cam)
-        {
+        private void DarkImage(int ID_Cam ){
+
+
             String str;
             SapFlatFieldStats stats = new SapFlatFieldStats();
 
@@ -1328,8 +1376,9 @@ namespace C2S150_ML
             }
         }
 
-        private void BrightImage(int ID_Cam)
+        private void BrightImage(int ID_Cam )
         {
+  
             String str;
             SapFlatFieldStats stats = new SapFlatFieldStats();
 

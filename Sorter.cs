@@ -43,7 +43,7 @@ namespace C2S150_ML
 
         DLS DLS;
         static int ID;
-        DataSV DataSV = new DataSV();
+        SETS _SETS = new SETS();
         FlowCamera flowCamera = new FlowCamera();
         USB_HID USB_HID = new USB_HID();
 
@@ -61,23 +61,34 @@ namespace C2S150_ML
 
         private ChartValues<ObservablePoint> chartValues;
         private DateTime startTime;
-
+        STGS STGS = new STGS();
 
 
         public Sorter()
         {
             InitializeComponent();
 
+
+
+
             ////******   USB HID INSTAL *********//
             USB_HID.InstalDevice("C1");
             CAMERA.ON();
             InstMosaics();
-            DataSV.Deserializ();
+            /////////////////////////////////////////////////////////////////////////
+            ///   File SAVE 
+            ///   START File
+            STGS.Read();
+            TextBoxSemplTyp.Text = STGS.DT.SampleType;
+            // ModelML.Text = STGS.DT.Name_Model;
+
+
+            _SETS.Read();
+           
             RefreshSetings();
 
 
-
-
+           
             timer1.Enabled = true;
             //*************  initialization of cameras  *********************
 
@@ -141,16 +152,17 @@ namespace C2S150_ML
             // Діаграма швиткості
             solidGauge1.To = 150;
 
-
+            LoadSempelsName();
 
 
         }
 
         private void button54_Click(object sender, EventArgs e) {
-            AnalisPredict.GoodSamples = 0;
-            AnalisPredict.BadSamples = 0;
+            Calc.GoodSamples = 0;
+            Calc.BadSamples = 0;
             SpidIdxEv = 0;
-            ANLImg_M.CauntOllBlob = 0;
+            Calc.BlobsMaster = 0;
+            Calc.BlobsSlave = 0;
             /////////////// Діаграма швиткості ////////////////
             solidGauge1.Value = 0.00;
             SpidKgH.Text = "0.00";
@@ -162,41 +174,45 @@ namespace C2S150_ML
         double RatioSamplsOll;
         int SpidIdxEv = 0;
 
+        double SamplsOLL;
+
         private int rowIndex = 0;
-        int sampleCount = 25000; // Кількість семплів
+        const int sampleCount = 25000; // Кількість семплів на кілограм
         double timeInSeconds = 3600; // Інтервал часу в секундах
         private void TimerRefreshChart()
         {
 
 
             if (buttonStartAnalic.Text == "Stop Analysis") {
-
                 TimOutRefresh++;
 
+                if (SETS.Data.ID_CAM == DLS.Slave)
+                {        SamplsOLL = Calc.BlobsSlave;
+                } else { SamplsOLL = Calc.BlobsSlave; }
 
                 double ratio3 = 0;
-
-                if (SpidIdxEv != 0) { ratio3 = ((((double)AnalisPredict.GoodSamples + (double)AnalisPredict.BadSamples) / (double)sampleCount)) / ((double)(SpidIdxEv / 2) / (double)timeInSeconds); }   // Діаграма швиткості середння
+                // Діаграма швиткості середння Kg/h
+                if (SpidIdxEv != 0) { ratio3 = (((SamplsOLL) / (double)sampleCount)) / ((double)(SpidIdxEv / 2) / (double)timeInSeconds); }   // Діаграма швиткості середння
                 SpidIdxEv++;
                 if (TimOutRefresh >= 10) { TimOutRefresh = 0;
 
                     // Отримання поточного часу та значення для додавання до даних
                     DateTime currentTime = DateTime.Now;
                     double ratio2 = 0;
-                    if ((SpidIdxEv != 0)) { ratio2 = ((((double)AnalisPredict.GoodSamples + (double)AnalisPredict.BadSamples) - (double)RatioSamplsOll) / (double)sampleCount) * (double)timeInSeconds / 5; }   // Діаграма швиткості
+                    if ((SpidIdxEv != 0)) { ratio2 = ((SamplsOLL - (double)RatioSamplsOll) / (double)sampleCount) * (double)timeInSeconds / 5; }   // Діаграма швиткості
                     if (ratio2 < 0) { ratio2 = 0; };
 
 
 
                     // Обчислення відношення хороших/поганих зразків за хвилину
-                    double ratio = ((double)AnalisPredict.GoodSamples / (double)(AnalisPredict.GoodSamples + AnalisPredict.BadSamples)) * 100;
-                    double ratio1 = ((double)AnalisPredict.BadSamples / (double)(AnalisPredict.GoodSamples + AnalisPredict.BadSamples)) * 100;
+                    double ratio = ((SamplsOLL - (double)Calc.BadSamples) / (double)((SamplsOLL - (double)Calc.BadSamples) + Calc.BadSamples)) * 100;
+                    double ratio1 = ((double)Calc.BadSamples / SamplsOLL) * 100;
 
                     double GoodKg = 0.0;
                     double TotalKg = 0.0;
-                    if (AnalisPredict.GoodSamples != 0) { GoodKg = ((double)AnalisPredict.GoodSamples / (double)sampleCount); }                             // Кількість Good Kg
-                    if (AnalisPredict.BadSamples != 0) { TotalKg = (((double)AnalisPredict.GoodSamples + (double)AnalisPredict.BadSamples) / (double)sampleCount); }  // Кількість Total Kg
-                    RatioSamplsOll = ((double)AnalisPredict.GoodSamples + (double)AnalisPredict.BadSamples);
+                    if (Calc.GoodSamples != 0) { GoodKg = ((SamplsOLL-(double)Calc.BadSamples) / (double)sampleCount); }                             // Кількість Good Kg
+                    if (Calc.BadSamples != 0) { TotalKg = (SamplsOLL / (double)sampleCount); }  // Кількість Total Kg
+                    RatioSamplsOll = SamplsOLL;
 
 
                     ratio = Math.Round(ratio, 4);
@@ -213,16 +229,16 @@ namespace C2S150_ML
                     dataGridView1.Rows.Add(currentTime, ratio, ratio1, ratio2, GoodKg, TotalKg);
 
                     /////////////// Діаграма швиткості ////////////////
-                    solidGauge1.Value = ratio2;
-                    SpidKgH.Text = ratio3.ToString();
+                    solidGauge1.Value = ratio2;        // Митєва швиткість раз в 5 секунд   
+                    SpidKgH.Text = ratio3.ToString();  // Швиткість Kg\H
 
                     // Прокрутка таблиці до останнього рядка
                     dataGridView1.FirstDisplayedScrollingRowIndex = rowIndex;
                     rowIndex++;
 
-                    //if (AnalisPredict.BadSamples != RatioSampls) {}
-                    int Ratio = AnalisPredict.BadSamples - RatioSampls;
-                    RatioSampls = AnalisPredict.BadSamples;
+                    //if (Calc.BadSamples != RatioSampls) {}
+                    int Ratio = Calc.BadSamples - RatioSampls;
+                    RatioSampls = Calc.BadSamples;
 
                     //double value = Math.Sin((currentTime - startTime).TotalSeconds);
                     // ratio = Math.Round(ratio, 2);
@@ -401,8 +417,9 @@ namespace C2S150_ML
             FlowAnalis.StartAnais = true;//включення живого відео
 
             if (buttonStartAnalic.Text == "Start Analysis"){
-                
-               buttonStartAnalic.BackColor = Color.Red;
+                SEPARATOR.ON();  // Metal separator
+                AUTOLOADER.ON();  // Autoloder
+                buttonStartAnalic.BackColor = Color.Red;
 
                 LIGHT.ON();
         
@@ -449,20 +466,30 @@ namespace C2S150_ML
 
         private void Save_Click(object sender, EventArgs e) {
 
+              STGS.DT.SampleType = TextBoxSemplTyp.Text;
+            // Запис у файл
+              STGS.Save();
 
-            SaveSetValue();
-            DataSV.DirectSave("SaveSV.txt");
-            DataSV.Serializ();
+
+             SaveSetValue();
+             _SETS.Save();
+  
+
+
+  
+
         }
 
         void SaveSetValue()
         {
               //CAMERA
-            SETS.Data.GEIN1    = GAIN1.Value;
+            SETS. Data.GEIN1    = GAIN1.Value;
             SETS.Data.GEIN2    = GAIN2.Value;
-            if (SETS.Data.ID_CAM) { 
+            if (SETS.Data.ID_CAM == DLS.Master) { 
                 SETS.Data.ACQGEIN1 = numericACQ_Gain.Value;} else {
                 SETS.Data.ACQGEIN2 = numericACQ_Gain.Value;}
+
+
                 SETS.Data.ACQ_Pach = textBox5.Text;
                 SETS.Data.AnalisLock = AnalisLock.Checked;
             //-----------------------------------
@@ -471,7 +498,11 @@ namespace C2S150_ML
             SETS.Data.CameraAnalis_1     = checkBox4.Checked;
             SETS.Data.CameraAnalis_2     = checkBox3.Checked;
             SETS.Data.PashTestIMG        = textBox1.Text;
-            SETS.Data.ID_CAM             = radioButtonCam1.Checked;
+          if (radioButtonCam1.Checked) { 
+             SETS.Data.ID_CAM = DLS.Master;} else {
+             SETS.Data.ID_CAM = DLS.Slave; }
+
+ 
 
             SETS.Data.BlobsInvert = InvertBlobs.Checked;
 
@@ -493,9 +524,8 @@ namespace C2S150_ML
                 checkBox4.Checked = SETS.Data.CameraAnalis_1;
                 checkBox3.Checked = SETS.Data.CameraAnalis_2;
                 textBox1.Text = SETS.Data.PashTestIMG;
-                if (SETS.Data.ID_CAM) { radioButtonCam1.Checked = true; }
-                else
-                { radioButtonCam2.Checked = true; }
+                if (SETS.Data.ID_CAM == DLS.Master) { radioButtonCam1.Checked = true; }
+                                                else{ radioButtonCam2.Checked = true; }
 
                 //---------------------------------------------------
 
@@ -510,12 +540,8 @@ namespace C2S150_ML
                 OutputDelay.Value = USB_HID.Data.Fleps_Time_OFF;
                 FLAPS.Time_OFF(OutputDelay.Value);
 
-                if (SETS.Data != null) { checkBox13.Checked = SETS.Data.LiveVideoOFF; }
-                else
-                {
-                    SETS.Data = new SETS.DATA_Save();
-                    Help.ErrorMesag("saved data setings not correct !");
-                }
+                checkBox13.Checked = SETS.Data.LiveVideoOFF; 
+        
 
                 numericUpDown1.Value = SETS.Data.DoublingFlaps; //
                 numericUpDown6.Value = SETS.Data.LimitinGraphPoints;
@@ -527,8 +553,8 @@ namespace C2S150_ML
                 textBox5.Text      = SETS.Data.ACQ_Pach;
                 AnalisLock.Checked = SETS.Data.AnalisLock;
 
-                if (SETS.Data.ID_CAM) { numericACQ_Gain.Value = SETS.Data.ACQGEIN1; }
-                else { numericACQ_Gain.Value = SETS.Data.ACQGEIN2; }
+                if (SETS.Data.ID_CAM==DLS.Master) { numericACQ_Gain.Value = SETS.Data.ACQGEIN1; }
+                                             else { numericACQ_Gain.Value = SETS.Data.ACQGEIN2; }
 
 
 
@@ -542,9 +568,7 @@ namespace C2S150_ML
             }
             catch
             {
-
-                EMGU.Data = new EMGU.DATA_Save();
-                USB_HID.Data = new USB_HID.DATA_Save();
+                
                 Help.ErrorMesag("saved data not correct !");
             }
         }
@@ -552,44 +576,36 @@ namespace C2S150_ML
 
 
 
-        private void trackBar8_Scroll(object sender, EventArgs e)
-        {
-            GreyMax_.Value = GreyMax.Value;
-        }
+   
 
-        private void MastConturMax_ValueChanged(object sender, EventArgs e)
-        {
-            if (GreyMax_.Value != GreyMax.Value) { GreyMax.Value = Convert.ToInt32(GreyMax_.Value); }
+        private void MastConturMax_ValueChanged(object sender, EventArgs e){
+
             EMGU.Data.GreySizeMax[ID] = (double)GreyMax_.Value;
         }
 
-        private void trackBar7_Scroll(object sender, EventArgs e) { GreyMin_.Value = GreyMin.Value; }
+
 
         private void GreyMin__ValueChanged(object sender, EventArgs e)
         {
-            if (GreyMin_.Value != GreyMin.Value) { GreyMin.Value = Convert.ToInt32(GreyMin_.Value); }
             EMGU.Data.GreySizeMin[ID] = (double)GreyMin_.Value;
         }
 
         //****************************/
-        private void trackBar1_Scroll(object sender, EventArgs e) { GreyScaleMax_.Value = GreyScaleMax.Value; }
+
 
         private void MastMinR_ValueChanged(object sender, EventArgs e)
         {
-            if (GreyScaleMax_.Value != GreyScaleMax.Value) { GreyScaleMax.Value = Convert.ToInt32(GreyScaleMax_.Value); }
-            EMGU.Data.GreyScaleMax[ID] = GreyScaleMax.Value;
+           
+            EMGU.Data.GreyScaleMax[ID] = (int)GreyScaleMax_.Value;
 
         }
 
-        private void GreyScaleMin_Scroll(object sender, EventArgs e)
-        {
-            GreyScaleMin_.Value = GreyScaleMin.Value;
-        }
+
 
         private void GreyScaleMin__ValueChanged(object sender, EventArgs e)
         {
-            if (GreyScaleMin_.Value != GreyScaleMin.Value) { GreyScaleMin.Value = Convert.ToInt32(GreyScaleMin_.Value); }
-            EMGU.Data.GreyScaleMin[ID] = GreyScaleMin.Value;
+           
+            EMGU.Data.GreyScaleMin[ID] =(int)GreyScaleMin_.Value;
         }
 
 
@@ -607,7 +623,11 @@ namespace C2S150_ML
             BuferImgIdx.Text = FlowCamera.BuferImg.Count.ToString();
             BuferImgCaun.Text = FlowCamera.BoxImgM.Count.ToString();
             CauntListImages.Text = FlowCamera.ImgSave.Count.ToString();
-            CauntSamls.Text = ANLImg_M.CauntOllBlob.ToString();
+
+            if (SETS.Data.ID_CAM== DLS.Slave) {
+                    CauntSamls.Text = Calc.BlobsSlave.ToString();
+            }else { CauntSamls.Text = Calc.BlobsSlave.ToString(); }
+
             toolStripStatusLabel5.Text = DLS.elapsedMs.ToString();
             toolStripStatusLabel6.Text = FlowCamera.BatchSizePreict.ToString();
 
@@ -855,7 +875,7 @@ namespace C2S150_ML
             else { USB_HID.Data.PWM_Table = PWM_Table.Value; }
 
         }
-        private void PWM_Table_Entr(object sender, KeyPressEventArgs e) { PWM_Table_Click(null, null); }
+
 
 
         private void Hz_Table_ValueChanged(object sender, EventArgs e)
@@ -1099,7 +1119,6 @@ namespace C2S150_ML
         }
 
         #region FLEPS
-        private void OutputDelay_Click(object sender, EventArgs e) { FLAPS.Time_OFF(OutputDelay.Value); }
         private void button27_Click(object sender, EventArgs e) { FLAPS.SET(FLAPS.Typ.Fps1, true); }
         private void button28_Click(object sender, EventArgs e) { FLAPS.SET(FLAPS.Typ.Fps2, true); }
         private void button29_Click(object sender, EventArgs e) { FLAPS.SET(FLAPS.Typ.Fps3, true); }
@@ -1339,7 +1358,11 @@ namespace C2S150_ML
                 }
                 else { GAIN2.Value = (decimal)DLS.Devis.Gain[DLS.Slave]; }
 
- 
+                // Завантаження Вирівнювання Фону
+              //if(DLS.button_Load_FF_Click(SETS.Data.ACQ_Pach)) { 
+               // DLS.checkBox_FaltField_Click(DLS.Master, checkBoxAcqSet.Checked);
+              //  DLS.checkBox_FaltField_Click(DLS.Slave, checkBoxAcqSet.Checked);
+              //  }
 
 
             }
@@ -1358,37 +1381,55 @@ namespace C2S150_ML
 
         private void GAIN2_Click(object sender, EventArgs e)
         {
- DLS.SetGain((double)GAIN2.Value, DLS.Slave);
+     DLS.SetGain((double)GAIN2.Value, DLS.Slave);
         }
 
         private void button55_Click(object sender, EventArgs e)
         {
-            DLS.button_Load_FF_Click(DLS.Master);
+            DLS.button_Load_FF_Click(SETS.Data.ID_CAM);
         }
 
         private void button56_Click(object sender, EventArgs e)
         {
-            DLS.checkBox_FaltField_Click(DLS.Master,true);
+            DLS.checkBox_FaltField_Click(SETS.Data.ID_CAM, true);
         }
 
         private void button57_Click(object sender, EventArgs e)
         {
-            DLS.Acq_Bright_Click(DLS.Master);
+            Flow.StartSorting();
+            Flow.STARTsorting = false;
+            buttonLiveVideo.Text = "LIVE VIDEO ON";
+
+            checkBoxAcqSet.Checked = false;
+            LIGHT.ON();
+            OnLight.Text = "OFF Light";
+            DLS.Acq_Bright_Click(SETS.Data.ID_CAM);
+            LIGHT.OFF();
+            OnLight.Text = "ON Light";
         }
 
-        private void Acq_Dark_Click(object sender, EventArgs e)
-        {
-            DLS. Acq_Dark_Click(DLS.Master);
+        private void Acq_Dark_Click(object sender, EventArgs e){
+            Flow.StartSorting();
+            Flow.STARTsorting = false;
+            buttonLiveVideo.Text = "LIVE VIDEO ON";
+
+            checkBoxAcqSet.Checked = false;
+            LIGHT.OFF();
+            OnLight.Text = "ON Light";
+            DLS. Acq_Dark_Click(SETS.Data.ID_CAM);
+            LIGHT.ON();
+            OnLight.Text = "OFF Light";
         }
 
         private void button59_Click(object sender, EventArgs e)
         {
-            DLS.Save_Acq_File(DLS.Master);
+            checkBoxAcqSet.Checked = false;
+            DLS.Save_Acq_File(SETS.Data.ID_CAM, SETS.Data.ACQ_Pach);
         }
 
         private void checkBox1_Click(object sender, EventArgs e)
         {
-            DLS.checkBox_FaltField_Click(DLS.Master, checkBox1.Checked);
+            DLS.checkBox_FaltField_Click(SETS.Data.ID_CAM, checkBoxAcqSet.Checked);
         }
 
         private void zcheckBox1_Click(object sender, EventArgs e)
@@ -1408,10 +1449,10 @@ namespace C2S150_ML
         }
 
         private void radioButtonCam1_Click(object sender, EventArgs e)
-        { SETS.Data.ID_CAM = true; RefreshSetings(); }
+        { SETS.Data.ID_CAM = DLS.Master; RefreshSetings(); }
 
         private void radioButtonCam2_Click(object sender, EventArgs e)
-        { SETS.Data.ID_CAM = false; RefreshSetings(); }
+        { SETS.Data.ID_CAM = DLS.Slave; RefreshSetings(); }
 
         private void ACQ_PachButton(object sender, EventArgs e)
         {
@@ -1429,5 +1470,145 @@ namespace C2S150_ML
 
 
 
+
+
+
+        //____________________________________Save semple Type____________________________________________________
+
+
+
+        private void CreatSamplTyp_Click(object sender, EventArgs e)
+        {
+
+            if (textBoxСreateSample.Text != "")
+            {
+
+                DialogResult YESNO = MessageBox.Show("Do you want add new sample type " + textBoxСreateSample.Text + "  ?", "Waring!", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                if ( YESNO == DialogResult.Yes)
+                {
+
+
+
+                    var PathType = Path.Combine(STGS.DT.URL_SampleType, textBoxСreateSample.Text);
+
+                    if (false == Directory.Exists(STGS.DT.URL_SampleType)) { Directory.CreateDirectory(STGS.DT.URL_SampleType); }
+                    if (false == Directory.Exists(PathType)) { Directory.CreateDirectory(PathType); }
+                    textBoxСreateSample.Text = "";
+                }
+            }
+        }
+
+    
+
+
+
+        void LoadSempelsName()
+        {
+            try
+            {
+                int idx = 0;
+                string[] SamlCatalogPath = new string[Directory.GetDirectories(STGS.DT.URL_SampleType).Length];
+                string[] pathSmpl = new string[Directory.GetDirectories(STGS.DT.URL_SampleType).Length];
+                SamlCatalogPath = Directory.GetDirectories(STGS.DT.URL_SampleType);
+
+
+                for (idx = 0; idx < SamlCatalogPath.Length; idx++)
+                { pathSmpl[idx] += Path.GetFileName(SamlCatalogPath[idx]); }
+
+                comboBoxSetingsName.Items.Clear();
+                comboBox1.Items.Clear();
+
+                int x = 0;
+                string[] NemSmpls = new string[pathSmpl.Length];
+
+                foreach (var i in pathSmpl)
+                {
+                    if ((DTLimg.NameGp == null) || (DTLimg.NameGp.Length != NemSmpls.Length)) { DTLimg.NameGp = new string[pathSmpl.Length]; }
+                    DTLimg.NameGp[x] = i;
+                    comboBoxSetingsName.Items.Add(i);
+                    comboBox1.Items.Add(i);
+                    NemSmpls[x++] = i;
+                }
+
+              //  DSV.TF_DT.Name = NemSmpls;
+
+
+            } catch { Help.ErrorMesag(" problem with Catalogue (Sample Type) "); }
+        }
+
+        private void buttonDeleteTypeSempl_Click(object sender, EventArgs e)
+        {
+            DialogResult result = DialogResult.Yes;
+            result = MessageBox.Show("Do you want delete sample type '" + comboBox1.Text + "' ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+
+            if (result == DialogResult.Yes)
+            {
+                if ((TextBoxSemplTyp.Text != comboBox1.Text)&&(comboBox1.Text != STGS.DT.SampleType))
+                {
+                    
+                    //видалити деректрію
+                    try
+                    {
+                        DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(STGS.DT.URL_SampleType, comboBox1.Text));
+                        dirInfo.Delete(true);
+                        comboBox1.Text = "";
+                    }
+                    catch { MessageBox.Show("The directory cannot be deleted 'directory is not found' "); }
+                }
+                else { MessageBox.Show("The sample type cannot be deleted because it is currently in use !!!"); }
+            }
+            
+        }
+
+        private void comboBox1_Click(object sender, EventArgs e)
+        { LoadSempelsName();}
+
+        private void comboBoxSetingsName_Click(object sender, EventArgs e)
+        { LoadSempelsName();
+
+
+        
+        }
+
+        private void comboBoxSetingsName_TextChanged(object sender, EventArgs e)
+        {
+
+            if (comboBoxSetingsName.Text != "")
+            {
+
+
+                DialogResult result = DialogResult.Yes;
+                result = MessageBox.Show("Do you want to choose new type '" + comboBoxSetingsName.Text + "' ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                if (result == DialogResult.Yes)
+                {
+
+                    TextBoxSemplTyp.Text = comboBoxSetingsName.Text;
+                     comboBoxSetingsName.Items.Clear();
+
+         
+                  //  result = MessageBox.Show("Apply new settings '" + comboBoxSetingsName.Text + "' ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                  //  if (result == DialogResult.Yes)
+                  //  {
+                        if (_SETS.Read(comboBoxSetingsName.Text))
+                        {
+                           RefreshSetings();
+                        }else {   MessageBox.Show("Unable to apply new settings!!! Maybe the file doesn't exist yet, you need to make the first save. If you press save, the current settings will be saved in the" + "sample type" + "file");}; 
+                   // }
+
+                    }
+            }
+            
+
+
+        }
+
+        private void OutputDelay_Click(object sender, EventArgs e)
+        {
+            FLAPS.Time_OFF(OutputDelay.Value);
+        }
     }
+
 }

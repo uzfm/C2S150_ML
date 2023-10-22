@@ -45,19 +45,22 @@ namespace C2S150_ML
 
         
     }
+    
 
 
 
 
 
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //==============================                                 ВИЗНАЧАЄМ ТА МАЛЮЄМО КОНТУРИ з FOTO                                                      ==============================//
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //==============================                                 ВИЗНАЧАЄМ ТА МАЛЮЄМО КОНТУРИ з FOTO                                                      ==============================//
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -87,7 +90,7 @@ namespace C2S150_ML
         List<CutImg> ListCutImg = new List<CutImg>();
         CutImg CutImgClass = new CutImg();
         public static Emgu.CV.UI.ImageBox ImageLiveVI = new Emgu.CV.UI.ImageBox();
-        public static int CauntOllBlob = 0;
+        //public static int CauntOllBlob = 0;
         static Image<Gray, byte> imgAI = new Image<Gray, byte>(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width);
         static Mat NewMatAI = new Mat();
         public static int CountContactAI = 0;
@@ -95,7 +98,7 @@ namespace C2S150_ML
         static Image<Bgr, byte> ImagContactVI = new Image<Bgr, byte>(8192,400);
 
       
-        int ZiseImages = 10; // число в скільки раз вжимаємо фото
+        int ZiseCompres = 5; // число в скільки раз вжимаємо фото
 
         public static int WidthAI ;
         public static int AperturaWidth;
@@ -130,8 +133,8 @@ namespace C2S150_ML
                     if ((ImagAI != null))
                     {
                         Stopwatch watch = Stopwatch.StartNew();
-                        WidthAI = ImagAI.Width / ZiseImages;
-                        HeightAI = ImagAI.Height / ZiseImages;
+                        WidthAI = ImagAI.Width / ZiseCompres;
+                        HeightAI = ImagAI.Height / ZiseCompres;
                         AperturaWidth = ImagAI.Width;
 
                         /////////зжимаємо фото
@@ -143,7 +146,7 @@ namespace C2S150_ML
                         Rectangle BoxROIcaT = new Rectangle();
 
 
-                        if ((!SETS.Data.LiveVideoOFF)&&(SETS.Data.ID_CAM)) {CvInvoke.CvtColor(ImagAI, ImagContactVI, Emgu.CV.CvEnum.ColorConversion.Gray2Bgr);}
+                        if ((!SETS.Data.LiveVideoOFF)&&(SETS.Data.ID_CAM == DLS.Master)) {CvInvoke.CvtColor(ImagAI, ImagContactVI, Emgu.CV.CvEnum.ColorConversion.Gray2Bgr);}
 
                         int closestIndex = 0;
                         bool OK = false;
@@ -157,10 +160,10 @@ namespace C2S150_ML
                                 //{
 
 
-                                BoxROI.X = (CutCTR_SV.ROI[i].X * 10);
-                                BoxROI.Y = (CutCTR_SV.ROI[i].Y * 10);  //20
-                                BoxROI.Height = (CutCTR_SV.ROI[i].Height * 10); //вниз 19
-                                BoxROI.Width = CutCTR_SV.ROI[i].Width * 10; //в ліво 12
+                                BoxROI.X = (CutCTR_SV.ROI[i].X * ZiseCompres);
+                                BoxROI.Y = (CutCTR_SV.ROI[i].Y * ZiseCompres);  //20
+                                BoxROI.Height = (CutCTR_SV.ROI[i].Height * ZiseCompres); //вниз 19
+                                BoxROI.Width = CutCTR_SV.ROI[i].Width * ZiseCompres; //в ліво 12
 
 
 
@@ -179,7 +182,7 @@ namespace C2S150_ML
                                         if (CutCTR_SV.CUT[i])
                                         {
 
-                                            BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * 10);
+                                            BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * ZiseCompres);
                                             int distance = Math.Abs(BoxROI.X - BoxROIcaT.X);
 
                                             if ((distance < RoiX))
@@ -198,7 +201,7 @@ namespace C2S150_ML
                                         ImagAI.ROI = BoxROI;
                                         CutImgClass.Img = ImagAI.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                         CutImgClass.ROI = BoxROI;
-                                        CauntOllBlob++;
+                                        Calc.BlobsMaster ++;
                                         if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
@@ -207,10 +210,10 @@ namespace C2S150_ML
                                     }
 
 
-                                    BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * 10);
-                                    BoxROIcaT.Y = (CutCTR_Old.ROI[closestIndex].Y * 10);  //20
-                                    BoxROIcaT.Height = (CutCTR_Old.ROI[closestIndex].Height * 10); //вниз 19
-                                    BoxROIcaT.Width = CutCTR_Old.ROI[closestIndex].Width * 10; //в ліво 12
+                                    BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * ZiseCompres);
+                                    BoxROIcaT.Y = (CutCTR_Old.ROI[closestIndex].Y * ZiseCompres);  //20
+                                    BoxROIcaT.Height = (CutCTR_Old.ROI[closestIndex].Height * ZiseCompres); //вниз 19
+                                    BoxROIcaT.Width = CutCTR_Old.ROI[closestIndex].Width * ZiseCompres; //в ліво 12
 
                                     //ImagAI_Old.ROI = BoxROIcaT;
                                     //ImagAI.    ROI = BoxROI;
@@ -243,7 +246,7 @@ namespace C2S150_ML
                                     ImagAI.ROI = BoxROI;
                                     CutImgClass.Img = NewMatAI.ToImage<Gray, byte>().Copy().Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                     CutImgClass.ROI = BoxROI;
-                                    CauntOllBlob++;
+                                    Calc.BlobsMaster++;
                                     if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
                                     CutCTR_Old.NULL[closestIndex] = false;
@@ -261,7 +264,7 @@ namespace C2S150_ML
                                         ImagAI.ROI = BoxROI;
                                         CutImgClass.Img = ImagAI.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                         CutImgClass.ROI = BoxROI;
-                                        CauntOllBlob++;
+                                        Calc.BlobsMaster++;
                                         if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
@@ -289,15 +292,15 @@ namespace C2S150_ML
                             {
                                 if (CutCTR_Old.NULL[idx] == true)
                                 {
-                                    BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * 10);
-                                    BoxROIcaT.Y = (CutCTR_Old.ROI[idx].Y * 10);  //20
-                                    BoxROIcaT.Height = CutCTR_Old.ROI[idx].Height * 10; //вниз 19
-                                    BoxROIcaT.Width = CutCTR_Old.ROI[idx].Width * 10; //в ліво 12
+                                    BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * ZiseCompres);
+                                    BoxROIcaT.Y = (CutCTR_Old.ROI[idx].Y * ZiseCompres);  //20
+                                    BoxROIcaT.Height = CutCTR_Old.ROI[idx].Height * ZiseCompres; //вниз 19
+                                    BoxROIcaT.Width = CutCTR_Old.ROI[idx].Width * ZiseCompres; //в ліво 12
                                     ImagAI_Old.ROI = BoxROIcaT;
 
                                     CutImgClass.Img = ImagAI_Old.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                     CutImgClass.ROI = BoxROI;
-                                    CauntOllBlob++;
+                                    Calc.BlobsMaster++;
                                     if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
                                     //if (!SETS.Data.LiveVideoOFF) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
@@ -314,7 +317,7 @@ namespace C2S150_ML
 
 
 
-                        if ((FlowCamera.SaveImages == true) && (SETS.Data.ID_CAM))
+                        if ((FlowCamera.SaveImages == true) && (SETS.Data.ID_CAM == DLS.Master))
                         {
                             IProducerConsumerCollection<Image<Gray, byte>> tmpSave = FlowCamera.ImgSave; //створити ліст імідж
                             tmpSave.TryAdd(ImagAI.Copy()  /* imOriginal.ToImage<Gray, byte>()*/);
@@ -325,7 +328,7 @@ namespace C2S150_ML
 
                         // if (!SETS.Data.LiveVideoOFF){LiveImage = ImagContactVI.Resize(2000, 100, Inter.Linear);}
 
-                        if ((!SETS.Data.LiveVideoOFF) && (SETS.Data.ID_CAM)) { 
+                        if ((!SETS.Data.LiveVideoOFF) && (SETS.Data.ID_CAM == DLS.Master)) { 
 
                             imgStic = ImagContactVI.Resize(2000,100, Inter.Linear);
                             //imgStic = ImagContactVI;
@@ -505,7 +508,6 @@ namespace C2S150_ML
         List<CutImg> ListCutImg = new List<CutImg>();
         CutImg CutImgClass = new CutImg();
         public static Emgu.CV.UI.ImageBox ImageLiveVI = new Emgu.CV.UI.ImageBox();
-        public static int CauntOllBlob = 0;
         static Image<Gray, byte> imgAI = new Image<Gray, byte>(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width);
         static Mat NewMatAI = new Mat();
         public static int CountContactAI = 0;
@@ -513,7 +515,7 @@ namespace C2S150_ML
         static Image<Bgr, byte> ImagContactVI = new Image<Bgr, byte>(8192, 300);
 
 
-        int ZiseImages = 10; // число в скільки раз вжимаємо фото
+        int ZiseCompres = 5; // число в скільки раз вжимаємо фото
 
         public static int WidthAI;
         public static int AperturaWidth;
@@ -546,8 +548,8 @@ namespace C2S150_ML
                     if ((ImagAI != null))
                     {
                         Stopwatch watch = Stopwatch.StartNew();
-                        WidthAI = ImagAI.Width / ZiseImages;
-                        HeightAI = ImagAI.Height / ZiseImages;
+                        WidthAI = ImagAI.Width / ZiseCompres;
+                        HeightAI = ImagAI.Height / ZiseCompres;
                         AperturaWidth = ImagAI.Width;
 
                         /////////зжимаємо фото
@@ -559,7 +561,7 @@ namespace C2S150_ML
                         Rectangle BoxROIcaT = new Rectangle();
 
 
-                        if ((!SETS.Data.LiveVideoOFF) && (!SETS.Data.ID_CAM)) { CvInvoke.CvtColor(ImagAI, ImagContactVI, Emgu.CV.CvEnum.ColorConversion.Gray2Bgr); }
+                        if ((!SETS.Data.LiveVideoOFF) && (SETS.Data.ID_CAM == DLS.Slave)) { CvInvoke.CvtColor(ImagAI, ImagContactVI, Emgu.CV.CvEnum.ColorConversion.Gray2Bgr); }
 
                         int closestIndex = 0;
                         bool OK = false;
@@ -575,10 +577,10 @@ namespace C2S150_ML
                                 //{
 
 
-                                BoxROI.X = (CutCTR_SV.ROI[i].X * 10);
-                                BoxROI.Y = (CutCTR_SV.ROI[i].Y * 10);  //20
-                                BoxROI.Height = (CutCTR_SV.ROI[i].Height * 10); //вниз 19
-                                BoxROI.Width = CutCTR_SV.ROI[i].Width * 10; //в ліво 12
+                                BoxROI.X = (CutCTR_SV.ROI[i].X * ZiseCompres);
+                                BoxROI.Y = (CutCTR_SV.ROI[i].Y * ZiseCompres);  //20
+                                BoxROI.Height = (CutCTR_SV.ROI[i].Height * ZiseCompres); //вниз 19
+                                BoxROI.Width = CutCTR_SV.ROI[i].Width * ZiseCompres; //в ліво 12
 
 
 
@@ -597,7 +599,7 @@ namespace C2S150_ML
                                         if (CutCTR_SV.CUT[i])
                                         {
 
-                                            BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * 10);
+                                            BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * ZiseCompres);
                                             int distance = Math.Abs(BoxROI.X - BoxROIcaT.X);
 
                                             if ((distance < RoiX))
@@ -615,7 +617,7 @@ namespace C2S150_ML
                                         ImagAI.ROI = BoxROI;
                                         CutImgClass.Img = ImagAI.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                         CutImgClass.ROI = BoxROI;
-                                        CauntOllBlob++;
+                                        Calc.BlobsSlave++;
                                         if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
@@ -624,10 +626,10 @@ namespace C2S150_ML
                                     }
 
 
-                                    BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * 10);
-                                    BoxROIcaT.Y = (CutCTR_Old.ROI[closestIndex].Y * 10);  //20
-                                    BoxROIcaT.Height = (CutCTR_Old.ROI[closestIndex].Height * 10); //вниз 19
-                                    BoxROIcaT.Width = CutCTR_Old.ROI[closestIndex].Width * 10; //в ліво 12
+                                    BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * ZiseCompres);
+                                    BoxROIcaT.Y = (CutCTR_Old.ROI[closestIndex].Y * ZiseCompres);  //20
+                                    BoxROIcaT.Height = (CutCTR_Old.ROI[closestIndex].Height * ZiseCompres); //вниз 19
+                                    BoxROIcaT.Width = CutCTR_Old.ROI[closestIndex].Width * ZiseCompres; //в ліво 12
 
                                     //ImagAI_Old.ROI = BoxROIcaT;
                                     //ImagAI.    ROI = BoxROI;
@@ -660,7 +662,7 @@ namespace C2S150_ML
                                     ImagAI.ROI = BoxROI;
                                     CutImgClass.Img = NewMatAI.ToImage<Gray, byte>().Copy().Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                     CutImgClass.ROI = BoxROI;
-                                    CauntOllBlob++;
+                                    Calc.BlobsSlave++;
                                     if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
                                     CutCTR_Old.NULL[closestIndex] = false;
@@ -678,7 +680,7 @@ namespace C2S150_ML
                                         ImagAI.ROI = BoxROI;
                                         CutImgClass.Img = ImagAI.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                         CutImgClass.ROI = BoxROI;
-                                        CauntOllBlob++;
+                                        Calc.BlobsSlave++;
                                         if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
@@ -705,20 +707,20 @@ namespace C2S150_ML
                             for (int idx = 0; idx < CutCTR_Old.CUT.Length; idx++)
                             {
                                 if (CutCTR_Old.NULL[idx] == true)
-                                {
-                                    BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * 10);
-                                    BoxROIcaT.Y = (CutCTR_Old.ROI[idx].Y * 10);  //20
-                                    BoxROIcaT.Height = CutCTR_Old.ROI[idx].Height * 10; //вниз 19
-                                    BoxROIcaT.Width = CutCTR_Old.ROI[idx].Width * 10; //в ліво 12
+                                {  
+                                    BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * ZiseCompres);
+                                    BoxROIcaT.Y = (CutCTR_Old.ROI[idx].Y * ZiseCompres);  //20
+                                    BoxROIcaT.Height = CutCTR_Old.ROI[idx].Height * ZiseCompres; //вниз 19
+                                    BoxROIcaT.Width = CutCTR_Old.ROI[idx].Width * ZiseCompres; //в ліво 12
                                     ImagAI_Old.ROI = BoxROIcaT;
 
                                     CutImgClass.Img = ImagAI_Old.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                     CutImgClass.ROI = BoxROI;
-                                    CauntOllBlob++;
+                                    Calc.BlobsSlave++;
                                     if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
-                                    if ((!SETS.Data.LiveVideoOFF) && (!SETS.Data.ID_CAM)) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
-                                }
+                                    if ((!SETS.Data.LiveVideoOFF) && (SETS.Data.ID_CAM == DLS.Slave)) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
+                                } 
                             }
                         }
 
@@ -729,7 +731,7 @@ namespace C2S150_ML
                         ImagAI_Old.ROI = Rectangle.Empty;
                         CutCTR_Old = CutCTR_SV;
 
-                        if ((FlowCamera.SaveImages == true) && (!SETS.Data.ID_CAM))
+                        if ((FlowCamera.SaveImages == true) && (SETS.Data.ID_CAM == DLS.Slave))
                         {
                             IProducerConsumerCollection<Image<Gray, byte>> tmpSave = FlowCamera.ImgSave; //створити ліст імідж
                             tmpSave.TryAdd(ImagAI.Copy()  /* imOriginal.ToImage<Gray, byte>()*/);
@@ -740,7 +742,7 @@ namespace C2S150_ML
                         //if ((!SETS.Data.LiveVideoOFF) && (!SETS.Data.LiveViewCam))
                         //{ FlowCamera.LiveImage = ImagContactVI.Resize(2000, 100, Inter.Linear); }
 
-                        if ((!SETS.Data.LiveVideoOFF) && (!SETS.Data.ID_CAM))
+                        if ((!SETS.Data.LiveVideoOFF) && (SETS.Data.ID_CAM == DLS.Slave))
                         {
 
                             imgStic = ImagContactVI.Resize(2000, 100, Inter.Linear);
@@ -910,6 +912,19 @@ namespace C2S150_ML
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    public static class Calc
+    {
+
+
+        public static int GoodSamples { get; set; } = 0;
+        public static int BadSamples { get; set; } = 0;
+
+  
+        public static int BlobsMaster { get; set; } = 0;
+        public static int BlobsSlave { get; set; } = 0;
+        
+    }
+
 
     class AnalisPredict{
 
@@ -926,8 +941,8 @@ namespace C2S150_ML
                const int MaxBatchSizeML = 1000;
 
 
-        public static int GoodSamples = 0;
-        public static int BadSamples  = 0;
+      //  public static int GoodSamples = 0;
+      //  public static int BadSamples  = 0;
 
 
 
@@ -951,9 +966,10 @@ namespace C2S150_ML
             EMGU.ListMast.Clear();
             EMGU.ListSlav.Clear();
 
-            GoodSamples = 0;
-            BadSamples  = 0;
-            ANLImg_M.CauntOllBlob = 0;
+            Calc.GoodSamples = 0;
+            Calc.BadSamples = 0;
+            Calc.BlobsMaster = 0;
+            Calc.BlobsSlave = 0;
         }
 
 
@@ -1022,7 +1038,7 @@ namespace C2S150_ML
 
                             if (((int)class_index != 1) || (MosaicShowOll)|| FlapsTest)
                             {
-                                BadSamples++;
+                                    Calc.BadSamples++;
                                 if (((!MosaicShowOll)||(FlapsTest))&&(!Flapslocking))
                                 {
 
@@ -1038,7 +1054,7 @@ namespace C2S150_ML
                                 DTLimg.Img = ImgsMosaic[idxRz].ToImage<Gray, byte>();
                                 MosaicaEvent(DTLimg);
 
-                            }else { GoodSamples++; } idxRz++; }}
+                            }else { Calc.GoodSamples++; } idxRz++; }}
 
                                
                             

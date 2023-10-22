@@ -121,7 +121,8 @@ namespace C2S150_ML
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.TextBoxSemplTyp = new System.Windows.Forms.TextBox();
+            this.comboBoxSetingsName = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button12 = new System.Windows.Forms.Button();
             this.label20 = new System.Windows.Forms.Label();
@@ -153,25 +154,25 @@ namespace C2S150_ML
             this.checkBox13 = new System.Windows.Forms.CheckBox();
             this.InvertBlobs = new System.Windows.Forms.CheckBox();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
-            this.GreyScaleMin_ = new System.Windows.Forms.NumericUpDown();
-            this.GreyScaleMin = new System.Windows.Forms.TrackBar();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.URL_file_Setings = new System.Windows.Forms.RichTextBox();
             this.button37 = new System.Windows.Forms.Button();
             this.button36 = new System.Windows.Forms.Button();
             this.button34 = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.GreyMin = new System.Windows.Forms.TrackBar();
-            this.GreyMax = new System.Windows.Forms.TrackBar();
-            this.GreyMin_ = new System.Windows.Forms.NumericUpDown();
+            this.groupBox18 = new System.Windows.Forms.GroupBox();
             this.GreyMax_ = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.GreyMin_ = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.GreyScaleMax_ = new System.Windows.Forms.NumericUpDown();
+            this.label34 = new System.Windows.Forms.Label();
+            this.GreyScaleMin_ = new System.Windows.Forms.NumericUpDown();
             this.button6 = new System.Windows.Forms.Button();
             this.СontourSelect = new System.Windows.Forms.CheckBox();
-            this.GreyScaleMax_ = new System.Windows.Forms.NumericUpDown();
-            this.GreyScaleMax = new System.Windows.Forms.TrackBar();
-            this.label7 = new System.Windows.Forms.Label();
             this.button7 = new System.Windows.Forms.Button();
             this.Flapslocking = new System.Windows.Forms.CheckBox();
             this.button9 = new System.Windows.Forms.Button();
@@ -217,7 +218,7 @@ namespace C2S150_ML
             this.button59 = new System.Windows.Forms.Button();
             this.label33 = new System.Windows.Forms.Label();
             this.button57 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkBoxAcqSet = new System.Windows.Forms.CheckBox();
             this.button58 = new System.Windows.Forms.Button();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.label32 = new System.Windows.Forms.Label();
@@ -233,6 +234,10 @@ namespace C2S150_ML
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label25 = new System.Windows.Forms.Label();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.buttonDeleteTypeSempl = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.textBoxСreateSample = new System.Windows.Forms.TextBox();
+            this.CreatSamplTyp = new System.Windows.Forms.Button();
             this.button19 = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.button14 = new System.Windows.Forms.Button();
@@ -316,15 +321,13 @@ namespace C2S150_ML
             this.tabPage1.SuspendLayout();
             this.WorkTable.SuspendLayout();
             this.groupBox15.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin_)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin)).BeginInit();
             this.groupBox9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyMin)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyMax)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyMin_)).BeginInit();
+            this.groupBox18.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GreyMax_)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GreyMin_)).BeginInit();
+            this.groupBox16.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMax_)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMax)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin_)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.tabPage4.SuspendLayout();
@@ -523,7 +526,7 @@ namespace C2S150_ML
             this.button10.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.button10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button10.ImageKey = "(none)";
-            this.button10.Location = new System.Drawing.Point(12, -62);
+            this.button10.Location = new System.Drawing.Point(12, -61);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(119, 33);
             this.button10.TabIndex = 2004;
@@ -550,7 +553,7 @@ namespace C2S150_ML
             this.dataGridView1.Name = "dataGridView1";
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridView1.Size = new System.Drawing.Size(699, 209);
+            this.dataGridView1.Size = new System.Drawing.Size(697, 210);
             this.dataGridView1.TabIndex = 2;
             // 
             // Column1
@@ -612,7 +615,7 @@ namespace C2S150_ML
             // 
             this.splitContainer6.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer6.Size = new System.Drawing.Size(1904, 1006);
-            this.splitContainer6.SplitterDistance = 750;
+            this.splitContainer6.SplitterDistance = 749;
             this.splitContainer6.TabIndex = 0;
             // 
             // splitContainer2
@@ -633,8 +636,8 @@ namespace C2S150_ML
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer4);
             this.splitContainer2.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.splitContainer2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer2.Size = new System.Drawing.Size(1904, 750);
-            this.splitContainer2.SplitterDistance = 1005;
+            this.splitContainer2.Size = new System.Drawing.Size(1904, 749);
+            this.splitContainer2.SplitterDistance = 1004;
             this.splitContainer2.TabIndex = 46;
             // 
             // splitContainer1
@@ -655,8 +658,8 @@ namespace C2S150_ML
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer7);
             this.splitContainer1.Panel2.Cursor = System.Windows.Forms.Cursors.Default;
             this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
-            this.splitContainer1.Size = new System.Drawing.Size(1001, 746);
-            this.splitContainer1.SplitterDistance = 196;
+            this.splitContainer1.Size = new System.Drawing.Size(1000, 745);
+            this.splitContainer1.SplitterDistance = 195;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer5
@@ -674,8 +677,8 @@ namespace C2S150_ML
             // splitContainer5.Panel2
             // 
             this.splitContainer5.Panel2.Controls.Add(this.tableLayoutPanel1);
-            this.splitContainer5.Size = new System.Drawing.Size(1001, 196);
-            this.splitContainer5.SplitterDistance = 156;
+            this.splitContainer5.Size = new System.Drawing.Size(1000, 195);
+            this.splitContainer5.SplitterDistance = 154;
             this.splitContainer5.TabIndex = 0;
             // 
             // LiveView
@@ -684,7 +687,7 @@ namespace C2S150_ML
             this.LiveView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LiveView.Location = new System.Drawing.Point(0, 0);
             this.LiveView.Name = "LiveView";
-            this.LiveView.Size = new System.Drawing.Size(1001, 156);
+            this.LiveView.Size = new System.Drawing.Size(1000, 154);
             this.LiveView.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.LiveView.TabIndex = 0;
             this.LiveView.TabStop = false;
@@ -733,16 +736,16 @@ namespace C2S150_ML
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1001, 36);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1000, 37);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // button53
             // 
             this.button53.BackColor = System.Drawing.Color.ForestGreen;
             this.button53.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button53.Location = new System.Drawing.Point(944, 3);
+            this.button53.Location = new System.Drawing.Point(929, 3);
             this.button53.Name = "button53";
-            this.button53.Size = new System.Drawing.Size(54, 30);
+            this.button53.Size = new System.Drawing.Size(68, 31);
             this.button53.TabIndex = 2040;
             this.button53.Text = "17";
             this.button53.UseVisualStyleBackColor = false;
@@ -752,9 +755,9 @@ namespace C2S150_ML
             // 
             this.button52.BackColor = System.Drawing.Color.ForestGreen;
             this.button52.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button52.Location = new System.Drawing.Point(885, 3);
+            this.button52.Location = new System.Drawing.Point(871, 3);
             this.button52.Name = "button52";
-            this.button52.Size = new System.Drawing.Size(53, 30);
+            this.button52.Size = new System.Drawing.Size(52, 31);
             this.button52.TabIndex = 2039;
             this.button52.Text = "16";
             this.button52.UseVisualStyleBackColor = false;
@@ -764,9 +767,9 @@ namespace C2S150_ML
             // 
             this.button50.BackColor = System.Drawing.Color.ForestGreen;
             this.button50.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button50.Location = new System.Drawing.Point(826, 3);
+            this.button50.Location = new System.Drawing.Point(813, 3);
             this.button50.Name = "button50";
-            this.button50.Size = new System.Drawing.Size(53, 30);
+            this.button50.Size = new System.Drawing.Size(52, 31);
             this.button50.TabIndex = 2038;
             this.button50.Text = "15";
             this.button50.UseVisualStyleBackColor = false;
@@ -776,9 +779,9 @@ namespace C2S150_ML
             // 
             this.button49.BackColor = System.Drawing.Color.ForestGreen;
             this.button49.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button49.Location = new System.Drawing.Point(767, 3);
+            this.button49.Location = new System.Drawing.Point(755, 3);
             this.button49.Name = "button49";
-            this.button49.Size = new System.Drawing.Size(53, 30);
+            this.button49.Size = new System.Drawing.Size(52, 31);
             this.button49.TabIndex = 2037;
             this.button49.Text = "14";
             this.button49.UseVisualStyleBackColor = false;
@@ -788,9 +791,9 @@ namespace C2S150_ML
             // 
             this.button48.BackColor = System.Drawing.Color.ForestGreen;
             this.button48.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button48.Location = new System.Drawing.Point(708, 3);
+            this.button48.Location = new System.Drawing.Point(697, 3);
             this.button48.Name = "button48";
-            this.button48.Size = new System.Drawing.Size(53, 30);
+            this.button48.Size = new System.Drawing.Size(52, 31);
             this.button48.TabIndex = 2036;
             this.button48.Text = "13";
             this.button48.UseVisualStyleBackColor = false;
@@ -800,9 +803,9 @@ namespace C2S150_ML
             // 
             this.button47.BackColor = System.Drawing.Color.ForestGreen;
             this.button47.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button47.Location = new System.Drawing.Point(649, 3);
+            this.button47.Location = new System.Drawing.Point(639, 3);
             this.button47.Name = "button47";
-            this.button47.Size = new System.Drawing.Size(53, 30);
+            this.button47.Size = new System.Drawing.Size(52, 31);
             this.button47.TabIndex = 2035;
             this.button47.Text = "12";
             this.button47.UseVisualStyleBackColor = false;
@@ -812,9 +815,9 @@ namespace C2S150_ML
             // 
             this.button46.BackColor = System.Drawing.Color.ForestGreen;
             this.button46.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button46.Location = new System.Drawing.Point(590, 3);
+            this.button46.Location = new System.Drawing.Point(581, 3);
             this.button46.Name = "button46";
-            this.button46.Size = new System.Drawing.Size(53, 30);
+            this.button46.Size = new System.Drawing.Size(52, 31);
             this.button46.TabIndex = 2034;
             this.button46.Text = "11";
             this.button46.UseVisualStyleBackColor = false;
@@ -824,9 +827,9 @@ namespace C2S150_ML
             // 
             this.button45.BackColor = System.Drawing.Color.ForestGreen;
             this.button45.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button45.Location = new System.Drawing.Point(531, 3);
+            this.button45.Location = new System.Drawing.Point(523, 3);
             this.button45.Name = "button45";
-            this.button45.Size = new System.Drawing.Size(53, 30);
+            this.button45.Size = new System.Drawing.Size(52, 31);
             this.button45.TabIndex = 2033;
             this.button45.Text = "10";
             this.button45.UseVisualStyleBackColor = false;
@@ -836,9 +839,9 @@ namespace C2S150_ML
             // 
             this.button42.BackColor = System.Drawing.Color.ForestGreen;
             this.button42.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button42.Location = new System.Drawing.Point(472, 3);
+            this.button42.Location = new System.Drawing.Point(465, 3);
             this.button42.Name = "button42";
-            this.button42.Size = new System.Drawing.Size(53, 30);
+            this.button42.Size = new System.Drawing.Size(52, 31);
             this.button42.TabIndex = 2032;
             this.button42.Text = "9";
             this.button42.UseVisualStyleBackColor = false;
@@ -848,9 +851,9 @@ namespace C2S150_ML
             // 
             this.button39.BackColor = System.Drawing.Color.ForestGreen;
             this.button39.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button39.Location = new System.Drawing.Point(413, 3);
+            this.button39.Location = new System.Drawing.Point(407, 3);
             this.button39.Name = "button39";
-            this.button39.Size = new System.Drawing.Size(53, 30);
+            this.button39.Size = new System.Drawing.Size(52, 31);
             this.button39.TabIndex = 2031;
             this.button39.Text = "8";
             this.button39.UseVisualStyleBackColor = false;
@@ -860,9 +863,9 @@ namespace C2S150_ML
             // 
             this.button33.BackColor = System.Drawing.Color.ForestGreen;
             this.button33.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button33.Location = new System.Drawing.Point(354, 3);
+            this.button33.Location = new System.Drawing.Point(349, 3);
             this.button33.Name = "button33";
-            this.button33.Size = new System.Drawing.Size(53, 30);
+            this.button33.Size = new System.Drawing.Size(52, 31);
             this.button33.TabIndex = 2030;
             this.button33.Text = "7";
             this.button33.UseVisualStyleBackColor = false;
@@ -872,9 +875,9 @@ namespace C2S150_ML
             // 
             this.button32.BackColor = System.Drawing.Color.ForestGreen;
             this.button32.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button32.Location = new System.Drawing.Point(295, 3);
+            this.button32.Location = new System.Drawing.Point(291, 3);
             this.button32.Name = "button32";
-            this.button32.Size = new System.Drawing.Size(53, 30);
+            this.button32.Size = new System.Drawing.Size(52, 31);
             this.button32.TabIndex = 2029;
             this.button32.Text = "6";
             this.button32.UseVisualStyleBackColor = false;
@@ -884,9 +887,9 @@ namespace C2S150_ML
             // 
             this.button31.BackColor = System.Drawing.Color.ForestGreen;
             this.button31.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button31.Location = new System.Drawing.Point(237, 3);
+            this.button31.Location = new System.Drawing.Point(234, 3);
             this.button31.Name = "button31";
-            this.button31.Size = new System.Drawing.Size(52, 30);
+            this.button31.Size = new System.Drawing.Size(51, 31);
             this.button31.TabIndex = 2028;
             this.button31.Text = "5";
             this.button31.UseVisualStyleBackColor = false;
@@ -896,9 +899,9 @@ namespace C2S150_ML
             // 
             this.button30.BackColor = System.Drawing.Color.ForestGreen;
             this.button30.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button30.Location = new System.Drawing.Point(180, 3);
+            this.button30.Location = new System.Drawing.Point(177, 3);
             this.button30.Name = "button30";
-            this.button30.Size = new System.Drawing.Size(51, 30);
+            this.button30.Size = new System.Drawing.Size(51, 31);
             this.button30.TabIndex = 2027;
             this.button30.Text = "4";
             this.button30.UseVisualStyleBackColor = false;
@@ -908,9 +911,9 @@ namespace C2S150_ML
             // 
             this.button29.BackColor = System.Drawing.Color.ForestGreen;
             this.button29.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button29.Location = new System.Drawing.Point(121, 3);
+            this.button29.Location = new System.Drawing.Point(119, 3);
             this.button29.Name = "button29";
-            this.button29.Size = new System.Drawing.Size(53, 30);
+            this.button29.Size = new System.Drawing.Size(52, 31);
             this.button29.TabIndex = 2026;
             this.button29.Text = "3";
             this.button29.UseVisualStyleBackColor = false;
@@ -920,9 +923,9 @@ namespace C2S150_ML
             // 
             this.button28.BackColor = System.Drawing.Color.ForestGreen;
             this.button28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button28.Location = new System.Drawing.Point(62, 3);
+            this.button28.Location = new System.Drawing.Point(61, 3);
             this.button28.Name = "button28";
-            this.button28.Size = new System.Drawing.Size(53, 30);
+            this.button28.Size = new System.Drawing.Size(52, 31);
             this.button28.TabIndex = 2025;
             this.button28.Text = "2";
             this.button28.UseVisualStyleBackColor = false;
@@ -934,7 +937,7 @@ namespace C2S150_ML
             this.button27.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button27.Location = new System.Drawing.Point(3, 3);
             this.button27.Name = "button27";
-            this.button27.Size = new System.Drawing.Size(53, 30);
+            this.button27.Size = new System.Drawing.Size(52, 31);
             this.button27.TabIndex = 2024;
             this.button27.Text = "1";
             this.button27.UseVisualStyleBackColor = false;
@@ -959,8 +962,8 @@ namespace C2S150_ML
             this.splitContainer7.Panel2.Controls.Add(this.splitContainer8);
             this.splitContainer7.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.splitContainer7.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer7.Size = new System.Drawing.Size(1001, 546);
-            this.splitContainer7.SplitterDistance = 333;
+            this.splitContainer7.Size = new System.Drawing.Size(1000, 546);
+            this.splitContainer7.SplitterDistance = 332;
             this.splitContainer7.TabIndex = 0;
             // 
             // cartesianChart1
@@ -971,7 +974,7 @@ namespace C2S150_ML
             this.cartesianChart1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.cartesianChart1.Location = new System.Drawing.Point(0, 0);
             this.cartesianChart1.Name = "cartesianChart1";
-            this.cartesianChart1.Size = new System.Drawing.Size(1001, 333);
+            this.cartesianChart1.Size = new System.Drawing.Size(1000, 332);
             this.cartesianChart1.TabIndex = 4;
             this.cartesianChart1.Text = "cartesianChart1";
             // 
@@ -992,8 +995,8 @@ namespace C2S150_ML
             this.splitContainer8.Panel2.Controls.Add(this.SpidKgH);
             this.splitContainer8.Panel2.Controls.Add(this.label19);
             this.splitContainer8.Panel2.Controls.Add(this.solidGauge1);
-            this.splitContainer8.Size = new System.Drawing.Size(1001, 209);
-            this.splitContainer8.SplitterDistance = 699;
+            this.splitContainer8.Size = new System.Drawing.Size(1000, 210);
+            this.splitContainer8.SplitterDistance = 697;
             this.splitContainer8.TabIndex = 0;
             // 
             // button54
@@ -1042,7 +1045,7 @@ namespace C2S150_ML
             this.solidGauge1.Location = new System.Drawing.Point(0, 0);
             this.solidGauge1.Name = "solidGauge1";
             this.solidGauge1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.solidGauge1.Size = new System.Drawing.Size(298, 209);
+            this.solidGauge1.Size = new System.Drawing.Size(299, 210);
             this.solidGauge1.TabIndex = 6;
             this.solidGauge1.Text = "solidGauge1";
             // 
@@ -1066,8 +1069,8 @@ namespace C2S150_ML
             this.splitContainer4.Panel2.Controls.Add(this.PageCauntMosaic);
             this.splitContainer4.Panel2.Controls.Add(this.button1);
             this.splitContainer4.Panel2.Controls.Add(this.NabrMosaicVisul);
-            this.splitContainer4.Size = new System.Drawing.Size(891, 746);
-            this.splitContainer4.SplitterDistance = 693;
+            this.splitContainer4.Size = new System.Drawing.Size(892, 745);
+            this.splitContainer4.SplitterDistance = 691;
             this.splitContainer4.TabIndex = 0;
             // 
             // listView1
@@ -1079,7 +1082,7 @@ namespace C2S150_ML
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(891, 693);
+            this.listView1.Size = new System.Drawing.Size(892, 691);
             this.listView1.TabIndex = 0;
             this.listView1.TileSize = new System.Drawing.Size(120, 400);
             this.listView1.UseCompatibleStateImageBehavior = false;
@@ -1178,8 +1181,8 @@ namespace C2S150_ML
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.USER);
-            this.splitContainer3.Size = new System.Drawing.Size(1904, 252);
-            this.splitContainer3.SplitterDistance = 710;
+            this.splitContainer3.Size = new System.Drawing.Size(1904, 253);
+            this.splitContainer3.SplitterDistance = 709;
             this.splitContainer3.TabIndex = 0;
             // 
             // groupBox3
@@ -1222,7 +1225,7 @@ namespace C2S150_ML
             this.buttonStartAnalic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonStartAnalic.BackColor = System.Drawing.Color.GreenYellow;
             this.buttonStartAnalic.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.buttonStartAnalic.Location = new System.Drawing.Point(12, 165);
+            this.buttonStartAnalic.Location = new System.Drawing.Point(12, 166);
             this.buttonStartAnalic.Name = "buttonStartAnalic";
             this.buttonStartAnalic.Size = new System.Drawing.Size(136, 76);
             this.buttonStartAnalic.TabIndex = 2023;
@@ -1277,7 +1280,7 @@ namespace C2S150_ML
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button2.BackColor = System.Drawing.Color.LightSalmon;
-            this.button2.Location = new System.Drawing.Point(12, 48);
+            this.button2.Location = new System.Drawing.Point(12, 49);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(119, 41);
             this.button2.TabIndex = 2013;
@@ -1333,7 +1336,7 @@ namespace C2S150_ML
             this.USER.Name = "USER";
             this.USER.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.USER.SelectedIndex = 0;
-            this.USER.Size = new System.Drawing.Size(1190, 252);
+            this.USER.Size = new System.Drawing.Size(1190, 253);
             this.USER.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.USER.TabIndex = 45;
             this.USER.SelectedIndexChanged += new System.EventHandler(this.USER_SelectedIndexChanged);
@@ -1346,7 +1349,7 @@ namespace C2S150_ML
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1182, 223);
+            this.tabPage2.Size = new System.Drawing.Size(1182, 224);
             this.tabPage2.TabIndex = 5;
             this.tabPage2.Text = "USER";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1359,7 +1362,7 @@ namespace C2S150_ML
             this.groupBox10.Controls.Add(this.numericUpDown6);
             this.groupBox10.Controls.Add(this.numericUpDown7);
             this.groupBox10.Controls.Add(this.label6);
-            this.groupBox10.Location = new System.Drawing.Point(38, 38);
+            this.groupBox10.Location = new System.Drawing.Point(22, 23);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.groupBox10.Size = new System.Drawing.Size(325, 134);
@@ -1468,26 +1471,41 @@ namespace C2S150_ML
             // 
             // groupBox5
             // 
-            this.groupBox5.Controls.Add(this.comboBox1);
+            this.groupBox5.Controls.Add(this.TextBoxSemplTyp);
+            this.groupBox5.Controls.Add(this.comboBoxSetingsName);
             this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.groupBox5.Location = new System.Drawing.Point(386, 28);
+            this.groupBox5.Location = new System.Drawing.Point(386, 24);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(231, 81);
+            this.groupBox5.Size = new System.Drawing.Size(242, 121);
             this.groupBox5.TabIndex = 2016;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Settings name";
             // 
-            // comboBox1
+            // TextBoxSemplTyp
             // 
-            this.comboBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.ItemHeight = 24;
-            this.comboBox1.Location = new System.Drawing.Point(23, 28);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.comboBox1.Size = new System.Drawing.Size(199, 32);
-            this.comboBox1.TabIndex = 2005;
+            this.TextBoxSemplTyp.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.TextBoxSemplTyp.ForeColor = System.Drawing.Color.Black;
+            this.TextBoxSemplTyp.Location = new System.Drawing.Point(17, 30);
+            this.TextBoxSemplTyp.Name = "TextBoxSemplTyp";
+            this.TextBoxSemplTyp.ReadOnly = true;
+            this.TextBoxSemplTyp.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.TextBoxSemplTyp.Size = new System.Drawing.Size(199, 31);
+            this.TextBoxSemplTyp.TabIndex = 2006;
+            this.TextBoxSemplTyp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // comboBoxSetingsName
+            // 
+            this.comboBoxSetingsName.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.comboBoxSetingsName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.comboBoxSetingsName.FormattingEnabled = true;
+            this.comboBoxSetingsName.ItemHeight = 24;
+            this.comboBoxSetingsName.Location = new System.Drawing.Point(17, 74);
+            this.comboBoxSetingsName.Name = "comboBoxSetingsName";
+            this.comboBoxSetingsName.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.comboBoxSetingsName.Size = new System.Drawing.Size(199, 32);
+            this.comboBoxSetingsName.TabIndex = 2005;
+            this.comboBoxSetingsName.TextChanged += new System.EventHandler(this.comboBoxSetingsName_TextChanged);
+            this.comboBoxSetingsName.Click += new System.EventHandler(this.comboBoxSetingsName_Click);
             // 
             // groupBox2
             // 
@@ -1575,7 +1593,7 @@ namespace C2S150_ML
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(1182, 223);
+            this.tabPage5.Size = new System.Drawing.Size(1182, 224);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Report";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1780,7 +1798,7 @@ namespace C2S150_ML
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1182, 223);
+            this.tabPage1.Size = new System.Drawing.Size(1182, 224);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Detection";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1790,8 +1808,6 @@ namespace C2S150_ML
             this.WorkTable.Controls.Add(this.groupBox15);
             this.WorkTable.Controls.Add(this.InvertBlobs);
             this.WorkTable.Controls.Add(this.checkBox7);
-            this.WorkTable.Controls.Add(this.GreyScaleMin_);
-            this.WorkTable.Controls.Add(this.GreyScaleMin);
             this.WorkTable.Controls.Add(this.richTextBox1);
             this.WorkTable.Controls.Add(this.URL_file_Setings);
             this.WorkTable.Controls.Add(this.button37);
@@ -1800,9 +1816,6 @@ namespace C2S150_ML
             this.WorkTable.Controls.Add(this.groupBox9);
             this.WorkTable.Controls.Add(this.button6);
             this.WorkTable.Controls.Add(this.СontourSelect);
-            this.WorkTable.Controls.Add(this.GreyScaleMax_);
-            this.WorkTable.Controls.Add(this.GreyScaleMax);
-            this.WorkTable.Controls.Add(this.label7);
             this.WorkTable.Controls.Add(this.button7);
             this.WorkTable.Controls.Add(this.Flapslocking);
             this.WorkTable.Location = new System.Drawing.Point(6, 6);
@@ -1895,33 +1908,6 @@ namespace C2S150_ML
             this.checkBox7.UseVisualStyleBackColor = true;
             this.checkBox7.CheckedChanged += new System.EventHandler(this.checkBox7_CheckedChanged);
             // 
-            // GreyScaleMin_
-            // 
-            this.GreyScaleMin_.BackColor = System.Drawing.Color.Salmon;
-            this.GreyScaleMin_.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.GreyScaleMin_.Location = new System.Drawing.Point(255, 160);
-            this.GreyScaleMin_.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.GreyScaleMin_.Name = "GreyScaleMin_";
-            this.GreyScaleMin_.Size = new System.Drawing.Size(43, 20);
-            this.GreyScaleMin_.TabIndex = 2015;
-            this.GreyScaleMin_.ValueChanged += new System.EventHandler(this.GreyScaleMin__ValueChanged);
-            // 
-            // GreyScaleMin
-            // 
-            this.GreyScaleMin.AutoSize = false;
-            this.GreyScaleMin.Location = new System.Drawing.Point(18, 160);
-            this.GreyScaleMin.Maximum = 255;
-            this.GreyScaleMin.Name = "GreyScaleMin";
-            this.GreyScaleMin.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.GreyScaleMin.Size = new System.Drawing.Size(229, 20);
-            this.GreyScaleMin.TabIndex = 2014;
-            this.GreyScaleMin.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.GreyScaleMin.Scroll += new System.EventHandler(this.GreyScaleMin_Scroll);
-            // 
             // richTextBox1
             // 
             this.richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
@@ -1984,96 +1970,160 @@ namespace C2S150_ML
             // 
             // groupBox9
             // 
-            this.groupBox9.Controls.Add(this.label18);
-            this.groupBox9.Controls.Add(this.label13);
-            this.groupBox9.Controls.Add(this.GreyMin);
-            this.groupBox9.Controls.Add(this.GreyMax);
-            this.groupBox9.Controls.Add(this.GreyMin_);
-            this.groupBox9.Controls.Add(this.GreyMax_);
-            this.groupBox9.Location = new System.Drawing.Point(6, 55);
+            this.groupBox9.Controls.Add(this.groupBox18);
+            this.groupBox9.Controls.Add(this.groupBox16);
+            this.groupBox9.Location = new System.Drawing.Point(17, 52);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.groupBox9.Size = new System.Drawing.Size(332, 75);
+            this.groupBox9.Size = new System.Drawing.Size(259, 141);
             this.groupBox9.TabIndex = 354;
             this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Size contours detect";
+            this.groupBox9.Text = "Blobs detect";
             // 
-            // label18
+            // groupBox18
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(299, 50);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(28, 16);
-            this.label18.TabIndex = 355;
-            this.label18.Text = "Min";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(299, 26);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(32, 16);
-            this.label13.TabIndex = 354;
-            this.label13.Text = "Max";
-            // 
-            // GreyMin
-            // 
-            this.GreyMin.AutoSize = false;
-            this.GreyMin.LargeChange = 1;
-            this.GreyMin.Location = new System.Drawing.Point(11, 49);
-            this.GreyMin.Maximum = 5000;
-            this.GreyMin.Name = "GreyMin";
-            this.GreyMin.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.GreyMin.Size = new System.Drawing.Size(229, 20);
-            this.GreyMin.TabIndex = 282;
-            this.GreyMin.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.GreyMin.Scroll += new System.EventHandler(this.trackBar7_Scroll);
-            // 
-            // GreyMax
-            // 
-            this.GreyMax.AutoSize = false;
-            this.GreyMax.LargeChange = 1;
-            this.GreyMax.Location = new System.Drawing.Point(12, 21);
-            this.GreyMax.Maximum = 500;
-            this.GreyMax.Name = "GreyMax";
-            this.GreyMax.Size = new System.Drawing.Size(228, 21);
-            this.GreyMax.TabIndex = 356;
-            this.GreyMax.TickStyle = System.Windows.Forms.TickStyle.Both;
-            // 
-            // GreyMin_
-            // 
-            this.GreyMin_.DecimalPlaces = 2;
-            this.GreyMin_.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.GreyMin_.Location = new System.Drawing.Point(246, 48);
-            this.GreyMin_.Maximum = new decimal(new int[] {
-            50000,
-            0,
-            0,
-            0});
-            this.GreyMin_.Name = "GreyMin_";
-            this.GreyMin_.Size = new System.Drawing.Size(53, 20);
-            this.GreyMin_.TabIndex = 283;
-            this.GreyMin_.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.GreyMin_.ValueChanged += new System.EventHandler(this.GreyMin__ValueChanged);
+            this.groupBox18.Controls.Add(this.GreyMax_);
+            this.groupBox18.Controls.Add(this.label18);
+            this.groupBox18.Controls.Add(this.label7);
+            this.groupBox18.Controls.Add(this.GreyMin_);
+            this.groupBox18.Controls.Add(this.label13);
+            this.groupBox18.Location = new System.Drawing.Point(8, 27);
+            this.groupBox18.Name = "groupBox18";
+            this.groupBox18.Size = new System.Drawing.Size(119, 100);
+            this.groupBox18.TabIndex = 357;
+            this.groupBox18.TabStop = false;
+            this.groupBox18.Text = "Contours size ";
             // 
             // GreyMax_
             // 
-            this.GreyMax_.DecimalPlaces = 2;
-            this.GreyMax_.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.GreyMax_.Location = new System.Drawing.Point(246, 26);
+            this.GreyMax_.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.GreyMax_.DecimalPlaces = 1;
+            this.GreyMax_.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.GreyMax_.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.GreyMax_.Location = new System.Drawing.Point(9, 22);
             this.GreyMax_.Maximum = new decimal(new int[] {
             5000000,
             0,
             0,
             0});
             this.GreyMax_.Name = "GreyMax_";
-            this.GreyMax_.Size = new System.Drawing.Size(53, 20);
+            this.GreyMax_.Size = new System.Drawing.Size(72, 29);
             this.GreyMax_.TabIndex = 284;
             this.GreyMax_.ValueChanged += new System.EventHandler(this.MastConturMax_ValueChanged);
+            // 
+            // label18
+            // 
+            this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(85, 63);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(28, 16);
+            this.label18.TabIndex = 355;
+            this.label18.Text = "Min";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(49, 42);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(0, 16);
+            this.label7.TabIndex = 274;
+            // 
+            // GreyMin_
+            // 
+            this.GreyMin_.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.GreyMin_.DecimalPlaces = 1;
+            this.GreyMin_.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.GreyMin_.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.GreyMin_.Location = new System.Drawing.Point(9, 60);
+            this.GreyMin_.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.GreyMin_.Name = "GreyMin_";
+            this.GreyMin_.Size = new System.Drawing.Size(72, 29);
+            this.GreyMin_.TabIndex = 283;
+            this.GreyMin_.ValueChanged += new System.EventHandler(this.GreyMin__ValueChanged);
+            // 
+            // label13
+            // 
+            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(87, 32);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(32, 16);
+            this.label13.TabIndex = 354;
+            this.label13.Text = "Max";
+            // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.label30);
+            this.groupBox16.Controls.Add(this.GreyScaleMax_);
+            this.groupBox16.Controls.Add(this.label34);
+            this.groupBox16.Controls.Add(this.GreyScaleMin_);
+            this.groupBox16.Location = new System.Drawing.Point(133, 27);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(113, 100);
+            this.groupBox16.TabIndex = 356;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "Gray filter";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(71, 68);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(28, 16);
+            this.label30.TabIndex = 357;
+            this.label30.Text = "Min";
+            // 
+            // GreyScaleMax_
+            // 
+            this.GreyScaleMax_.BackColor = System.Drawing.Color.White;
+            this.GreyScaleMax_.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.GreyScaleMax_.Location = new System.Drawing.Point(11, 25);
+            this.GreyScaleMax_.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.GreyScaleMax_.Name = "GreyScaleMax_";
+            this.GreyScaleMax_.Size = new System.Drawing.Size(54, 29);
+            this.GreyScaleMax_.TabIndex = 265;
+            this.GreyScaleMax_.ValueChanged += new System.EventHandler(this.MastMinR_ValueChanged);
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(71, 32);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(32, 16);
+            this.label34.TabIndex = 356;
+            this.label34.Text = "Max";
+            // 
+            // GreyScaleMin_
+            // 
+            this.GreyScaleMin_.BackColor = System.Drawing.Color.White;
+            this.GreyScaleMin_.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.GreyScaleMin_.Location = new System.Drawing.Point(11, 63);
+            this.GreyScaleMin_.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.GreyScaleMin_.Name = "GreyScaleMin_";
+            this.GreyScaleMin_.Size = new System.Drawing.Size(54, 29);
+            this.GreyScaleMin_.TabIndex = 2015;
+            this.GreyScaleMin_.ValueChanged += new System.EventHandler(this.GreyScaleMin__ValueChanged);
             // 
             // button6
             // 
@@ -2095,41 +2145,6 @@ namespace C2S150_ML
             this.СontourSelect.Text = "Flaps Test";
             this.СontourSelect.UseVisualStyleBackColor = true;
             this.СontourSelect.CheckedChanged += new System.EventHandler(this.СontourSelect_CheckedChanged);
-            // 
-            // GreyScaleMax_
-            // 
-            this.GreyScaleMax_.BackColor = System.Drawing.Color.Salmon;
-            this.GreyScaleMax_.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.GreyScaleMax_.Location = new System.Drawing.Point(255, 134);
-            this.GreyScaleMax_.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.GreyScaleMax_.Name = "GreyScaleMax_";
-            this.GreyScaleMax_.Size = new System.Drawing.Size(43, 20);
-            this.GreyScaleMax_.TabIndex = 265;
-            this.GreyScaleMax_.ValueChanged += new System.EventHandler(this.MastMinR_ValueChanged);
-            // 
-            // GreyScaleMax
-            // 
-            this.GreyScaleMax.AutoSize = false;
-            this.GreyScaleMax.Location = new System.Drawing.Point(17, 134);
-            this.GreyScaleMax.Maximum = 255;
-            this.GreyScaleMax.Name = "GreyScaleMax";
-            this.GreyScaleMax.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.GreyScaleMax.Size = new System.Drawing.Size(229, 20);
-            this.GreyScaleMax.TabIndex = 1;
-            this.GreyScaleMax.TickStyle = System.Windows.Forms.TickStyle.Both;
-            this.GreyScaleMax.Scroll += new System.EventHandler(this.trackBar1_Scroll);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(298, 140);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(0, 16);
-            this.label7.TabIndex = 274;
             // 
             // button7
             // 
@@ -2218,6 +2233,7 @@ namespace C2S150_ML
             0,
             0});
             this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.numericUpDown3.Size = new System.Drawing.Size(77, 26);
             this.numericUpDown3.TabIndex = 2012;
             this.numericUpDown3.Value = new decimal(new int[] {
@@ -2308,6 +2324,7 @@ namespace C2S150_ML
             0,
             0});
             this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.numericUpDown2.Size = new System.Drawing.Size(77, 26);
             this.numericUpDown2.TabIndex = 393;
             this.numericUpDown2.Value = new decimal(new int[] {
@@ -2331,7 +2348,7 @@ namespace C2S150_ML
             // 
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(-700, 389);
+            this.label11.Location = new System.Drawing.Point(-700, 390);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(0, 16);
             this.label11.TabIndex = 266;
@@ -2343,7 +2360,7 @@ namespace C2S150_ML
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(1182, 223);
+            this.tabPage4.Size = new System.Drawing.Size(1182, 224);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Settings device";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -2571,8 +2588,7 @@ namespace C2S150_ML
             0,
             0,
             0});
-            this.PWM_Table.Click += new System.EventHandler(this.PWM_Table_Click);
-            this.PWM_Table.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PWM_Table_Entr);
+            this.PWM_Table.ValueChanged += new System.EventHandler(this.PWM_Table_Click);
             // 
             // Hz_Table
             // 
@@ -2594,7 +2610,7 @@ namespace C2S150_ML
             0,
             0,
             0});
-            this.Hz_Table.Click += new System.EventHandler(this.Hz_Table_ValueChanged);
+            this.Hz_Table.ValueChanged += new System.EventHandler(this.Hz_Table_ValueChanged);
             // 
             // label1
             // 
@@ -2628,7 +2644,7 @@ namespace C2S150_ML
             this.groupBox14.Controls.Add(this.button59);
             this.groupBox14.Controls.Add(this.label33);
             this.groupBox14.Controls.Add(this.button57);
-            this.groupBox14.Controls.Add(this.checkBox1);
+            this.groupBox14.Controls.Add(this.checkBoxAcqSet);
             this.groupBox14.Controls.Add(this.button58);
             this.groupBox14.Location = new System.Drawing.Point(264, 23);
             this.groupBox14.Name = "groupBox14";
@@ -2675,12 +2691,13 @@ namespace C2S150_ML
             0,
             0});
             this.numericACQ_Gain.Name = "numericACQ_Gain";
+            this.numericACQ_Gain.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.numericACQ_Gain.Size = new System.Drawing.Size(69, 26);
             this.numericACQ_Gain.TabIndex = 42;
             // 
             // button59
             // 
-            this.button59.Location = new System.Drawing.Point(237, 78);
+            this.button59.Location = new System.Drawing.Point(237, 88);
             this.button59.Name = "button59";
             this.button59.Size = new System.Drawing.Size(98, 23);
             this.button59.TabIndex = 382;
@@ -2701,7 +2718,7 @@ namespace C2S150_ML
             // 
             // button57
             // 
-            this.button57.Location = new System.Drawing.Point(237, 46);
+            this.button57.Location = new System.Drawing.Point(237, 54);
             this.button57.Name = "button57";
             this.button57.Size = new System.Drawing.Size(98, 23);
             this.button57.TabIndex = 380;
@@ -2709,16 +2726,16 @@ namespace C2S150_ML
             this.button57.UseVisualStyleBackColor = true;
             this.button57.Click += new System.EventHandler(this.button57_Click);
             // 
-            // checkBox1
+            // checkBoxAcqSet
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(135, 21);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(73, 20);
-            this.checkBox1.TabIndex = 380;
-            this.checkBox1.Text = "Acq Set";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.Click += new System.EventHandler(this.checkBox1_Click);
+            this.checkBoxAcqSet.AutoSize = true;
+            this.checkBoxAcqSet.Location = new System.Drawing.Point(135, 21);
+            this.checkBoxAcqSet.Name = "checkBoxAcqSet";
+            this.checkBoxAcqSet.Size = new System.Drawing.Size(73, 20);
+            this.checkBoxAcqSet.TabIndex = 380;
+            this.checkBoxAcqSet.Text = "Acq Set";
+            this.checkBoxAcqSet.UseVisualStyleBackColor = true;
+            this.checkBoxAcqSet.Click += new System.EventHandler(this.checkBox1_Click);
             // 
             // button58
             // 
@@ -2773,6 +2790,7 @@ namespace C2S150_ML
             0,
             0});
             this.GAIN1.Name = "GAIN1";
+            this.GAIN1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.GAIN1.Size = new System.Drawing.Size(69, 26);
             this.GAIN1.TabIndex = 42;
             this.GAIN1.Click += new System.EventHandler(this.GAIN1_Click);
@@ -2796,6 +2814,7 @@ namespace C2S150_ML
             0,
             0});
             this.GAIN2.Name = "GAIN2";
+            this.GAIN2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.GAIN2.Size = new System.Drawing.Size(69, 26);
             this.GAIN2.TabIndex = 45;
             this.GAIN2.Click += new System.EventHandler(this.GAIN2_Click);
@@ -2876,6 +2895,7 @@ namespace C2S150_ML
             0,
             0});
             this.OutputDelay.Name = "OutputDelay";
+            this.OutputDelay.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OutputDelay.Size = new System.Drawing.Size(72, 26);
             this.OutputDelay.TabIndex = 288;
             this.OutputDelay.Value = new decimal(new int[] {
@@ -2883,7 +2903,7 @@ namespace C2S150_ML
             0,
             0,
             0});
-            this.OutputDelay.Click += new System.EventHandler(this.OutputDelay_Click);
+            this.OutputDelay.ValueChanged += new System.EventHandler(this.OutputDelay_Click);
             // 
             // numericUpDown1
             // 
@@ -2892,6 +2912,7 @@ namespace C2S150_ML
             this.numericUpDown1.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.numericUpDown1.Location = new System.Drawing.Point(12, 14);
             this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.numericUpDown1.Size = new System.Drawing.Size(72, 26);
             this.numericUpDown1.TabIndex = 383;
             this.numericUpDown1.Value = new decimal(new int[] {
@@ -2912,6 +2933,10 @@ namespace C2S150_ML
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.buttonDeleteTypeSempl);
+            this.tabPage7.Controls.Add(this.comboBox1);
+            this.tabPage7.Controls.Add(this.textBoxСreateSample);
+            this.tabPage7.Controls.Add(this.CreatSamplTyp);
             this.tabPage7.Controls.Add(this.button19);
             this.tabPage7.Controls.Add(this.label12);
             this.tabPage7.Controls.Add(this.button14);
@@ -2925,15 +2950,58 @@ namespace C2S150_ML
             this.tabPage7.Controls.Add(this.button15);
             this.tabPage7.Location = new System.Drawing.Point(4, 25);
             this.tabPage7.Name = "tabPage7";
-            this.tabPage7.Size = new System.Drawing.Size(1182, 223);
+            this.tabPage7.Size = new System.Drawing.Size(1182, 224);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "ML";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
+            // buttonDeleteTypeSempl
+            // 
+            this.buttonDeleteTypeSempl.Location = new System.Drawing.Point(740, 160);
+            this.buttonDeleteTypeSempl.Name = "buttonDeleteTypeSempl";
+            this.buttonDeleteTypeSempl.Size = new System.Drawing.Size(139, 35);
+            this.buttonDeleteTypeSempl.TabIndex = 2014;
+            this.buttonDeleteTypeSempl.Text = "Delete sample type";
+            this.buttonDeleteTypeSempl.UseVisualStyleBackColor = true;
+            this.buttonDeleteTypeSempl.Click += new System.EventHandler(this.buttonDeleteTypeSempl_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Good",
+            "Bed"});
+            this.comboBox1.Location = new System.Drawing.Point(579, 166);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.comboBox1.Size = new System.Drawing.Size(155, 28);
+            this.comboBox1.TabIndex = 2013;
+            this.comboBox1.Click += new System.EventHandler(this.comboBox1_Click);
+            // 
+            // textBoxСreateSample
+            // 
+            this.textBoxСreateSample.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.textBoxСreateSample.Location = new System.Drawing.Point(579, 128);
+            this.textBoxСreateSample.Name = "textBoxСreateSample";
+            this.textBoxСreateSample.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.textBoxСreateSample.Size = new System.Drawing.Size(155, 26);
+            this.textBoxСreateSample.TabIndex = 2012;
+            // 
+            // CreatSamplTyp
+            // 
+            this.CreatSamplTyp.Location = new System.Drawing.Point(740, 122);
+            this.CreatSamplTyp.Name = "CreatSamplTyp";
+            this.CreatSamplTyp.Size = new System.Drawing.Size(139, 32);
+            this.CreatSamplTyp.TabIndex = 2011;
+            this.CreatSamplTyp.Text = "Сreate sample type";
+            this.CreatSamplTyp.UseVisualStyleBackColor = true;
+            this.CreatSamplTyp.Click += new System.EventHandler(this.CreatSamplTyp_Click);
+            // 
             // button19
             // 
             this.button19.BackColor = System.Drawing.Color.Transparent;
-            this.button19.Location = new System.Drawing.Point(757, 124);
+            this.button19.Location = new System.Drawing.Point(298, 125);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(113, 31);
             this.button19.TabIndex = 2010;
@@ -2953,7 +3021,7 @@ namespace C2S150_ML
             // button14
             // 
             this.button14.BackColor = System.Drawing.Color.Transparent;
-            this.button14.Location = new System.Drawing.Point(893, 124);
+            this.button14.Location = new System.Drawing.Point(1046, 152);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(113, 25);
             this.button14.TabIndex = 2009;
@@ -2974,9 +3042,9 @@ namespace C2S150_ML
             // 
             // button18
             // 
-            this.button18.Location = new System.Drawing.Point(942, 154);
+            this.button18.Location = new System.Drawing.Point(298, 162);
             this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(64, 31);
+            this.button18.Size = new System.Drawing.Size(113, 31);
             this.button18.TabIndex = 6;
             this.button18.Text = "Teach";
             this.button18.UseVisualStyleBackColor = true;
@@ -2990,13 +3058,14 @@ namespace C2S150_ML
             "Bed"});
             this.comboBox2.Location = new System.Drawing.Point(164, 127);
             this.comboBox2.Name = "comboBox2";
+            this.comboBox2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.comboBox2.Size = new System.Drawing.Size(121, 24);
             this.comboBox2.TabIndex = 5;
             this.comboBox2.Text = "Good";
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(308, 127);
+            this.button17.Location = new System.Drawing.Point(166, 154);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(119, 31);
             this.button17.TabIndex = 4;
@@ -3057,7 +3126,7 @@ namespace C2S150_ML
             this.tabPage3.Controls.Add(this.groupBox8);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1182, 223);
+            this.tabPage3.Size = new System.Drawing.Size(1182, 224);
             this.tabPage3.TabIndex = 7;
             this.tabPage3.Text = "Vision";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -3341,6 +3410,7 @@ namespace C2S150_ML
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
             this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tabPage5.ResumeLayout(false);
@@ -3352,16 +3422,15 @@ namespace C2S150_ML
             this.WorkTable.PerformLayout();
             this.groupBox15.ResumeLayout(false);
             this.groupBox15.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin_)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin)).EndInit();
             this.groupBox9.ResumeLayout(false);
-            this.groupBox9.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyMin)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyMax)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyMin_)).EndInit();
+            this.groupBox18.ResumeLayout(false);
+            this.groupBox18.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GreyMax_)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GreyMin_)).EndInit();
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMax_)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMax)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin_)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.tabPage4.ResumeLayout(false);
@@ -3425,7 +3494,7 @@ namespace C2S150_ML
         private System.Windows.Forms.TabControl USER;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBoxSetingsName;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Label label20;
@@ -3466,14 +3535,11 @@ namespace C2S150_ML
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TrackBar GreyMin;
-        private System.Windows.Forms.TrackBar GreyMax;
         private System.Windows.Forms.NumericUpDown GreyMin_;
         private System.Windows.Forms.NumericUpDown GreyMax_;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.CheckBox СontourSelect;
         private System.Windows.Forms.NumericUpDown GreyScaleMax_;
-        private System.Windows.Forms.TrackBar GreyScaleMax;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.CheckBox Flapslocking;
@@ -3512,7 +3578,6 @@ namespace C2S150_ML
         private System.Windows.Forms.Button buttonStartAnalic;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.NumericUpDown GreyScaleMin_;
-        private System.Windows.Forms.TrackBar GreyScaleMin;
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.ImageList imageList1;
@@ -3633,7 +3698,7 @@ namespace C2S150_ML
         private System.Windows.Forms.Button button57;
         private System.Windows.Forms.Button button58;
         private System.Windows.Forms.Button button59;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBoxAcqSet;
         private System.Windows.Forms.GroupBox groupBox14;
         private System.Windows.Forms.NumericUpDown numericACQ_Gain;
         private System.Windows.Forms.Label label33;
@@ -3641,5 +3706,14 @@ namespace C2S150_ML
         private System.Windows.Forms.Button button56;
         private System.Windows.Forms.GroupBox groupBox15;
         private System.Windows.Forms.CheckBox AnalisLock;
+        private System.Windows.Forms.Button CreatSamplTyp;
+        private System.Windows.Forms.TextBox textBoxСreateSample;
+        private System.Windows.Forms.Button buttonDeleteTypeSempl;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.TextBox TextBoxSemplTyp;
+        private System.Windows.Forms.GroupBox groupBox18;
+        private System.Windows.Forms.GroupBox groupBox16;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label34;
     }
 }
