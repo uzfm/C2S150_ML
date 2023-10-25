@@ -159,16 +159,12 @@ namespace C2S150_ML
                         acConfigDlg2.Close();
                     }
                     else { DalsaVal.m_online[Slave] = false; }
-
-
             }
             else {
 
                 acConfigDlg2.Show();
                 DalsaVal.m_online[Slave] = true;
                 acConfigDlg2.Close();
-
-
             }
 
             if (!CreateNewObjects(DalsaVal.Default_Nbr_buffers[Slave], acConfigDlg2, Slave)) ;
@@ -179,23 +175,13 @@ namespace C2S150_ML
 
         public bool Setings_Camera1() {
             AcqConfigDlg acConfigDlg = new AcqConfigDlg(null, "", AcqConfigDlg.ServerCategory.ServerAcq, Master);
-
-            if (acConfigDlg.ShowDialog() == DialogResult.OK)
-            {
+            if (acConfigDlg.ShowDialog() == DialogResult.OK){
                 acConfigDlg.Show();
                 DalsaVal.m_online[Master] = true;
                 acConfigDlg.Close();
-            }
-            else
-            {
-                DalsaVal.m_online[Master] = false;
-            }
-
-            if (!CreateNewObjects(DalsaVal.Default_Nbr_buffers[Master], acConfigDlg, Master)) ;
-
-            Help.ErrorMesag("Restart the program for update the settings !!!");
-
-
+            } else {DalsaVal.m_online[Master] = false;
+            } if (!CreateNewObjects(DalsaVal.Default_Nbr_buffers[Master], acConfigDlg, Master)) ;
+            Help.Mesag("Restart the program for update the settings !!!");
             return DalsaVal.m_online[Master];
         }
 
@@ -207,8 +193,8 @@ namespace C2S150_ML
                 acConfigDlg2.Close();
             } else { DalsaVal.m_online[Slave] = false; }
             //if (!CreateNewObjects(DalsaVal.Default_Nbr_buffers[Slave], acConfigDlg2, Slave)) ;
-            Help.ErrorMesag("Restart the program for update the settings !!!");
-            return DalsaVal.m_online[Master];
+            Help.Mesag("Restart the program for update the settings !!!");
+            return DalsaVal.m_online[Slave];
 
 
 
@@ -254,6 +240,7 @@ namespace C2S150_ML
                 //event for view  ===== M A S T E R ======
                 if (ID_Cam == Master)
                 {
+                    DalsaVal.m_FlatField[Master] = new SapFlatField(DalsaVal.m_Acquisition[Master]);
                     DalsaVal.m_Xfer[ID_Cam].Pairs[0].EventType = SapXferPair.XferEventType.EndOfFrame;
                     DalsaVal.m_Xfer[ID_Cam].XferNotify += new SapXferNotifyHandler(xfer_XferNotifyMast);
                     DalsaVal.m_Xfer[ID_Cam].XferNotifyContext = this;
@@ -262,13 +249,14 @@ namespace C2S150_ML
                 //event for view  ===== S L A V E ======
                 if (ID_Cam == Slave)
                 {
+                    DalsaVal.m_FlatField[Slave] = new SapFlatField(DalsaVal.m_Acquisition[Slave]);
                     DalsaVal.m_Xfer[ID_Cam].Pairs[0].EventType = SapXferPair.XferEventType.EndOfFrame;
                     DalsaVal.m_Xfer[ID_Cam].XferNotify += new SapXferNotifyHandler(xfer_XferNotifySlav);
                     DalsaVal.m_Xfer[ID_Cam].XferNotifyContext = this;
                 }
 
 
-                DalsaVal.m_FlatField[ID_Cam] = new SapFlatField(DalsaVal.m_Acquisition[ID_Cam]);
+                //SDalsaVal.m_FlatField[ID_Cam] = new SapFlatField(DalsaVal.m_Acquisition[ID_Cam]);
                 
          
 
@@ -720,6 +708,7 @@ namespace C2S150_ML
         // Delegate to display number of frame acquired 
         // Delegate is needed because .NEt framework does not support cross thread control modification
         private delegate void RefreshControlDelegateMaster();
+        private delegate void RefreshControlDelegateSlave();
         //private delegate void CheckForLastFrameDelegate();
 
         // Delegate to display number of frame acquired 
@@ -800,19 +789,6 @@ namespace C2S150_ML
         /////////////////////
 
 
-      //  static Mat NewMat = new Mat();
-      //  static Image<Gray, byte> img = new Image<Gray, byte>(100,100);
-        //public static int CountContact =0;
-       // static Image<Gray, byte> ImagContact;
-
-     //   static Mat NewMatAI = new Mat();
-     //  static Image<Gray, byte> imgAI = new Image<Gray, byte>(100, 100);
-      //  public static int CountContactAI = 0;
-      //  static Image<Gray, byte> ImagContactAI;
-
-
-        //  static  AnalisImg AnalisI = new AnalisImg();
-
        public static long elapsedMs=0;
         static    IntPtr DataM = new IntPtr(); // image pointer
      static   public void CheckForLastFrameMast(int number, bool trash){
@@ -825,100 +801,22 @@ namespace C2S150_ML
                 
                 DalsaVal.m_Buffers[Master].GetAddress(out DataM);
 
-                //MIplImage rgb32Image = new MIplImage();
-                //rgb32Image = (MIplImage)Marshal.PtrToStructure(Data, typeof(MIplImage));
-                //_imgM = new Bitmap(DalsaVal.m_Buffers[Master].Width, DalsaVal.m_Buffers[Master].Height, (DalsaVal.m_Buffers[Master].Width * 4), PixelFormat.Format32bppRgb, Data); // color camera
-                //tmp2.TryAdd(_imgM.ToImage<Bgr, byte>());
 
                 Emgu.CV.Mat imOriginal = new Emgu.CV.Mat(DalsaVal.m_Buffers[Master].Height,
                                          DalsaVal.m_Buffers[Master].Width,
                                          Emgu.CV.CvEnum.DepthType. Cv8U, 1,      //Emgu.CV.CvEnum.DepthType.Cv8U  
                                          DataM,
                                          DalsaVal.m_Buffers[Master].Width );
-
-                //Size newSize = new Size(imOriginal.Width/2, imOriginal.Height/2);
-                // Масштабування зображення до нового розміру з оптимізованим методом
-                //Mat resizedImage = new Mat();
-                //CvInvoke.Resize(imOriginal, resizedImage, newSize, interpolation: Inter.Linear);
-
                 IProducerConsumerCollection<Image<Gray, byte>> CollecTemp = FlowCamera.BoxImgM;
-                CollecTemp.TryAdd(imOriginal.ToImage<Gray, byte>().Clone());
-             //   imOriginal = new Mat();
+                CollecTemp.TryAdd(imOriginal.ToImage<Gray, byte>());
 
-
-
-                // int Width = imOriginal.Width/10;
-                // int Height = imOriginal.Height/10;
-
-
-                ////////зжимаємо фото
-                //img = imOriginal.ToImage<Gray, byte>().Resize(Width, Height, Inter.Linear);
-                // NewMat = new Mat();
-
-                // ////// склейка фото 3 трьох частитн
-                // if (CountContact >= 2)
-                // { ImagContact.ROI = new Rectangle(0, Height,Width, (ImagContact.Height - Height)); }
-                // else { CountContact++; }
-
-                // if (ImagContact != null)
-                // {
-                //     CvInvoke.VConcat(ImagContact, img, NewMat);
-                // }
-                // else { NewMat = img.Mat; }
-                // ImagContact = NewMat.ToImage<Gray, byte>();
-
-                // LiveViewS.Invoke(new Action(() => { LiveViewS.Image = ImagContact.ToBitmap(); })); // передаємо зображення в imageBox.Handle
-                //                                                                                    //  LiveViewS.Image = imOriginal.ToBitmap();
-
-                //Stopwatch watch = Stopwatch.StartNew();
-                //int WidthAI = imOriginal.Width;
-                //int HeightAI = imOriginal.Height;
-                ////////зжимаємо фото
-                //imgAI = imOriginal.ToImage<Gray, byte>().Resize(WidthAI, HeightAI, Inter.Linear);
-                //NewMatAI = new Mat();
-                //////// склейка фото 3 трьох частитн
-                //if (CountContactAI >= 2)
-                //{ ImagContactAI.ROI = new Rectangle(0, HeightAI, WidthAI, (ImagContactAI.Height - HeightAI)); }
-                //else { CountContactAI++; }
-                //if (ImagContactAI != null){CvInvoke.VConcat(ImagContactAI, imgAI, NewMatAI);}
-                //else { NewMatAI = imgAI.Mat; }
-                //ImagContactAI = NewMatAI.ToImage<Gray, byte>();
-
-
-
-
-                //if (ImagContactAI.Height == 600) { 
-                //IProducerConsumerCollection<Image<Gray, byte>> tmp2 = FlowCamera.BoxM; //створити ліст імідж
-                //tmp2.TryAdd(ImagContactAI.Copy()  /*  imOriginal.ToImage<Gray, byte>().Resize(4096, 50, Inter.Linear)*/);
-                /// Task.Run(() => AnalisI.FindBlobs(ImagContactAI));
-                /// 
-
-
-
-                //watch.Stop();
-                //elapsedMs = watch.ElapsedMilliseconds;
-
-                //CollecTemp.TryAdd(  imOriginal.ToImage<Gray,byte>());
-
-
-
-
-
-                //AnalisI.FindBlobs(ImagContactAI.Clone());
-
-
-
-                //if (FlowCamera.SaveImages == true){ 
-                // IProducerConsumerCollection<Image<Gray, byte>> tmpSave = FlowCamera.ImgSave; //створити ліст імідж
-                // tmpSave.TryAdd(ImagContactAI/* imOriginal.ToImage<Gray, byte>()*/); }
-
-
-                //}
             }
         }
 
 
                static       IntPtr DataS = new IntPtr(); // image pointer
+
+
         static public void CheckForLastFrameSlav(int number, bool trash) {
 
 
@@ -933,7 +831,7 @@ namespace C2S150_ML
 
 
                 /******************* Convert to Image ***********************************/
-
+               
                 DalsaVal.m_Buffers[Slave].GetAddress(out DataS);
 
 
@@ -944,14 +842,10 @@ namespace C2S150_ML
                                                   DalsaVal.m_Buffers[Slave].Width);
 
 
-                // Масштабування зображення до нового розміру з оптимізованим методом
-                // Size newSize = new Size(imOriginal.Width / 2, imOriginal.Height / 2);
-                //  Mat resizedImage = new Mat();
-                // CvInvoke.Resize(imOriginal, resizedImage, newSize, interpolation: Inter.Linear);
 
                 IProducerConsumerCollection<Image<Gray, byte>> CollecTemp = FlowCamera.BoxImgS;
                 CollecTemp.TryAdd(imOriginal.ToImage<Gray, byte>());
-                //imOriginal = new Mat();
+    
 
 
             }
@@ -990,10 +884,10 @@ namespace C2S150_ML
                 string PathNameSlave = PathName + "\\" + "CAM_" + Slave + DEFAULT_FFC_FILENAME;
                 // Load flat field correction file
                 if (!DalsaVal.m_FlatField[Master].Load(PathNameMaster))
-                if (!DalsaVal.m_FlatField[Master].Load(PathNameSlave))
+                if (!DalsaVal.m_FlatField[Slave].Load(PathNameSlave))
                         return true;
             }
-            else { Help.ErrorMesag("Camera Background Alignment (FFC) file not found!!!"); }
+            else { Help.Mesag("Camera Background Alignment (FFC) file not found!!!"); }
             return false;
             //UpdateControls();
         }
@@ -1035,8 +929,8 @@ namespace C2S150_ML
 
 
 
-       int textBox_Frame_Avg = 10;                  // Визначається кількість зображень, які використовуються для розрахунку Flat Field 
-        int textBox_Line_Avg = 128;                 // Кількість ліній для усереднення
+       int textBox_Frame_Avg = 20;                  // Визначається кількість зображень, які використовуються для розрахунку Flat Field 
+        int textBox_Line_Avg = 64;                 // Кількість ліній для усереднення
         int textBox_Max_Dev = 100;                   // Встановіть максимальне відхилення від середнього значення пікселя для темного зображення
         int textBox_Vert_Offset = 0;                // вертикальний зсув
         bool ClippedCoefsDefects_checkbox = false;   // вказує, чи слід вважати пікселі з обрізаними коефіцієнтами як дефектні.
@@ -1321,7 +1215,7 @@ namespace C2S150_ML
             bool tooManyBadPixels = false;
             int numComponents = stats.NumComponents;
 
-            for (int i = 0; i < numComponents; i++)
+            for (int i = 0; i < numComponents; i++)                                      //7,10,5,1,7388,7,/90,18555/1
             {
                 if (stats.get_Average(i) > m_RecommendedDark)
                 {
@@ -1331,7 +1225,8 @@ namespace C2S150_ML
             }
 
             if (tooManyBadPixels && DalsaVal.m_FlatField[ID_Cam].ClippedGainOffsetDefects)
-            {
+            {                                                                                              
+                //false
                 str = "The following statistics have been computed on the dark image: \n";
                 str += String.Format("The average pixel value is {0}\n", stats.Average.ToString());
                 str += String.Format("\nThis yields too many bad pixels above the hardware limit of {0}\n", m_RecommendedDark);
@@ -1360,7 +1255,7 @@ namespace C2S150_ML
             LogMessage(LogTypes.Info, str);
 
             // Compute offset coefficients using last acquired image
-            DalsaVal.m_FlatField[ID_Cam].NumFramesAverage = DalsaVal.m_pLocalBuffer[ID_Cam].Count;
+                DalsaVal.m_FlatField[ID_Cam].NumFramesAverage = DalsaVal.m_pLocalBuffer[ID_Cam].Count;
             if (DalsaVal.m_FlatField[ID_Cam].ComputeOffset(DalsaVal.m_pLocalBuffer[ID_Cam]))
             {
                 //button_Acq_Dark.Enabled = false;
@@ -1527,11 +1422,11 @@ namespace C2S150_ML
                 }
 
                 //Add a short delay to ensure the transfer callback has time to arrive
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(200);
 
                 if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
                 {
-                    DalsaVal.m_pLocalBuffer[ID_Cam].Index = iFrame;
+           
                     DalsaVal.m_pLocalBuffer[ID_Cam].Copy(DalsaVal.m_Buffers[ID_Cam]);  ///<- SapBuffer m_pBuffer;
                 }
             }
@@ -1600,11 +1495,11 @@ namespace C2S150_ML
 
     public class DalsaVal
     {
-      
 
-        public SapFlatField  [] m_FlatField = new SapFlatField [2];
+
+         public SapFlatField  [] m_FlatField = new SapFlatField [2];
         //public SapTransfer [] m_pXfer = new SapTransfer[2];    ///
-        public SapBuffer [] m_pLocalBuffer = new SapBuffer[2] ; /// <summary>
+       public SapBuffer [] m_pLocalBuffer = new SapBuffer[2] ; /// <summary>
 
 
 

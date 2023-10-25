@@ -30,10 +30,10 @@ namespace C2S150_ML
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sorter));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.HidConect = new System.Windows.Forms.ToolStripStatusLabel();
@@ -147,6 +147,7 @@ namespace C2S150_ML
             this.MakeReportButton = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.WorkTable = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.AnalisLock = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
@@ -183,7 +184,7 @@ namespace C2S150_ML
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxTestImg = new System.Windows.Forms.TextBox();
             this.button22 = new System.Windows.Forms.Button();
             this.button21 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
@@ -250,6 +251,16 @@ namespace C2S150_ML
             this.listView2 = new System.Windows.Forms.ListView();
             this.button15 = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox20 = new System.Windows.Forms.GroupBox();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.AnalysisTest = new System.Windows.Forms.RadioButton();
+            this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
+            this.label36 = new System.Windows.Forms.Label();
+            this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown13 = new System.Windows.Forms.NumericUpDown();
+            this.label37 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
@@ -350,6 +361,11 @@ namespace C2S150_ML
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.tabPage7.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.groupBox20.SuspendLayout();
+            this.groupBox19.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox8.SuspendLayout();
@@ -538,8 +554,8 @@ namespace C2S150_ML
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToOrderColumns = true;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -548,18 +564,19 @@ namespace C2S150_ML
             this.Column5,
             this.Column6,
             this.Column3});
+            this.dataGridView1.Cursor = System.Windows.Forms.Cursors.Default;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridView1.Size = new System.Drawing.Size(697, 210);
             this.dataGridView1.TabIndex = 2;
             // 
             // Column1
             // 
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle6;
             this.Column1.FillWeight = 50F;
             this.Column1.HeaderText = "Data Time";
             this.Column1.Name = "Column1";
@@ -568,8 +585,8 @@ namespace C2S150_ML
             // 
             // Column2
             // 
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Column2.DefaultCellStyle = dataGridViewCellStyle7;
             this.Column2.HeaderText = "Good %";
             this.Column2.MinimumWidth = 10;
             this.Column2.Name = "Column2";
@@ -730,12 +747,13 @@ namespace C2S150_ML
             this.tableLayoutPanel1.Controls.Add(this.button29, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.button28, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.button27, 0, 0);
+            this.tableLayoutPanel1.Cursor = System.Windows.Forms.Cursors.HSplit;
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1000, 37);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
@@ -970,6 +988,7 @@ namespace C2S150_ML
             // 
             this.cartesianChart1.BackColor = System.Drawing.Color.White;
             this.cartesianChart1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.cartesianChart1.Cursor = System.Windows.Forms.Cursors.Default;
             this.cartesianChart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cartesianChart1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.cartesianChart1.Location = new System.Drawing.Point(0, 0);
@@ -1242,6 +1261,7 @@ namespace C2S150_ML
             this.button40.TabIndex = 2018;
             this.button40.Text = "ON Cooling";
             this.button40.UseVisualStyleBackColor = false;
+            this.button40.Click += new System.EventHandler(this.button40_Click);
             // 
             // OnLight
             // 
@@ -1787,7 +1807,7 @@ namespace C2S150_ML
             this.tabPage1.Controls.Add(this.numericUpDown3);
             this.tabPage1.Controls.Add(this.textBox2);
             this.tabPage1.Controls.Add(this.label10);
-            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Controls.Add(this.textBoxTestImg);
             this.tabPage1.Controls.Add(this.button22);
             this.tabPage1.Controls.Add(this.button21);
             this.tabPage1.Controls.Add(this.button20);
@@ -1805,6 +1825,7 @@ namespace C2S150_ML
             // 
             // WorkTable
             // 
+            this.WorkTable.Controls.Add(this.checkBox1);
             this.WorkTable.Controls.Add(this.groupBox15);
             this.WorkTable.Controls.Add(this.InvertBlobs);
             this.WorkTable.Controls.Add(this.checkBox7);
@@ -1823,6 +1844,17 @@ namespace C2S150_ML
             this.WorkTable.Size = new System.Drawing.Size(715, 202);
             this.WorkTable.TabIndex = 375;
             this.WorkTable.TabStop = false;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(394, 111);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.checkBox1.Size = new System.Drawing.Size(141, 20);
+            this.checkBox1.TabIndex = 2019;
+            this.checkBox1.Text = "Show good mosaic";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // groupBox15
             // 
@@ -2260,14 +2292,14 @@ namespace C2S150_ML
             this.label10.TabIndex = 394;
             this.label10.Text = "Show Mosaic";
             // 
-            // textBox1
+            // textBoxTestImg
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox1.Location = new System.Drawing.Point(753, 108);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(173, 26);
-            this.textBox1.TabIndex = 381;
-            this.textBox1.Text = "C:\\Users\\MICROPTIK\\Documents\\ImagesAnalis\\New folder";
+            this.textBoxTestImg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBoxTestImg.Location = new System.Drawing.Point(753, 108);
+            this.textBoxTestImg.Name = "textBoxTestImg";
+            this.textBoxTestImg.Size = new System.Drawing.Size(173, 26);
+            this.textBoxTestImg.TabIndex = 381;
+            this.textBoxTestImg.Text = "C:\\Users\\MICROPTIK\\Documents\\ImagesAnalis\\New folder";
             // 
             // button22
             // 
@@ -3114,6 +3146,8 @@ namespace C2S150_ML
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.groupBox20);
+            this.tabPage3.Controls.Add(this.groupBox19);
             this.tabPage3.Controls.Add(this.button3);
             this.tabPage3.Controls.Add(this.button4);
             this.tabPage3.Controls.Add(this.button8);
@@ -3130,6 +3164,147 @@ namespace C2S150_ML
             this.tabPage3.TabIndex = 7;
             this.tabPage3.Text = "Vision";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox20
+            // 
+            this.groupBox20.Controls.Add(this.radioButton1);
+            this.groupBox20.Controls.Add(this.AnalysisTest);
+            this.groupBox20.Location = new System.Drawing.Point(419, 15);
+            this.groupBox20.Name = "groupBox20";
+            this.groupBox20.Size = new System.Drawing.Size(117, 76);
+            this.groupBox20.TabIndex = 2029;
+            this.groupBox20.TabStop = false;
+            this.groupBox20.Text = "Analysis Test";
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(26, 49);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(59, 20);
+            this.radioButton1.TabIndex = 1;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Black";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // AnalysisTest
+            // 
+            this.AnalysisTest.AutoSize = true;
+            this.AnalysisTest.Location = new System.Drawing.Point(6, 24);
+            this.AnalysisTest.Name = "AnalysisTest";
+            this.AnalysisTest.Size = new System.Drawing.Size(79, 20);
+            this.AnalysisTest.TabIndex = 0;
+            this.AnalysisTest.Text = "Adaptive";
+            this.AnalysisTest.UseVisualStyleBackColor = true;
+            // 
+            // groupBox19
+            // 
+            this.groupBox19.Controls.Add(this.label35);
+            this.groupBox19.Controls.Add(this.numericUpDown5);
+            this.groupBox19.Controls.Add(this.label36);
+            this.groupBox19.Controls.Add(this.numericUpDown12);
+            this.groupBox19.Controls.Add(this.numericUpDown13);
+            this.groupBox19.Controls.Add(this.label37);
+            this.groupBox19.Location = new System.Drawing.Point(214, 12);
+            this.groupBox19.Name = "groupBox19";
+            this.groupBox19.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.groupBox19.Size = new System.Drawing.Size(197, 134);
+            this.groupBox19.TabIndex = 2028;
+            this.groupBox19.TabStop = false;
+            this.groupBox19.Text = "Settings vision Black ";
+            // 
+            // label35
+            // 
+            this.label35.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(28, 82);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(32, 16);
+            this.label35.TabIndex = 44;
+            this.label35.Text = "Max";
+            // 
+            // numericUpDown5
+            // 
+            this.numericUpDown5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.numericUpDown5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.numericUpDown5.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.numericUpDown5.Location = new System.Drawing.Point(98, 81);
+            this.numericUpDown5.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDown5.Name = "numericUpDown5";
+            this.numericUpDown5.Size = new System.Drawing.Size(76, 26);
+            this.numericUpDown5.TabIndex = 43;
+            this.numericUpDown5.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label36
+            // 
+            this.label36.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(24, 54);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(68, 16);
+            this.label36.TabIndex = 42;
+            this.label36.Text = "Threshold";
+            // 
+            // numericUpDown12
+            // 
+            this.numericUpDown12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.numericUpDown12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.numericUpDown12.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.numericUpDown12.Location = new System.Drawing.Point(98, 18);
+            this.numericUpDown12.Name = "numericUpDown12";
+            this.numericUpDown12.Size = new System.Drawing.Size(76, 26);
+            this.numericUpDown12.TabIndex = 38;
+            this.numericUpDown12.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown12.Click += new System.EventHandler(this.numericUpDown12_Click);
+            // 
+            // numericUpDown13
+            // 
+            this.numericUpDown13.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.numericUpDown13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.numericUpDown13.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.numericUpDown13.Location = new System.Drawing.Point(98, 49);
+            this.numericUpDown13.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDown13.Name = "numericUpDown13";
+            this.numericUpDown13.Size = new System.Drawing.Size(76, 26);
+            this.numericUpDown13.TabIndex = 39;
+            this.numericUpDown13.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDown13.Click += new System.EventHandler(this.numericUpDown13_Click);
+            // 
+            // label37
+            // 
+            this.label37.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(24, 25);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(30, 16);
+            this.label37.TabIndex = 41;
+            this.label37.Text = "Blur";
             // 
             // button3
             // 
@@ -3173,7 +3348,7 @@ namespace C2S150_ML
             // textBox3
             // 
             this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox3.Location = new System.Drawing.Point(542, 12);
+            this.textBox3.Location = new System.Drawing.Point(542, 15);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(62, 26);
             this.textBox3.TabIndex = 2023;
@@ -3224,13 +3399,13 @@ namespace C2S150_ML
             this.groupBox8.Controls.Add(this.numericUpDown10);
             this.groupBox8.Controls.Add(this.numericUpDown11);
             this.groupBox8.Controls.Add(this.label29);
-            this.groupBox8.Location = new System.Drawing.Point(25, 29);
+            this.groupBox8.Location = new System.Drawing.Point(11, 12);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.groupBox8.Size = new System.Drawing.Size(197, 134);
             this.groupBox8.TabIndex = 2018;
             this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Settings vision ";
+            this.groupBox8.Text = "Settings vision Adaptive";
             // 
             // label24
             // 
@@ -3291,6 +3466,7 @@ namespace C2S150_ML
             0,
             0,
             0});
+            this.numericUpDown10.Click += new System.EventHandler(this.numericUpDown10_Click);
             // 
             // numericUpDown11
             // 
@@ -3353,10 +3529,11 @@ namespace C2S150_ML
             // 
             // Sorter
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(1904, 1041);
             this.Controls.Add(this.splitContainer6);
             this.Controls.Add(this.statusStrip1);
+            this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Sorter";
             this.Text = "Soreter";
@@ -3463,6 +3640,13 @@ namespace C2S150_ML
             this.tabPage7.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.groupBox20.ResumeLayout(false);
+            this.groupBox20.PerformLayout();
+            this.groupBox19.ResumeLayout(false);
+            this.groupBox19.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox8.ResumeLayout(false);
@@ -3596,7 +3780,7 @@ namespace C2S150_ML
         private System.Windows.Forms.Button button20;
         private System.Windows.Forms.Button button21;
         private System.Windows.Forms.Button button22;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxTestImg;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Button button24;
         private System.Windows.Forms.Button button23;
@@ -3715,5 +3899,16 @@ namespace C2S150_ML
         private System.Windows.Forms.GroupBox groupBox16;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.GroupBox groupBox19;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.NumericUpDown numericUpDown5;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.NumericUpDown numericUpDown12;
+        private System.Windows.Forms.NumericUpDown numericUpDown13;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.GroupBox groupBox20;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton AnalysisTest;
     }
 }

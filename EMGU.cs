@@ -150,7 +150,7 @@ namespace C2S150_ML
 
 
         ///static public Image<Bgr, byte> Origenal_img;
-           public Bitmap Origenal_Image(int ID) {  try { return Origenal_img_Camera[ID].Mat.ToBitmap(); } catch {  Help.ErrorMesag(" Original image not found "); } return null; }
+           public Bitmap Origenal_Image(int ID) {  try { return Origenal_img_Camera[ID].Mat.ToBitmap(); } catch {  Help.Mesag(" Original image not found "); } return null; }
            public void Load_Image(Bitmap img, int ID) {  Origenal_img_Camera[ID] =  img.ToImage<Bgr, byte>(); }  // (new ToBitmap(img)); 
            public void Load_Image_Mosaics(Bitmap img, int ID) { Origenal_Img_Mosaics[ID] = img.ToImage<Bgr, byte>(); }
 
@@ -373,7 +373,7 @@ namespace C2S150_ML
                 Output[0]=0;
                 Output[1]=0;
                 Output[2]=0;
-                Help.ErrorMesag(" Check parameters (Flaps Settings)");
+                Help.Mesag(" Check parameters (Flaps Settings)");
                 return Output;
             } 
                 return Output;

@@ -15,6 +15,7 @@ using FLAPS = C2S150_ML.USB_HID.PLC_C2S150.FLAPS;
 using CAMERA = C2S150_ML.USB_HID.PLC_C2S150.CAMERA;
 using AUTOLOADER = C2S150_ML.USB_HID.PLC_C2S150.AUTOLOADER;
 using SEPARATOR = C2S150_ML.USB_HID.PLC_C2S150.SEPARATOR;
+using COOLING = C2S150_ML.USB_HID.PLC_C2S150.COOLING;
 
 using Emgu.CV.CvEnum;
 using System.Threading.Tasks;
@@ -188,7 +189,7 @@ namespace C2S150_ML
 
                 if (SETS.Data.ID_CAM == DLS.Slave)
                 {        SamplsOLL = Calc.BlobsSlave;
-                } else { SamplsOLL = Calc.BlobsSlave; }
+                } else { SamplsOLL = Calc.BlobsMaster; }
 
                 double ratio3 = 0;
                 // Діаграма швиткості середння Kg/h
@@ -330,6 +331,7 @@ namespace C2S150_ML
         void ClearMosaic()
         {
             Mosaics.Images.Clear();
+         
             listView1.Clear();
             srtVisulMosaic = 0;
             MosaicDTlist = new List<DTLimg>();
@@ -422,12 +424,13 @@ namespace C2S150_ML
                 buttonStartAnalic.BackColor = Color.Red;
 
                 LIGHT.ON();
-        
+                COOLING.ON();
+
                 buttonStartAnalic.Text = "Stop Analysis";
                 StartTable.Text = "Stop Table";
-                OnLight.Text = "OFF Light";
+                OnLight.Text =  "OFF Light";
                 button40.Text = "OFF Cooling";
-                button43.Text = "OFF Screw Feeder";
+                button43.Text = "OFF Autoloader";
                 button44.Text = "OFF Metal separator";
                 Thread.Sleep(500);
                 Flow.STARTsorting = true;
@@ -444,13 +447,13 @@ namespace C2S150_ML
                 Thread.Sleep(100);
 
                 LIGHT.OFF();
-          
+                COOLING.OFF();
 
                 buttonStartAnalic.Text = "Start Analysis";
                 StartTable.Text = "Start Table";
                 OnLight.Text  = "ON Light";
                 button40.Text = "ON Cooling";
-                button43.Text = "ON Screw Feeder";
+                button43.Text = "ON Autoloader";
                 button44.Text = "ON Metal separator";
             }
         }
@@ -493,11 +496,11 @@ namespace C2S150_ML
                 SETS.Data.ACQ_Pach = textBox5.Text;
                 SETS.Data.AnalisLock = AnalisLock.Checked;
             //-----------------------------------
-
+            SETS.Data.ShowGoodMosaic = checkBox1.Checked;
             SETS.Data.SetingsCameraStart = SetingsCameraStart.Checked;
             SETS.Data.CameraAnalis_1     = checkBox4.Checked;
             SETS.Data.CameraAnalis_2     = checkBox3.Checked;
-            SETS.Data.PashTestIMG        = textBox1.Text;
+            SETS.Data.PashTestIMG        = textBoxTestImg.Text;
           if (radioButtonCam1.Checked) { 
              SETS.Data.ID_CAM = DLS.Master;} else {
              SETS.Data.ID_CAM = DLS.Slave; }
@@ -513,6 +516,15 @@ namespace C2S150_ML
 
 
 
+
+            VIS.Data.blurA      = (byte)numericUpDown10.Value;
+            VIS.Data.ThresholdA = (byte)numericUpDown11.Value;
+            VIS.Data.maxValueA  = (byte)numericUpDown9.Value;
+
+            VIS.Data.blurB = (byte)numericUpDown12.Value;
+            VIS.Data.ThresholdB = (byte)numericUpDown13.Value;
+            VIS.Data.ArcLengthB = (int) numericUpDown5.Value;
+
         }
 
         void RefreshSetings()
@@ -523,7 +535,10 @@ namespace C2S150_ML
                 SetingsCameraStart.Checked = SETS.Data.SetingsCameraStart;
                 checkBox4.Checked = SETS.Data.CameraAnalis_1;
                 checkBox3.Checked = SETS.Data.CameraAnalis_2;
-                textBox1.Text = SETS.Data.PashTestIMG;
+                textBoxTestImg.Text = SETS.Data.PashTestIMG;
+
+                 checkBox1.Checked = SETS.Data.ShowGoodMosaic;
+
                 if (SETS.Data.ID_CAM == DLS.Master) { radioButtonCam1.Checked = true; }
                                                 else{ radioButtonCam2.Checked = true; }
 
@@ -565,11 +580,21 @@ namespace C2S150_ML
                 LockBack.Checked = USB_HID.Data.Light_Back;
                 LockBottom.Checked = USB_HID.Data.Light_Bottom;
 
+
+
+
+                numericUpDown10.Value =  VIS.Data.blurA;
+                numericUpDown11.Value = VIS.Data.ThresholdA;
+                numericUpDown9.Value   = VIS.Data.maxValueA;
+
+                numericUpDown12.Value = VIS.Data.blurB;
+                numericUpDown13.Value = VIS.Data.ThresholdB;
+                numericUpDown5.Value = VIS.Data.ArcLengthB;
             }
             catch
             {
                 
-                Help.ErrorMesag("saved data not correct !");
+                Help.Mesag("saved data not correct !");
             }
         }
 
@@ -626,7 +651,7 @@ namespace C2S150_ML
 
             if (SETS.Data.ID_CAM== DLS.Slave) {
                     CauntSamls.Text = Calc.BlobsSlave.ToString();
-            }else { CauntSamls.Text = Calc.BlobsSlave.ToString(); }
+            }else { CauntSamls.Text = Calc.BlobsMaster.ToString(); }
 
             toolStripStatusLabel5.Text = DLS.elapsedMs.ToString();
             toolStripStatusLabel6.Text = FlowCamera.BatchSizePreict.ToString();
@@ -749,7 +774,7 @@ namespace C2S150_ML
 
 
             }
-            else { Help.ErrorMesag("You cannot select image or generate a report when the images are not sorted! "); }
+            else { Help.Mesag("You cannot select image or generate a report when the images are not sorted! "); }
 
         }
 
@@ -951,8 +976,8 @@ namespace C2S150_ML
 
                     Image<Gray, byte> ImagAI = new Image<Gray, byte>(100, 100);
                     FlowCamera.ImgSave.TryDequeue(out ImagAI);
-                    if (textBox1.Text == "") { break; }
-                    ImagAI.Save(textBox1.Text + "\\" + "Image" + i.ToString() + ".jpg");
+                    if (textBoxTestImg.Text == "") { break; }
+                    ImagAI.Save(textBoxTestImg.Text + "\\" + "Image" + i.ToString() + ".jpg");
 
 
                 }
@@ -969,7 +994,7 @@ namespace C2S150_ML
                 if (FBD.ShowDialog() == DialogResult.OK)
                 {
 
-                    textBox1.Text = FBD.SelectedPath;
+                    textBoxTestImg.Text = FBD.SelectedPath;
                 }
                 else { MessageBox.Show("Choose directory please", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
             }
@@ -991,9 +1016,9 @@ namespace C2S150_ML
         private void timer2_Tick(object sender, EventArgs e)
         {
 
-            string urlMaster = textBox1.Text + "\\" + "Image" + IdxShou++ + ".jpg";
+            string urlMaster = textBoxTestImg.Text + "\\" + "Image" + IdxShou++ + ".jpg";
             FlowAnalis.Setings = true;
-            string[] files = Directory.GetFiles(@textBox1.Text, "*.jpg");
+            string[] files = Directory.GetFiles(textBoxTestImg.Text, "*.jpg");
 
             int count = files.Length;
 
@@ -1191,7 +1216,7 @@ namespace C2S150_ML
 
       int   IdxShouTest=0;
         string[] files;
-        Vision vision = new Vision();
+        VIS vision = new VIS();
 
         Emgu.CV.Mat imOriginalM;
 
@@ -1214,14 +1239,16 @@ namespace C2S150_ML
                     imOriginalM = imM.ToImage<Bgr, byte>().Resize(64,64,interpolationType: Inter.Linear).Mat;
 
                     Stopwatch watch = Stopwatch.StartNew();
-                    Image<Bgr, byte>[] ImagesViw = new Image<Bgr, byte>[2]; 
 
-                    for (int i = 0; i < 1000; i++)
+                    //for (int i = 0; i < 100; i++){}
+
+                    Image<Bgr, byte> ImagesViw = new Image<Bgr, byte>(100,100);
+                    if (AnalysisTest.Checked)
                     {
-
-                         ImagesViw = vision.DetectBlob(imOriginalM, (int)numericUpDown10.Value, (int)numericUpDown11.Value, (int)numericUpDown9.Value);
-
-                    }
+                             ImagesViw = vision.DetectBlob(imOriginalM);
+                    } else { 
+                        ImagesViw = vision.DetectBlobBlack(imOriginalM); }
+                    
 
 
                     watch.Stop();
@@ -1229,8 +1256,8 @@ namespace C2S150_ML
                     toolStripStatusLabel5.Text = elapsedMs.ToString();
                    // Console.WriteLine("First Prediction took: " + elapsedMs + " ms");
 
-                    pictureBox1.Image = ImagesViw[0].ToBitmap();
-                    pictureBox2.Image = ImagesViw[1].ToBitmap();
+                    pictureBox1.Image = ImagesViw.ToBitmap();
+                    pictureBox2.Image = imOriginalM.ToBitmap();
 
 
                 }
@@ -1242,22 +1269,29 @@ namespace C2S150_ML
 
 
       void SetingsValGrayImg (){
-
+ try{
             if (IdxShouTest <= files.Length)
             {
-                try
-                {
+               
+                
                     Bitmap imM = new Bitmap(files[IdxShouTest]);
                     textBox3.Text = IdxShouTest.ToString();
 
                     imOriginalM = imM.ToImage<Bgr, byte>().Resize(64, 64, interpolationType: Inter.Linear).Mat;
 
                     Stopwatch watch = Stopwatch.StartNew();
-                    Image<Bgr, byte>[] ImagesViw = new Image<Bgr, byte>[2];
 
 
-                        ImagesViw = vision.DetectBlob(imOriginalM, (int)numericUpDown10.Value, (int)numericUpDown11.Value, (int)numericUpDown9.Value);
+                    Image<Bgr, byte> ImagesViw = new Image<Bgr, byte>(100, 100);
 
+                    if (AnalysisTest.Checked)
+                    {
+                        ImagesViw = vision.DetectBlob(imOriginalM);
+                    }
+                    else
+                    {
+                        ImagesViw = vision.DetectBlobBlack(imOriginalM);
+                    }
 
 
                     watch.Stop();
@@ -1265,13 +1299,13 @@ namespace C2S150_ML
                     toolStripStatusLabel5.Text = elapsedMs.ToString();
                     // Console.WriteLine("First Prediction took: " + elapsedMs + " ms");
 
-                    pictureBox1.Image = ImagesViw[0].ToBitmap();
-                    pictureBox2.Image = ImagesViw[1].ToBitmap();
+                    pictureBox1.Image = ImagesViw.ToBitmap();
+                    pictureBox2.Image = imOriginalM.ToBitmap();
 
 
                 }
-                catch { }
-            }
+               
+            } catch { }
 
         }
 
@@ -1313,15 +1347,31 @@ namespace C2S150_ML
         private void numericUpDown9_Click(object sender, EventArgs e)
         {
             SetingsValGrayImg();
+            SaveSetValue();
         }
 
         private void numericUpDown11_Click(object sender, EventArgs e)
         {
             SetingsValGrayImg();
+            SaveSetValue();
         }
 
+        private void numericUpDown13_Click(object sender, EventArgs e)
+        {
+            SetingsValGrayImg();
+            SaveSetValue();
+        }
+        private void numericUpDown10_Click(object sender, EventArgs e)
+        {
+            SetingsValGrayImg();
+            SaveSetValue();
+        }
 
-
+        private void numericUpDown12_Click(object sender, EventArgs e)
+        {
+            SetingsValGrayImg();
+            SaveSetValue();
+        }
 
         short coutTim=0;
 
@@ -1333,7 +1383,7 @@ namespace C2S150_ML
             if (coutTim == 5) {
                 coutTim++;
                 try { DLS = new DLS(); }
-            catch { Help.ErrorMesag("Cameras are not connected"); }
+            catch { Help.Mesag("Cameras are not connected"); }
            }
 
             if (coutTim > 8)
@@ -1374,15 +1424,24 @@ namespace C2S150_ML
 
         private void GAIN1_Click(object sender, EventArgs e)
         {
+            try { 
             DLS.SetGain((double)GAIN1.Value, DLS.Master);
+            }
+            catch {
+            Help.Mesag("Reset Program"); }
         }
 
 
 
         private void GAIN2_Click(object sender, EventArgs e)
         {
-     DLS.SetGain((double)GAIN2.Value, DLS.Slave);
+            try
+            {
+                DLS.SetGain((double)GAIN2.Value, DLS.Slave);
         }
+            catch {
+            Help.Mesag("Reset Program"); }
+}
 
         private void button55_Click(object sender, EventArgs e)
         {
@@ -1443,9 +1502,15 @@ namespace C2S150_ML
         {
             if (button43.Text == "ON Autoloader")
             { AUTOLOADER.ON(); ; button43.Text = "OFF Autoloader"; } else 
-            { AUTOLOADER.OFF(); button43.Text = "ON Autoloader"; }
+            { AUTOLOADER.OFF(); button43.Text = "ON Autoloader"; }      
+        }
 
-                
+        private void button40_Click(object sender, EventArgs e)
+        {
+            if (button40.Text == "ON Cooling")
+            { COOLING.ON(); ; button40.Text = "OFF Cooling"; }
+            else
+            { COOLING.OFF(); button40.Text = "ON Cooling"; }
         }
 
         private void radioButtonCam1_Click(object sender, EventArgs e)
@@ -1534,7 +1599,7 @@ namespace C2S150_ML
               //  DSV.TF_DT.Name = NemSmpls;
 
 
-            } catch { Help.ErrorMesag(" problem with Catalogue (Sample Type) "); }
+            } catch { Help.Mesag(" problem with Catalogue (Sample Type) "); }
         }
 
         private void buttonDeleteTypeSempl_Click(object sender, EventArgs e)
@@ -1609,6 +1674,8 @@ namespace C2S150_ML
         {
             FLAPS.Time_OFF(OutputDelay.Value);
         }
+
+
     }
 
 }

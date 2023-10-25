@@ -160,6 +160,8 @@ namespace C2S150_ML
                 /// </summary>
                 public enum Typ { Fps1, Fps2, Fps3, Fps4, Fps5, Fps6, Fps7, Fps8, Fps9, Fps10, Fps11, Fps12, Fps13, Fps14, Fps15, Fps16, Fps17 }
 
+                static bool SetFlaps = false;
+
                 /// <summary>
                 ///  Selected fleps to on);
                 /// </summary>
@@ -187,7 +189,8 @@ namespace C2S150_ML
                         case Typ.Fps16: OUTPUT2_BIT |= BIT1_SET; break;
                         case Typ.Fps17: OUTPUT2_BIT |= BIT2_SET; break;
                     }
-               
+                    SetFlaps = true;
+
                 }
 
                 static public void SET()
@@ -220,6 +223,7 @@ namespace C2S150_ML
                         case Typ.Fps16: OUTPUT2_BIT |= BIT1_SET; break;
                         case Typ.Fps17: OUTPUT2_BIT |= BIT2_SET; break;
                     }
+                    SetFlaps = true;
                     if (Set) { RUN(); }
 
                 }
@@ -229,8 +233,11 @@ namespace C2S150_ML
                 /// </summary>
                 static public void RUN()
                 {
-                    if ((OUTPUT0_BIT != 0) || (OUTPUT1_BIT != 0) || (OUTPUT2_BIT != 0))
-                    {
+
+
+                    if (SetFlaps == true) {
+
+                        SetFlaps = false;
                         Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
                         Buffer_USB_RX[REG_31] = OUTPUT1_BIT;
                         Buffer_USB_RX[REG_32] = OUTPUT2_BIT; //32
@@ -241,9 +248,7 @@ namespace C2S150_ML
                         OUTPUT2_BIT &= BIT0_RES;
                         OUTPUT2_BIT &= BIT1_RES;
                         OUTPUT2_BIT &= BIT2_RES;
-                        Buffer_USB_RX[REG_32] &= BIT0_RES; 
-                        Buffer_USB_RX[REG_32] &= BIT1_RES;
-                        Buffer_USB_RX[REG_32] &= BIT2_RES;
+    
 
                     }
                 }
@@ -354,7 +359,7 @@ namespace C2S150_ML
 
             public class SEPARATOR
             {
-                //22 OUT
+                //24 OUT
                 static public void OFF()
                 {
                     OUTPUT2_BIT &= BIT7_RES;
@@ -374,8 +379,8 @@ namespace C2S150_ML
 
 
             public class AUTOLOADER 
-            {
-                //22 OUT
+            {  //out 23
+                
                 static public void OFF()
                 {
                     OUTPUT2_BIT &= BIT6_RES;
@@ -390,10 +395,28 @@ namespace C2S150_ML
                     Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
                 }
+            }
 
+            public class COOLING
+            {  //out 21
 
+                static public void OFF()
+                {
+                    OUTPUT2_BIT &= BIT4_RES;
+                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    HID_Write();
+
+                }
+
+                static public void ON()
+                {
+                    OUTPUT2_BIT |= BIT4_SET;
+                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    HID_Write();
+                }       
 
             }
+
 
 
             public class VIBRATING
@@ -452,10 +475,10 @@ namespace C2S150_ML
                     //case 15: OUTPUT2_BIT |= BIT0_SET; break; // Flaps 15
                     case 18: OUTPUT2_BIT |= BIT1_SET;  break; 
                     case 19: OUTPUT2_BIT |= BIT2_SET;  break; // Ionizer
-                    case 20: OUTPUT2_BIT |= BIT3_SET;  break; // Cooling
-                    case 21: OUTPUT2_BIT |= BIT4_SET;  break; // Conveyor Run
+                    case 20: OUTPUT2_BIT |= BIT3_SET;  break; // 
+                    case 21: OUTPUT2_BIT |= BIT4_SET;  break; // Cooling
                     case 22: OUTPUT2_BIT |= BIT5_SET;  break; // Cameras
-                    case 23: OUTPUT2_BIT |= BIT6_SET;  break; // Scru feeder
+                    case 23: OUTPUT2_BIT |= BIT6_SET;  break; // Autoloader
                     case 24: OUTPUT2_BIT |= BIT7_SET;  break; // Metal separator
                     case 25: OUTPUT3_BIT |= BIT0_SET;  break; // Lighte IR
                     case 26: OUTPUT3_BIT |= BIT1_SET;  break; // Lighte White
@@ -476,10 +499,10 @@ namespace C2S150_ML
                     //case 15: OUTPUT2_BIT &= BIT0_RES; break;
                     case 18: OUTPUT2_BIT &= BIT1_RES;  break; // Lighte
                     case 19: OUTPUT2_BIT &= BIT2_RES;  break; // Ionizer
-                    case 20: OUTPUT2_BIT &= BIT3_RES;  break; // Cooling
-                    case 21: OUTPUT2_BIT &= BIT4_RES;  break; // Conveyor Run
+                    case 20: OUTPUT2_BIT &= BIT3_RES;  break; // 
+                    case 21: OUTPUT2_BIT &= BIT4_RES;  break; // Cooling
                     case 22: OUTPUT2_BIT &= BIT5_RES;  break; // Cameras
-                    case 23: OUTPUT2_BIT &= BIT6_RES;  break; // Scru feeder
+                    case 23: OUTPUT2_BIT &= BIT6_RES;  break; // Autoloader
                     case 24: OUTPUT2_BIT &= BIT7_RES;  break; // Metal separator
                     case 25: OUTPUT3_BIT &= BIT0_RES;  break;
                     case 26: OUTPUT3_BIT &= BIT1_RES;  break;
@@ -750,7 +773,7 @@ namespace C2S150_ML
             {
                 await HIDstream.WriteAsync(Buffer_USB_RX, 0, 64);
             }
-            else { Help.ErrorMesag("device is disconnected"); }
+            else { Help.Mesag("device is disconnected"); }
             //}catch { Help.ErrorMesag("USB sending problems");  }
 
 

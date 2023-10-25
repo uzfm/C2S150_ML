@@ -170,44 +170,45 @@ namespace C2S150_ML
                                 if (BoxROI.Y == 0)
                                 {
 
-                                    //CtrFind = false;
-                                    //if (SelectDoubl == true)
-                                    //{ CvInvoke.DrawContours(ImageAN, contours, CountCNT, new MCvScalar(0, 0, 200), 1, LineType.FourConnected); }
+
                                     int RoiX = 100;
+             
+
                                     ImagAI.ROI = Rectangle.Empty;
                                     //  if ((BoxROI.Y + (BoxROI.Height) >= ImagAI.Height)) {
 
                                     for (int idx = 0; idx < CutCTR_Old.CUT.Length; idx++)
                                     {
-                                        if (CutCTR_SV.CUT[i])
+                                        if (CutCTR_Old.NULL[idx])
                                         {
 
                                             BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * ZiseCompres);
                                             int distance = Math.Abs(BoxROI.X - BoxROIcaT.X);
-
-                                            if ((distance < RoiX))
+                                            //ВИЗНАЧИТИ ПОХИБКУ ВІДХИЛЕННЯ РОЗРІЗАНОГО СЕМПЛА
+                                            if ((distance < RoiX) )
                                             {
                                                 RoiX = distance;
                                                 closestIndex = idx;
                                             }
+                                    
                                         }
                                     }
 
 
 
-                                    //Stmpl дотикається до верху (Позначаєм Червоним но не враховуємо)
+                                    //Контур не знайдений вирізаєм що знайшло TOP (Позначаєм Оранжевим но не враховуємо)
                                     if ((CutCTR_Old.CUT.Length == 0) || (RoiX >= 100))
                                     {
                                         ImagAI.ROI = BoxROI;
                                         CutImgClass.Img = ImagAI.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                         CutImgClass.ROI = BoxROI;
-                                        Calc.BlobsMaster ++;
+                                        Calc.BlobsMaster++;
                                         if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
-                                        {CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.DarkOrange).MCvScalar, 5);}
-                                        break;
-                                    }
+                                        { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.DarkOrange).MCvScalar, 5); }
+                                        //break;
+                                    }else { 
 
 
                                     BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * ZiseCompres);
@@ -241,8 +242,11 @@ namespace C2S150_ML
                                         ImagAI.ROI = BoxROI;
                                     }
 
-                                    //Stmpl дотикається до верху (Позначаєм Червоним но не враховуємо)
+                                    //Stmpl дотикається до верху (Позначаєм Синій но не враховуємо) а додаєм в буфер
+                                    //Stmpl зєднуються з двох окремих картинок 
+
                                     CvInvoke.VConcat(ImagAI_Old, ImagAI, NewMatAI);
+
                                     ImagAI.ROI = BoxROI;
                                     CutImgClass.Img = NewMatAI.ToImage<Gray, byte>().Copy().Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                     CutImgClass.ROI = BoxROI;
@@ -251,9 +255,9 @@ namespace C2S150_ML
                                     CutImgClass = new CutImg();
                                     CutCTR_Old.NULL[closestIndex] = false;
                                     if (!SETS.Data.LiveVideoOFF)
-                                    {CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Blue).MCvScalar, 5);}
+                                    { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Blue).MCvScalar, 5); }
 
-
+                                }
                                 }
                                 else
                                 {
@@ -283,9 +287,8 @@ namespace C2S150_ML
 
 
 
-
-                        //Stmpl зєднуються з двох окремих картинок 
-
+                        //Контур не знайдений вирізаєм що знайшло TOP (Позначаєм Оранжевим но не враховуємо)
+                        //коли не знайшло куска старої картинки добавляємо тещо знайшло  ВЕРХ !!!!
                         if (CutCTR_Old.CUT != null)
                         {
                             for (int idx = 0; idx < CutCTR_Old.CUT.Length; idx++)
@@ -303,7 +306,7 @@ namespace C2S150_ML
                                     Calc.BlobsMaster++;
                                     if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
-                                    //if (!SETS.Data.LiveVideoOFF) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
+                                    ///if (!SETS.Data.LiveVideoOFF) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
                                 }
                             }
                         }
@@ -313,10 +316,10 @@ namespace C2S150_ML
                         ImagAI.ROI = Rectangle.Empty;
                         ImagAI_Old = ImagAI.Copy();
                         ImagAI_Old.ROI = Rectangle.Empty;
-                        CutCTR_Old = CutCTR_SV;
+                        CutCTR_Old = CutCTR_SV;//Зберігаємо картинку для складання зрізів
 
 
-
+                       //__________________  VIWE  ________________________________________________________________________________________
                         if ((FlowCamera.SaveImages == true) && (SETS.Data.ID_CAM == DLS.Master))
                         {
                             IProducerConsumerCollection<Image<Gray, byte>> tmpSave = FlowCamera.ImgSave; //створити ліст імідж
@@ -334,6 +337,9 @@ namespace C2S150_ML
                             //imgStic = ImagContactVI;
 
                             NewMat = new Mat();
+
+
+
 
                         if ((FlowCamera.LiveImage != null)&&(FlowCamera.LiveImage != null))
                         {
@@ -596,24 +602,26 @@ namespace C2S150_ML
 
                                     for (int idx = 0; idx < CutCTR_Old.CUT.Length; idx++)
                                     {
-                                        if (CutCTR_SV.CUT[i])
+                                        if (CutCTR_Old.NULL[idx])
                                         {
 
                                             BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * ZiseCompres);
                                             int distance = Math.Abs(BoxROI.X - BoxROIcaT.X);
 
+                                            //ВИЗНАЧИТИ ПОХИБКУ ВІДХИЛЕННЯ РОЗРІЗАНОГО СЕМПЛА
                                             if ((distance < RoiX))
                                             {
                                                 RoiX = distance;
                                                 closestIndex = idx;
                                             }
+                             
                                         }
                                     }
 
 
-
-                                    //Stmpl дотикається до верху (Позначаєм Червоним но не враховуємо)
-                                    if ((CutCTR_Old.CUT.Length == 0) || (RoiX >= 100)) {
+                                    //Контур не знайдений вирізаєм що знайшло TOP (Позначаєм Оранжевим но не враховуємо)
+                                    if ((CutCTR_Old.CUT.Length == 0) || (RoiX >= 100))
+                                    {
                                         ImagAI.ROI = BoxROI;
                                         CutImgClass.Img = ImagAI.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                         CutImgClass.ROI = BoxROI;
@@ -622,8 +630,8 @@ namespace C2S150_ML
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Red).MCvScalar, 5); }
-                                        break;
-                                    }
+
+                                    }else { 
 
 
                                     BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * ZiseCompres);
@@ -669,7 +677,7 @@ namespace C2S150_ML
                                     if (!SETS.Data.LiveVideoOFF)
                                     { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Blue).MCvScalar, 5); }
 
-
+                                }
                                 } else {
 
                                     // якщо семпл не дотикається до кінця то враховуємо
@@ -700,7 +708,7 @@ namespace C2S150_ML
 
 
 
-                        //Stmpl зєднуються з двох окремих картинок 
+                        //коли не знайшло куска старої картинки добавляємо тещо знайшло  ВЕРХ !!!!                  
                         //---    CAT SEMPELS  ADD ------
                         if (CutCTR_Old.CUT != null)
                         {
@@ -719,7 +727,7 @@ namespace C2S150_ML
                                     Calc.BlobsSlave++;
                                     if (!SETS.Data.AnalisLock) { CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
-                                    if ((!SETS.Data.LiveVideoOFF) && (SETS.Data.ID_CAM == DLS.Slave)) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
+                               //     if ((!SETS.Data.LiveVideoOFF) && (SETS.Data.ID_CAM == DLS.Slave)) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
                                 } 
                             }
                         }
@@ -982,7 +990,7 @@ namespace C2S150_ML
 
 
         ML ml = new ML();
-
+        VIS ViS = new VIS();
         public void Predict(){
 
             int[] Arie ;
@@ -1006,8 +1014,44 @@ namespace C2S150_ML
                         FlowCamera.BuferImg.TryDequeue(out ImagAI);
                         //Buffer FUL
                         if ((ImagAI != null) && (ImagAI.Img != null)){
-                            ImgsMosaic.Add(ImagAI.Img);
-                            ImgsRectangle.Add(ImagAI.ROI);
+
+                            if (ViS._DetectBlobBlack(ImagAI.Img))
+                            {
+
+                                if ((ImagAI.ROI.X != 0) && (ImagAI.ROI.Width != 0))
+                                {
+
+
+                                    Calc.BadSamples++;
+
+
+
+                                    var OUTPUT_BIT = SeparationChenal(ImagAI.ROI.X, ImagAI.ROI.Width, false);
+                                    USB_HID.PLC_C2S150.FLAPS.SET((USB_HID.PLC_C2S150.FLAPS.Typ)OUTPUT_BIT[0]);
+                                    USB_HID.PLC_C2S150.FLAPS.SET((USB_HID.PLC_C2S150.FLAPS.Typ)OUTPUT_BIT[1]);
+                                    USB_HID.PLC_C2S150.FLAPS.SET((USB_HID.PLC_C2S150.FLAPS.Typ)OUTPUT_BIT[2]);
+
+
+
+                                    DTLimg DTLimg = new DTLimg();
+                                    DTLimg.Img = ImagAI.Img.ToImage<Gray, byte>();
+                                    if (!SETS.Data.ShowGoodMosaic) { MosaicaEvent(DTLimg); };
+
+
+
+                                }
+
+                            }
+                            else
+                            {
+                                if (ViS._DetectBlob(ImagAI.Img))
+                                {
+                                    ImgsMosaic.Add(ImagAI.Img); // IMG analis
+                                    ImgsRectangle.Add(ImagAI.ROI); // Rectangl analis
+                                }
+                            }
+
+
                         } else { break; }
 
                         if ( FlowCamera.BuferImg.Count == 0) { break; }
@@ -1022,7 +1066,7 @@ namespace C2S150_ML
 
 
 
-                              //PREDICT
+                              //--------------------PREDICT------------------//
                             var Predict = ml.PredictImage(ImgsMosaic);
                        
                           
@@ -1049,22 +1093,26 @@ namespace C2S150_ML
                                     USB_HID.PLC_C2S150.FLAPS.SET((USB_HID.PLC_C2S150.FLAPS.Typ)OUTPUT_BIT[2]);
 
                                 }
-                                USB_HID.PLC_C2S150.FLAPS.SET();
+                               
                                 DTLimg DTLimg = new DTLimg();
                                 DTLimg.Img = ImgsMosaic[idxRz].ToImage<Gray, byte>();
-                                MosaicaEvent(DTLimg);
+                                    if (!SETS.Data.ShowGoodMosaic) { MosaicaEvent(DTLimg); };
 
-                            }else { Calc.GoodSamples++; } idxRz++; }}
+                            }else { Calc.GoodSamples++; if (SETS.Data.ShowGoodMosaic) {
+                                        DTLimg DTLimg = new DTLimg();
+                                        DTLimg.Img = ImgsMosaic[idxRz].ToImage<Gray, byte>();
+                                        MosaicaEvent(DTLimg); }; } idxRz++; }
+                        }
 
-                               
-                            
+               
+                          
 
 
                        
                         ImgsMosaic   .Clear();
                         ImgsRectangle.Clear();
                     }
-
+                 USB_HID.PLC_C2S150.FLAPS.SET();
                 }
                       Thread.Sleep(1);  }
 

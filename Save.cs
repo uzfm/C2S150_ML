@@ -30,9 +30,9 @@ namespace C2S150_ML
             public bool BlobsInvert { get; set; }
 
 
-            public bool LiveVideoOFF { get; set; }
-            public int DoublingFlaps { get; set; }
-
+            public bool LiveVideoOFF   { get; set; }
+            public int  DoublingFlaps  { get; set; }
+            public bool ShowGoodMosaic { get; set; }
 
             //GRAF ML
             public int LimitinGraphPoints { get; set; }
@@ -64,16 +64,19 @@ namespace C2S150_ML
 
             public USB_HID.DATA_Save USB = new USB_HID.DATA_Save();
             public EMGU.DATA_Save EMGUDT = new EMGU.DATA_Save();
+            public VIS.DATA_Save Vis = new VIS.DATA_Save();
 
             public  void SET(){
                  Data.USB    = USB_HID.Data;
                  Data.EMGUDT = EMGU.Data;
+                 Data.Vis =    VIS.Data;
             }
 
             public void READ()
             {
                 USB_HID.Data = Data.USB;
                 EMGU.Data = Data.EMGUDT;
+                VIS.Data  = Data.Vis;
             }
 
         }
@@ -146,6 +149,10 @@ namespace C2S150_ML
 
                     Console.WriteLine("Deserialize JSON OK");
                     return true;
+                }
+                else
+                {
+                   
                 }
             }
             catch

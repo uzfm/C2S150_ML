@@ -17,8 +17,8 @@ namespace C2S150_ML
         static public void SendHalp() {
 
 
-         //   if (StringHalp!=null) 
-          // { MessageBox.Show(StringHalp); }
+           if (StringHalp!=null) 
+           { MessageBox.Show(StringHalp); }
 
             StringHalp = "";
 
@@ -32,7 +32,7 @@ namespace C2S150_ML
 
 
 
-        static public void ErrorMesag (string data) {
+        static public void Mesag (string data) {
 
             MessageBox.Show(data);
         }
