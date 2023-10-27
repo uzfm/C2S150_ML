@@ -50,7 +50,6 @@ namespace C2S150_ML
 
 
 
-        public List<Image<Gray, byte>> MosaicGrey = new List<Image<Gray, byte>>();
         public List<Image<Gray, byte>> MosaicsTeachGrey = new List<Image<Gray, byte>>();
 
         public ImageList Mosaics = new ImageList();
@@ -69,6 +68,8 @@ namespace C2S150_ML
         {
             InitializeComponent();
 
+            // Додайте обробник подій MouseWheel до вашої форми
+          
 
 
 
@@ -279,7 +280,7 @@ namespace C2S150_ML
         private static int MosaicsCoutOllGood = 0;
 
 
-        private void RefreshMosaics()
+        private async void RefreshMosaics()
         {
 
 
@@ -295,60 +296,142 @@ namespace C2S150_ML
 
 
 
-            if ((MosaicDTlist.Count != 0) && (ImgListCout <= (Convert.ToInt32(PageCauntMosaic.Text))))
-            {
+            if ((MosaicDTlist.Count != 0)// && (ImgListCout <= (Convert.ToInt32(PageCauntMosaic.Text)))
+                ){
 
-
-                // if (ImgListCout < MosaicDTlist.Count) { ErceCont = 0; } else { ErceCont++; };
-                // if (ErceCont >= 10) { ErceCont = 0; FlowAnalis.QualityRecognition = false; }
                 //візуалізація мозаїки
-                int Q = ImgListCout;
-                for (; Q < MosaicDTlist.Count; Q++)
+                //int Q = ImgListCout;
+                for (; ImgListCout < MosaicDTlist.Count; ImgListCout++)
                 {
-                    if (Q >= (Convert.ToInt32(PageCauntMosaic.Text))) { break; }
-                    if ((srtVisulMosaic < 100000))
-                    {
-                        if (MosaicDTlist[Q].Img != null)
+                    if ( ImgListCout >= SETS.Data.MaxImagesMmosaic ) { ClearMosaic();  break; }
+            
+
+                        if (MosaicDTlist[ImgListCout].Img != null)
                         {
                             if (MouseAddImage.Checked) { }
-                            MosaicGrey.Add(MosaicDTlist[Q].Img[0]);
-                            Mosaics.Images.Add(MosaicDTlist[Q].Img[0].ToBitmap());
-                            listView1.LargeImageList = Mosaics;
-                            listView1.Items.Add(new ListViewItem { ImageIndex = MosaicsCoutOllBad, Text = MosaicsCoutOllBad.ToString() + "S",  /*BackColor = Color.Blue,*/  });
-                            MosaicsCoutOllBad++;
+                        ImageData dt = new ImageData();
+                        //dt.Image= (Image<Gray, byte>) MosaicDTlist[ImgListCout].Img[0];
+                        //dt.Group = "TEST";
+
+
+                        Mosaics.Images.Add(MosaicDTlist[ImgListCout].Img[0].AsBitmap());
+                        listView1.LargeImageList = Mosaics;
+                        listView1.VirtualListSize = ImgListCout;// Задайте загальну кількість елементів
+
+      
+                        //ListViewItem item = new ListViewItem
+                        //    {
+                        //        ImageIndex = ImgListCout ,
+                        //        Text = dt.Group,
+                        //       Group = listView1.Groups[dt.Group],
+                     
+
+                        //};
+                        //    listView1.Items.Add(item);
+                        
+
+
+
+
+
+                        //listView1.Items.Add(new ListViewItem { ImageIndex = MosaicsCoutOllBad, Text = MosaicsCoutOllBad.ToString() + "S",  /*BackColor = Color.Blue,*/  });
+                        MosaicsCoutOllBad++;
                             srtVisulMosaic++;
-                        }
-                    } else { ClearMosaic(); }
-                } ImgListCout = Q;
+                         
 
+                        }    
+                        
+
+                   //listView1.LargeImageList = Mosaics;
+                    //listView1.VirtualListSize = ImgListCout;// Задайте загальну кількість елементів
+                    if (SETS.Data.MosaicRealTime) {
+                    if ((visibleItemsPerPage == 0)||(ImgListCout == 0)) { listView1_Resize(null, null); } else {
+                    int startIndex = Math.Max(0, ImgListCout - visibleItemsPerPage); // Отримайте індекс першого елемента для відображення
+                    listView1.EnsureVisible(startIndex); /// Переконайтесь, що перший елемент видимий
+                        
+                    }
+                    }
+
+                }
             }
+        }
+
+
+        public class ImageData{
+
+            public string Group { get; set; }
+            public Image<Gray, byte> Image { get; set; }
+
+        }
+
+
+        int visibleItemsPerPage;
+        private void listView1_Resize(object sender, EventArgs e)
+        {
+            if (listView1.Items.Count != 0)
+            {
+                int itemHeight = listView1.GetItemRect(0).Height; // Визначте висоту одного елемента списку
+                visibleItemsPerPage = listView1.ClientRectangle.Height / itemHeight;
+            }
+        }
+
+        private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            try
+            {
+            
+                if (e.ItemIndex >= 0 && e.ItemIndex < ImgListCout)
+                {
+                    // Отримайте дані для відображення (зображення, текст і т. д.) для пункта з індексом e.ItemIndex
+                    var item = Mosaics.Images[e.ItemIndex];
+
+                    // Створіть об'єкт для відображення
+                    ListViewItem listViewItem = new ListViewItem();
+                                 listViewItem.ImageIndex = e.ItemIndex; // Індекс зображення (залежить від ваших даних)
+                                 listViewItem.Text = e.ItemIndex.ToString();
+                    // Передайте об'єкт для відображення у подію
+                    e.Item = listViewItem;
+                }
+
+
+            }catch { }
+        }
 
 
 
+
+
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+           
         }
 
 
         void ClearMosaic()
         {
             Mosaics.Images.Clear();
-         
+            listView1.VirtualListSize = 0; // Скидаємо кількість елементів у ListView
+
             listView1.Clear();
             srtVisulMosaic = 0;
             MosaicDTlist = new List<DTLimg>();
             MosaicsCoutOllBad = 0;
-            MosaicGrey.Clear();
             MosaicsTeachGrey.Clear();
             ImgListCout = 0;
+
+       
 
         }
 
         void ClearMosaicVi()
         {
             Mosaics.Images.Clear();
+            listView1.VirtualListSize = 0; // Скидаємо кількість елементів у ListView
             listView1.Clear();
             srtVisulMosaic = 0;
             MosaicsCoutOllBad = 0;
-            MosaicGrey.Clear();
             MosaicsTeachGrey.Clear();
             ImgListCout = 0;
 
@@ -356,33 +439,38 @@ namespace C2S150_ML
 
 
 
-        private void InstMosaics()
-        {
-            // listView1.View = View.LargeIcon;                //відображати назву картинкі
-            Mosaics.ImageSize = new Size(100, 100);      //розмір виводу картинкі
+        private void InstMosaics(){   
+            
+            
+    
+            listView1.View = View.LargeIcon;                //відображати назву картинкі
+            Mosaics.ImageSize = new Size(64, 64);      //розмір виводу картинкі
             Mosaics.ColorDepth = ColorDepth.Depth16Bit;
-            // Mosaics[Master].Images.Add ( imig);               //додати картинку до списку   
-            // Set the view to show details.
-            //listView1.View = View.Details;
             // Allow the user to edit item text.
-            listView1.LabelEdit = true;
-            // Allow the user to rearrange columns.
-            listView1.AllowColumnReorder = true;
-            // Display check boxes.
-            // listView1.CheckBoxes = true;
-            // Select the item and subitems when selection is made.
-            listView1.FullRowSelect = true;
-            // Display grid lines.
-            listView1.GridLines = true;
-            //Sort the items in the list in ascending order.
-            // listView1.Sorting = SortOrder.Ascending;
+           // listView1.LabelEdit = true;
+            //// Allow the user to rearrange columns.
+            // listView1.AllowColumnReorder = true;
+            //// Select the item and subitems when selection is made.
+           // listView1.FullRowSelect = true;
+            //// Display grid lines.
+            //listView1.GridLines = true;
+            
+            listView1.Dock = DockStyle.Fill;
+            listView1.VirtualMode = true;
+            listView1.TileSize= new Size(64,64);
 
 
-
+           // listView1.Groups.Add(new ListViewGroup("TEST", HorizontalAlignment.Left));
+            listView1.Groups.Add(new ListViewGroup("Group B", HorizontalAlignment.Left));
+            //Створіть групу "TEST", якщо вона не існує
+            if (!listView1.Groups.Contains(new ListViewGroup("TEST")))
+            {
+                listView1.Groups.Add(new ListViewGroup("TEST", "TEST"));
+            }
 
 
             // listView1.View = View.LargeIcon;                //відображати назву картинкі
-            MosaicsTeach.ImageSize = new Size(100, 100);      //розмір виводу картинкі
+            MosaicsTeach.ImageSize = new Size(100,100);      //розмір виводу картинкі
             MosaicsTeach.ColorDepth = ColorDepth.Depth16Bit;
             listView2.LabelEdit = true;
             // Allow the user to rearrange columns.
@@ -473,21 +561,19 @@ namespace C2S150_ML
             // Запис у файл
               STGS.Save();
 
-
              SaveSetValue();
              _SETS.Save();
   
-
-
-  
-
         }
+
 
         void SaveSetValue()
         {
               //CAMERA
             SETS. Data.GEIN1    = GAIN1.Value;
             SETS.Data.GEIN2    = GAIN2.Value;
+
+
             if (SETS.Data.ID_CAM == DLS.Master) { 
                 SETS.Data.ACQGEIN1 = numericACQ_Gain.Value;} else {
                 SETS.Data.ACQGEIN2 = numericACQ_Gain.Value;}
@@ -505,7 +591,9 @@ namespace C2S150_ML
              SETS.Data.ID_CAM = DLS.Master;} else {
              SETS.Data.ID_CAM = DLS.Slave; }
 
- 
+            SETS.Data.MaxImagesMmosaic = (int)MaxImagesMmosaic.Value;
+            SETS.Data.MosaicRealTime = MosaicRealTime.Checked;
+
 
             SETS.Data.BlobsInvert = InvertBlobs.Checked;
 
@@ -531,7 +619,8 @@ namespace C2S150_ML
         {
             try
             {
-
+                 MosaicRealTime.Checked = SETS.Data.MosaicRealTime;
+                MaxImagesMmosaic.Value = SETS.Data.MaxImagesMmosaic;
                 SetingsCameraStart.Checked = SETS.Data.SetingsCameraStart;
                 checkBox4.Checked = SETS.Data.CameraAnalis_1;
                 checkBox3.Checked = SETS.Data.CameraAnalis_2;
@@ -710,24 +799,10 @@ namespace C2S150_ML
             FlowAnalis.StartAnais = true;
 
 
-            // flowAnalis.FindBlobs(img);
-
-
-            // Flow flow = new Flow();
-            // flow.PredictFlow(img);
-            //flow.PredictFlow(img);
-            //flow.PredictFlow(img);
-            //flow.PredictFlow(img);
-            //flow.PredictFlow(img);
-            //flow.PredictFlow(img);
 
             IProducerConsumerCollection<Image<Gray, byte>> tmp2 = FlowCamera.BoxM; //створити ліст імідж
             tmp2.TryAdd(img /*.Resize(4096, 50, Inter.Linear)*/);
 
-
-
-
-            // LiveView.Image =FlowAnalis.Img_Test;
 
         }
 
@@ -744,8 +819,8 @@ namespace C2S150_ML
         private void button15_Click(object sender, EventArgs e)
         {
 
-            MosaicsTeach.Images.Add(MosaicGrey[SelectITMs].ToBitmap());
-            MosaicsTeachGrey.Add(MosaicGrey[SelectITMs]);
+            MosaicsTeach.Images.Add(MosaicDTlist[SelectITMs].Img[0].ToBitmap());
+            MosaicsTeachGrey.Add(MosaicDTlist[SelectITMs].Img[0]);
 
             listView2.LargeImageList = MosaicsTeach;
             listView2.Items.Add(new ListViewItem { ImageIndex = ImagCouAnn, Text = "Images",  /*nema imag*/ });
@@ -763,14 +838,12 @@ namespace C2S150_ML
             {
                 DTLimg.SelectITM.Add(SelectITMs);
 
-                MosaicsTeach.Images.Add(MosaicGrey[SelectITMs].ToBitmap());
-                MosaicsTeachGrey.Add(MosaicGrey[SelectITMs]);
+                MosaicsTeach.Images.Add(MosaicDTlist[SelectITMs].Img[0].ToBitmap());
+                MosaicsTeachGrey.Add(MosaicDTlist[SelectITMs].Img[0]);
                 listView2.LargeImageList = MosaicsTeach;
                 listView2.Items.Add(new ListViewItem { ImageIndex = ImagCouAnn, Text = "Images",  /*nema imag*/ });
-
                 ImagCouAnn++;
-                // label21.Text = MY_ML.ImagCouAnn.ToString();
-                // label21.Text += " PCS ";
+
 
 
             }
@@ -782,18 +855,26 @@ namespace C2S150_ML
         {
 
 
+      
+        }
+
+        private void button60_Click(object sender, EventArgs e)
+        {
+
             if (listView1.FocusedItem != null)
             {
-                SelectITMs = listView1.FocusedItem.Index;
-                listView1.SelectedItems.Clear();
-                listView1.Select();
-                listView1.Items[listView1.FocusedItem.Index].Selected = true;
-                listView1.Items[listView1.FocusedItem.Index].Focused = true;
-
-
-                LearnImg = new Bitmap(Mosaics.Images[SelectITMs]);
-
+                int idx = listView1.SelectedIndices[0]; //початковий індекс з масиву
+                for (int Q = 0; Q < listView1.SelectedItems.Count; Q++)
+                {
+                    MosaicsTeach.Images.Add(MosaicDTlist[idx].Img[0].ToBitmap());
+                    MosaicsTeachGrey.Add(MosaicDTlist[idx].Img[0]);
+                    listView2.LargeImageList = MosaicsTeach;
+                    listView2.Items.Add(new ListViewItem { ImageIndex = ImagCouAnn, Text = "Images",  /*nema imag*/ });
+                    ImagCouAnn++;
+                    idx++;
+                }
             }
+            else { Help.Mesag("You need to select several images from the mosaic"); }
         }
 
         private void button16_Click(object sender, EventArgs e)
@@ -819,7 +900,7 @@ namespace C2S150_ML
         {
 
 
-            if (comboBox2.Text == "")
+            if (comboBoxBedGood.Text == "")
             {
                 MessageBox.Show("The name field cannot be empt", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -830,18 +911,24 @@ namespace C2S150_ML
 
 
 
-            string pashImg = Path.Combine(Application.StartupPath, "Data", comboBox2.Text); //створити назву Img
+          
+
             DialogResult result = DialogResult.Yes;
-            if (AskMsg == true) { result = MessageBox.Show("Do you want Add Images ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information); }
+            if (AskMsg == true) { result = MessageBox.Show("Do you want Add Images to " + comboBoxBedGood.Text + " ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information); }
 
 
+            string PshSampleType = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text); //створити шлях до каталога "Data"
+            string PshData       = Path.Combine(PshSampleType, "Data"); //створити шлях до каталога "Data"
+            string PshSempls     = Path.Combine(PshData, "SAMPLES"); //створити шлях до каталога "SAMPLES"
+            string PashImg       = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bed Good"
 
-            if (false == Directory.Exists(pashImg)) { Directory.CreateDirectory(pashImg); }
-            if (result == DialogResult.Yes)
-            {
+            if (false == Directory.Exists(PshData))   { Directory.CreateDirectory(PshData); }// якщо нема пакі то створюєм
+            if (false == Directory.Exists(PshSempls)) { Directory.CreateDirectory(PshSempls); }// якщо нема пакі то створюєм
+            if (false == Directory.Exists(PashImg))   { Directory.CreateDirectory(PashImg); }// якщо нема пакі то створюєм
 
-                for (int i = 0; i < MosaicsTeach.Images.Count; i++)
-                {
+            if (result == DialogResult.Yes) {
+                for (int i = 0; i < MosaicsTeach.Images.Count; i++) {
+
                     DateTime dateOnly = new DateTime();
                     dateOnly = DateTime.Now;
 
@@ -851,37 +938,89 @@ namespace C2S150_ML
                     DataFile = DataFile + dateOnly.Hour.ToString() + ".";
                     DataFile = DataFile + dateOnly.Minute.ToString() + ".";
                     DataFile = DataFile + dateOnly.Second.ToString() + " ";
-
-
-
-
-                    Bitmap IMGconvert = new Bitmap(MosaicsTeach.Images[i], 100, 100);
-
-
-                    // MosaicsTeach.Images[i].Save(pashImg + "\\" + DataFile + "img" + i.ToString() + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
-                    //IMGconvert.Save(pashImg + "\\" + DataFile + "img" + i.ToString() + ".jpg", System.Drawing.Imaging. ImageFormat.Jpeg);
-
-
-
-                    MosaicsTeachGrey[i].Save(pashImg + "\\" + DataFile + "img" + i.ToString() + ".jpg");
-
-
-
-
+                    MosaicsTeachGrey[i].Save(PashImg + "\\" + DataFile + "img" + i.ToString() + ".jpg");
 
                 }
 
             }
 
+        }
 
 
+        private void button61_Click(object sender, EventArgs e)
+        {
+            string PshSampleType = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text); //створити шлях до каталога "Data"
+            string PshData = Path.Combine(PshSampleType, "Data"); //створити шлях до каталога "Data"
+            string PshSempls = Path.Combine(PshData, "SAMPLES"); //створити шлях до каталога "SAMPLES"
+           // string PashImg = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bed Good"
+
+            if (false == Directory.Exists(PshData))   { Directory.CreateDirectory(PshData); }// якщо нема пакі то створюєм
+            if (false == Directory.Exists(PshSempls)) { Directory.CreateDirectory(PshSempls); }// якщо нема пакі то створюєм
+           // if (false == Directory.Exists(PashImg))   { Directory.CreateDirectory(PashImg); }// якщо нема пакі то створюєм
+
+
+
+            // Отримати поточний каталог (куди вказує відносний шлях)
+            string currentDirectory = Directory.GetCurrentDirectory();
+
+            // Об'єднати відносний шлях з поточним каталогом для отримання повного шляху
+            string fullPath = Path.Combine(currentDirectory, PshSempls);
+
+            string absolutePath = Path.GetFullPath(fullPath );
+
+            if (System.IO.Directory.Exists(absolutePath))
+            {
+                Process.Start("explorer.exe", absolutePath);
+            }
+            else
+            {
+                Console.WriteLine("Папка не існує.");
+            }
+        }
+
+        private void button62_Click(object sender, EventArgs e)
+        {
+  
+                            
+            // Отримати поточний каталог (куди вказує відносний шлях)
+            string currentDirectory = Directory.GetCurrentDirectory();
+
+            // Об'єднати відносний шлях з поточним каталогом для отримання повного шляху
+            string fullPath = Path.Combine(currentDirectory, STGS.Data.URL_SampleType);                                       
+
+            if (false == Directory.Exists(fullPath)) { Directory.CreateDirectory(fullPath); }// якщо нема пакі то створюєм
+
+            string absolutePath = Path.GetFullPath(fullPath);
+
+            if (System.IO.Directory.Exists(absolutePath))
+            {
+                Process.Start("explorer.exe", absolutePath);
+            }
+            else
+            {
+                Console.WriteLine("Папка не існує.");
+            }
         }
 
 
 
         private void button18_Click(object sender, EventArgs e)
         {
-            //  ML.Inst(Path.Combine(Application.StartupPath, "Data")); 
+            DialogResult result = MessageBox.Show("Do you want Teach ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+
+            if (result == DialogResult.Yes) {
+
+                string DataPath = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text,"Data");
+                // Отримати поточний каталог (куди вказує відносний шлях)
+                string currentDirectory = Directory.GetCurrentDirectory();
+                // Об'єднати відносний шлях з поточним каталогом для отримання повного шляху
+                string fullPath = Path.Combine(currentDirectory, DataPath);
+                string absolutePath = Path.GetFullPath(fullPath);
+                Flow.ProcessLerningFunction(absolutePath, "C2_150");
+                Close();
+
+            }
         }
 
         private void button19_Click(object sender, EventArgs e)
@@ -1080,67 +1219,12 @@ namespace C2S150_ML
         }
 
 
-        private void button26_Click(object sender, EventArgs e) {
-
-            ClearMosaicVi();
-
-            int Q = Convert.ToInt32(NabrMosaicVisul.Text);
-
-            ImgListCout = Q;
-            for (; Q < MosaicDTlist.Count; Q++) {
-                if (Q >= (Convert.ToInt32(NabrMosaicVisul.Text) + Convert.ToInt32(PageCauntMosaic.Text))) {
-                    NabrMosaicVisul.Text = (Convert.ToInt32(NabrMosaicVisul.Text) + Convert.ToInt32(PageCauntMosaic.Text)).ToString(); break; }
-                if ((srtVisulMosaic < 100000))
-                {
-                    if (MosaicDTlist[Q].Img != null)
-                    {
-                        if (MouseAddImage.Checked) { }
-                        MosaicGrey.Add(MosaicDTlist[Q].Img[0]);
-                        Mosaics.Images.Add(MosaicDTlist[Q].Img[0].ToBitmap());
-                        listView1.LargeImageList = Mosaics;
-                        listView1.Items.Add(new ListViewItem { ImageIndex = MosaicsCoutOllBad, Text = MosaicsCoutOllBad.ToString() + "S",  /*BackColor = Color.Blue,*/  });
-                        MosaicsCoutOllBad++;
-                        srtVisulMosaic++;
-                    }
-                }
-                else { ClearMosaic(); }
-            }
 
 
-        }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            if ((Convert.ToInt32(NabrMosaicVisul.Text) != (Convert.ToInt32(PageCauntMosaic.Text))))
-            {
-                ClearMosaicVi();
-                int Q = Convert.ToInt32(NabrMosaicVisul.Text);
-                ImgListCout = Q;
-                if (Q != Convert.ToInt32(PageCauntMosaic.Text)) NabrMosaicVisul.Text = (Convert.ToInt32(NabrMosaicVisul.Text) - Convert.ToInt32(PageCauntMosaic.Text)).ToString();
-                for (; Q < MosaicDTlist.Count; Q++) {
-                    if ((srtVisulMosaic < 100000))
-                    {
-                        if (MosaicDTlist[Q].Img != null)
-                        {
-                            if (MouseAddImage.Checked) { }
-                            MosaicGrey.Add(MosaicDTlist[Q].Img[0]);
-                            Mosaics.Images.Add(MosaicDTlist[Q].Img[0].ToBitmap());
-                            listView1.LargeImageList = Mosaics;
-                            listView1.Items.Add(new ListViewItem { ImageIndex = MosaicsCoutOllBad, Text = MosaicsCoutOllBad.ToString() + "S",  /*BackColor = Color.Blue,*/  });
-                            MosaicsCoutOllBad++;
-                            srtVisulMosaic++;
-                        }
-                    }
-                    else { ClearMosaic(); }
-                }
-            } else { NabrMosaicVisul.Text = PageCauntMosaic.Text; }
-
-        }
 
         private void PageCauntMosaic_TextChanged(object sender, EventArgs e)
         { ClearMosaicVi();
-            NabrMosaicVisul.Text = PageCauntMosaic.Text;
         }
 
         #region FLEPS
@@ -1375,6 +1459,7 @@ namespace C2S150_ML
 
         short coutTim=0;
 
+
         private void timer3_Tick(object sender, EventArgs e)
         {
 
@@ -1555,9 +1640,9 @@ namespace C2S150_ML
 
 
 
-                    var PathType = Path.Combine(STGS.DT.URL_SampleType, textBoxСreateSample.Text);
+                    var PathType = Path.Combine(STGS.Data.URL_SampleType, textBoxСreateSample.Text);
 
-                    if (false == Directory.Exists(STGS.DT.URL_SampleType)) { Directory.CreateDirectory(STGS.DT.URL_SampleType); }
+                    if (false == Directory.Exists(STGS.Data.URL_SampleType)) { Directory.CreateDirectory(STGS.Data.URL_SampleType); }
                     if (false == Directory.Exists(PathType)) { Directory.CreateDirectory(PathType); }
                     textBoxСreateSample.Text = "";
                 }
@@ -1573,9 +1658,9 @@ namespace C2S150_ML
             try
             {
                 int idx = 0;
-                string[] SamlCatalogPath = new string[Directory.GetDirectories(STGS.DT.URL_SampleType).Length];
-                string[] pathSmpl = new string[Directory.GetDirectories(STGS.DT.URL_SampleType).Length];
-                SamlCatalogPath = Directory.GetDirectories(STGS.DT.URL_SampleType);
+                string[] SamlCatalogPath = new string[Directory.GetDirectories(STGS.Data.URL_SampleType).Length];
+                string[] pathSmpl = new string[Directory.GetDirectories(STGS.Data.URL_SampleType).Length];
+                SamlCatalogPath = Directory.GetDirectories(STGS.Data.URL_SampleType);
 
 
                 for (idx = 0; idx < SamlCatalogPath.Length; idx++)
@@ -1616,7 +1701,7 @@ namespace C2S150_ML
                     //видалити деректрію
                     try
                     {
-                        DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(STGS.DT.URL_SampleType, comboBox1.Text));
+                        DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(STGS.Data.URL_SampleType, comboBox1.Text));
                         dirInfo.Delete(true);
                         comboBox1.Text = "";
                     }

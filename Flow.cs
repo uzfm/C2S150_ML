@@ -297,31 +297,31 @@ namespace C2S150_ML
             }
         }
 
-     
-
 
 
         static System.Diagnostics.Process _process = null;
-        //static public void ProcessLerningFunction(string DataPath,int ID) {
-        //    System.Diagnostics.ProcessStartInfo startInfo = new ProcessStartInfo();
-        //     _process = null;
-        //    if (ID==1) {
-        //        startInfo = new System.Diagnostics.ProcessStartInfo(
-        //         @"../../MLNET_GPU_Learn\MLNET_NEW_GPU_Bitmap\bin\Debug\MLfast\MLNET_GPU_Bitmap.exe");
-        //    }
-        //    if (ID == 0)
-        //    {
-        //        startInfo = new System.Diagnostics.ProcessStartInfo(
-        //         @"../../MLNET_GPU_Learn\MLNET_NEW_GPU_Bitmap\bin\Debug\MLslow\MLNET_GPU_Bitmap.exe");
-        //    }
 
-        //    startInfo.Arguments = DataPath;
-        //    startInfo.UseShellExecute = false;
-        //   _process = System.Diagnostics.Process.Start(startInfo);
 
-        //    while (!_process.WaitForExit(500)) ;
-        //}
-      
+        static public void ProcessLerningFunction(string DataPath, string ModelName)
+        {
+            try{
+
+                System.Diagnostics.ProcessStartInfo startInfo = new ProcessStartInfo();
+                _process = null;
+
+                startInfo = new System.Diagnostics.ProcessStartInfo(@"../../../../../MachineLearning\bin\Debug\net5.0-windows\TenserflowKeras.exe");
+
+                startInfo.ArgumentList.Add(ModelName);
+                startInfo.ArgumentList.Add(DataPath);
+
+                //startInfo.Arguments = DataPath;
+                _process = System.Diagnostics.Process.Start(startInfo);
+
+            }
+            catch { }
+        }
+
+
         static public void ProcessLoadImagesFunction(bool Run){
   
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(

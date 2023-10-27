@@ -27,12 +27,12 @@ namespace C2S150_ML
         public class Data_Serializable
         {
 
-            public bool BlobsInvert { get; set; }
-
-
-            public bool LiveVideoOFF   { get; set; }
-            public int  DoublingFlaps  { get; set; }
-            public bool ShowGoodMosaic { get; set; }
+            public bool BlobsInvert      { get; set; }
+            public bool MosaicRealTime   { get; set; }
+            public int  MaxImagesMmosaic { get; set; }
+            public bool LiveVideoOFF     { get; set; }
+            public int  DoublingFlaps    { get; set; }
+            public bool ShowGoodMosaic   { get; set; }
 
             //GRAF ML
             public int LimitinGraphPoints { get; set; }
@@ -86,7 +86,7 @@ namespace C2S150_ML
         {
             string url = System.Windows.Forms.Application.StartupPath;
 
-            if ((STGS.DT.SampleType != "")&&(STGS.DT.SampleType != null)) { url = Path.Combine(STGS.DT.URL_SampleType, STGS.DT.SampleType); }
+            if ((STGS.DT.SampleType != "")&&(STGS.DT.SampleType != null)) { url = Path.Combine(STGS.Data.URL_SampleType, STGS.DT.SampleType); }
 
 
             Data.SET();
@@ -111,7 +111,7 @@ namespace C2S150_ML
         public bool Read()
         {
             string url = System.Windows.Forms.Application.StartupPath;
-            if ((STGS.DT.SampleType != "") && (STGS.DT.SampleType != null)) { url = Path.Combine(STGS.DT.URL_SampleType, STGS.DT.SampleType); }
+            if ((STGS.DT.SampleType != "") && (STGS.DT.SampleType != null)) { url = Path.Combine(STGS.Data.URL_SampleType, STGS.DT.SampleType); }
             try
             {
                 string filePath = Path.Combine(url, "SETINGS TYPE.json");
@@ -136,7 +136,7 @@ namespace C2S150_ML
         public bool Read( string SampleType )
         {
             string url = System.Windows.Forms.Application.StartupPath;
-            if ((SampleType != "") ) { url = Path.Combine(STGS.DT.URL_SampleType, SampleType); }
+            if ((SampleType != "") ) { url = Path.Combine(STGS.Data.URL_SampleType, SampleType); }
             try
             {
                 string filePath = Path.Combine(url, "SETINGS TYPE.json");
@@ -172,16 +172,18 @@ namespace C2S150_ML
 
     //____________________________________________ JSON  _______________________________________________________________-
 
-    [Serializable()]
-    public class Data
-    {
-        public string URL_SampleType = Path.Combine(@"../../../", "Sample Type");
-        public string     SampleType { get; set; } // шлях для Моделі
-        public string Password { get; set; }
-    }
+
 
     class STGS
     {
+    [Serializable()]
+    public class Data
+    {
+      static  public string  URL_SampleType = Path.Combine(@"../../../../", "Sample Type");
+              public string  SampleType { get; set; } // шлях для Моделі
+              public string  Password { get; set; }
+    }
+
         static public Data DT = new Data();
 
         private const string FileName = "settings.json";

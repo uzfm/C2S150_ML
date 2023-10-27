@@ -30,10 +30,10 @@ namespace C2S150_ML
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sorter));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.HidConect = new System.Windows.Forms.ToolStripStatusLabel();
@@ -93,11 +93,9 @@ namespace C2S150_ML
             this.solidGauge1 = new LiveCharts.WinForms.SolidGauge();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.label4 = new System.Windows.Forms.Label();
-            this.button26 = new System.Windows.Forms.Button();
-            this.PageCauntMosaic = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.NabrMosaicVisul = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.PageCauntMosaic = new System.Windows.Forms.ComboBox();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.radioButtonCam2 = new System.Windows.Forms.RadioButton();
@@ -235,6 +233,9 @@ namespace C2S150_ML
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label25 = new System.Windows.Forms.Label();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.button62 = new System.Windows.Forms.Button();
+            this.button61 = new System.Windows.Forms.Button();
+            this.button60 = new System.Windows.Forms.Button();
             this.buttonDeleteTypeSempl = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBoxСreateSample = new System.Windows.Forms.TextBox();
@@ -244,7 +245,7 @@ namespace C2S150_ML
             this.button14 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.comboBoxBedGood = new System.Windows.Forms.ComboBox();
             this.button17 = new System.Windows.Forms.Button();
             this.button16 = new System.Windows.Forms.Button();
             this.MouseAddImage = new System.Windows.Forms.CheckBox();
@@ -282,6 +283,9 @@ namespace C2S150_ML
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer3 = new System.Windows.Forms.Timer(this.components);
+            this.MaxImagesMmosaic = new System.Windows.Forms.NumericUpDown();
+            this.LabelMaxImagesMmosaic = new System.Windows.Forms.Label();
+            this.MosaicRealTime = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
@@ -372,6 +376,7 @@ namespace C2S150_ML
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxImagesMmosaic)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -554,8 +559,8 @@ namespace C2S150_ML
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToOrderColumns = true;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -568,15 +573,15 @@ namespace C2S150_ML
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView1.Size = new System.Drawing.Size(697, 210);
             this.dataGridView1.TabIndex = 2;
             // 
             // Column1
             // 
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
             this.Column1.FillWeight = 50F;
             this.Column1.HeaderText = "Data Time";
             this.Column1.Name = "Column1";
@@ -585,8 +590,8 @@ namespace C2S150_ML
             // 
             // Column2
             // 
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Column2.DefaultCellStyle = dataGridViewCellStyle3;
             this.Column2.HeaderText = "Good %";
             this.Column2.MinimumWidth = 10;
             this.Column2.Name = "Column2";
@@ -1083,11 +1088,9 @@ namespace C2S150_ML
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.splitContainer4.Panel2.Controls.Add(this.label4);
-            this.splitContainer4.Panel2.Controls.Add(this.button26);
-            this.splitContainer4.Panel2.Controls.Add(this.PageCauntMosaic);
             this.splitContainer4.Panel2.Controls.Add(this.button1);
-            this.splitContainer4.Panel2.Controls.Add(this.NabrMosaicVisul);
+            this.splitContainer4.Panel2.Controls.Add(this.label4);
+            this.splitContainer4.Panel2.Controls.Add(this.PageCauntMosaic);
             this.splitContainer4.Size = new System.Drawing.Size(892, 745);
             this.splitContainer4.SplitterDistance = 691;
             this.splitContainer4.TabIndex = 0;
@@ -1105,28 +1108,29 @@ namespace C2S150_ML
             this.listView1.TabIndex = 0;
             this.listView1.TileSize = new System.Drawing.Size(120, 400);
             this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.listView1_RetrieveVirtualItem);
             this.listView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDoubleClick);
             this.listView1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseUp);
+            this.listView1.Resize += new System.EventHandler(this.listView1_Resize);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(243, 17);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(485, 17);
+            this.label4.Location = new System.Drawing.Point(110, 17);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(33, 15);
             this.label4.TabIndex = 5;
             this.label4.Text = "Page";
-            // 
-            // button26
-            // 
-            this.button26.Font = new System.Drawing.Font("Arial", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
-            this.button26.Location = new System.Drawing.Point(124, 9);
-            this.button26.Name = "button26";
-            this.button26.Size = new System.Drawing.Size(75, 29);
-            this.button26.TabIndex = 3;
-            this.button26.Text = ">";
-            this.button26.UseVisualStyleBackColor = true;
-            this.button26.Click += new System.EventHandler(this.button26_Click);
             // 
             // PageCauntMosaic
             // 
@@ -1148,33 +1152,12 @@ namespace C2S150_ML
             "3000",
             "4000",
             "5000"});
-            this.PageCauntMosaic.Location = new System.Drawing.Point(409, 17);
+            this.PageCauntMosaic.Location = new System.Drawing.Point(21, 14);
             this.PageCauntMosaic.Name = "PageCauntMosaic";
             this.PageCauntMosaic.Size = new System.Drawing.Size(70, 23);
             this.PageCauntMosaic.TabIndex = 4;
             this.PageCauntMosaic.Text = "10";
             this.PageCauntMosaic.TextChanged += new System.EventHandler(this.PageCauntMosaic_TextChanged);
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Arial", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
-            this.button1.Location = new System.Drawing.Point(12, 7);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 29);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "<";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // NabrMosaicVisul
-            // 
-            this.NabrMosaicVisul.AutoSize = true;
-            this.NabrMosaicVisul.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.NabrMosaicVisul.Location = new System.Drawing.Point(93, 12);
-            this.NabrMosaicVisul.Name = "NabrMosaicVisul";
-            this.NabrMosaicVisul.Size = new System.Drawing.Size(25, 21);
-            this.NabrMosaicVisul.TabIndex = 0;
-            this.NabrMosaicVisul.Text = "10";
             // 
             // splitContainer3
             // 
@@ -1385,7 +1368,7 @@ namespace C2S150_ML
             this.groupBox10.Location = new System.Drawing.Point(22, 23);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.groupBox10.Size = new System.Drawing.Size(325, 134);
+            this.groupBox10.Size = new System.Drawing.Size(325, 149);
             this.groupBox10.TabIndex = 2017;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Settings vibration table  ";
@@ -1620,10 +1603,12 @@ namespace C2S150_ML
             // 
             // groupBox12
             // 
+            this.groupBox12.Controls.Add(this.LabelMaxImagesMmosaic);
             this.groupBox12.Controls.Add(this.button35);
             this.groupBox12.Controls.Add(this.button51);
             this.groupBox12.Controls.Add(this.SempleTyp);
             this.groupBox12.Controls.Add(this.label14);
+            this.groupBox12.Controls.Add(this.MaxImagesMmosaic);
             this.groupBox12.Controls.Add(this.Comments);
             this.groupBox12.Controls.Add(this.label15);
             this.groupBox12.Controls.Add(this.CreatedBy);
@@ -1635,7 +1620,8 @@ namespace C2S150_ML
             this.groupBox12.Controls.Add(this.MakeReportButton);
             this.groupBox12.Location = new System.Drawing.Point(6, 9);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(860, 185);
+            this.groupBox12.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.groupBox12.Size = new System.Drawing.Size(1139, 185);
             this.groupBox12.TabIndex = 2002;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Report Settings";
@@ -1825,6 +1811,7 @@ namespace C2S150_ML
             // 
             // WorkTable
             // 
+            this.WorkTable.Controls.Add(this.MosaicRealTime);
             this.WorkTable.Controls.Add(this.checkBox1);
             this.WorkTable.Controls.Add(this.groupBox15);
             this.WorkTable.Controls.Add(this.InvertBlobs);
@@ -1920,7 +1907,7 @@ namespace C2S150_ML
             // InvertBlobs
             // 
             this.InvertBlobs.AutoSize = true;
-            this.InvertBlobs.Location = new System.Drawing.Point(241, 23);
+            this.InvertBlobs.Location = new System.Drawing.Point(251, 18);
             this.InvertBlobs.Name = "InvertBlobs";
             this.InvertBlobs.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.InvertBlobs.Size = new System.Drawing.Size(113, 20);
@@ -2965,6 +2952,9 @@ namespace C2S150_ML
             // 
             // tabPage7
             // 
+            this.tabPage7.Controls.Add(this.button62);
+            this.tabPage7.Controls.Add(this.button61);
+            this.tabPage7.Controls.Add(this.button60);
             this.tabPage7.Controls.Add(this.buttonDeleteTypeSempl);
             this.tabPage7.Controls.Add(this.comboBox1);
             this.tabPage7.Controls.Add(this.textBoxСreateSample);
@@ -2974,7 +2964,7 @@ namespace C2S150_ML
             this.tabPage7.Controls.Add(this.button14);
             this.tabPage7.Controls.Add(this.button13);
             this.tabPage7.Controls.Add(this.button18);
-            this.tabPage7.Controls.Add(this.comboBox2);
+            this.tabPage7.Controls.Add(this.comboBoxBedGood);
             this.tabPage7.Controls.Add(this.button17);
             this.tabPage7.Controls.Add(this.button16);
             this.tabPage7.Controls.Add(this.MouseAddImage);
@@ -2987,9 +2977,43 @@ namespace C2S150_ML
             this.tabPage7.Text = "ML";
             this.tabPage7.UseVisualStyleBackColor = true;
             // 
+            // button62
+            // 
+            this.button62.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.button62.Location = new System.Drawing.Point(665, 145);
+            this.button62.Name = "button62";
+            this.button62.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.button62.Size = new System.Drawing.Size(43, 28);
+            this.button62.TabIndex = 2017;
+            this.button62.Text = "...\\\\";
+            this.button62.UseVisualStyleBackColor = true;
+            this.button62.Click += new System.EventHandler(this.button62_Click);
+            // 
+            // button61
+            // 
+            this.button61.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.button61.Location = new System.Drawing.Point(291, 125);
+            this.button61.Name = "button61";
+            this.button61.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.button61.Size = new System.Drawing.Size(43, 28);
+            this.button61.TabIndex = 2016;
+            this.button61.Text = "...\\\\";
+            this.button61.UseVisualStyleBackColor = true;
+            this.button61.Click += new System.EventHandler(this.button61_Click);
+            // 
+            // button60
+            // 
+            this.button60.Location = new System.Drawing.Point(3, 123);
+            this.button60.Name = "button60";
+            this.button60.Size = new System.Drawing.Size(119, 28);
+            this.button60.TabIndex = 2015;
+            this.button60.Text = "Add Images";
+            this.button60.UseVisualStyleBackColor = true;
+            this.button60.Click += new System.EventHandler(this.button60_Click);
+            // 
             // buttonDeleteTypeSempl
             // 
-            this.buttonDeleteTypeSempl.Location = new System.Drawing.Point(740, 160);
+            this.buttonDeleteTypeSempl.Location = new System.Drawing.Point(876, 178);
             this.buttonDeleteTypeSempl.Name = "buttonDeleteTypeSempl";
             this.buttonDeleteTypeSempl.Size = new System.Drawing.Size(139, 35);
             this.buttonDeleteTypeSempl.TabIndex = 2014;
@@ -3004,7 +3028,7 @@ namespace C2S150_ML
             this.comboBox1.Items.AddRange(new object[] {
             "Good",
             "Bed"});
-            this.comboBox1.Location = new System.Drawing.Point(579, 166);
+            this.comboBox1.Location = new System.Drawing.Point(715, 184);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.comboBox1.Size = new System.Drawing.Size(155, 28);
@@ -3014,7 +3038,7 @@ namespace C2S150_ML
             // textBoxСreateSample
             // 
             this.textBoxСreateSample.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.textBoxСreateSample.Location = new System.Drawing.Point(579, 128);
+            this.textBoxСreateSample.Location = new System.Drawing.Point(715, 146);
             this.textBoxСreateSample.Name = "textBoxСreateSample";
             this.textBoxСreateSample.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.textBoxСreateSample.Size = new System.Drawing.Size(155, 26);
@@ -3022,7 +3046,7 @@ namespace C2S150_ML
             // 
             // CreatSamplTyp
             // 
-            this.CreatSamplTyp.Location = new System.Drawing.Point(740, 122);
+            this.CreatSamplTyp.Location = new System.Drawing.Point(876, 140);
             this.CreatSamplTyp.Name = "CreatSamplTyp";
             this.CreatSamplTyp.Size = new System.Drawing.Size(139, 32);
             this.CreatSamplTyp.TabIndex = 2011;
@@ -3033,7 +3057,7 @@ namespace C2S150_ML
             // button19
             // 
             this.button19.BackColor = System.Drawing.Color.Transparent;
-            this.button19.Location = new System.Drawing.Point(298, 125);
+            this.button19.Location = new System.Drawing.Point(1044, 183);
             this.button19.Name = "button19";
             this.button19.Size = new System.Drawing.Size(113, 31);
             this.button19.TabIndex = 2010;
@@ -3074,7 +3098,7 @@ namespace C2S150_ML
             // 
             // button18
             // 
-            this.button18.Location = new System.Drawing.Point(298, 162);
+            this.button18.Location = new System.Drawing.Point(359, 122);
             this.button18.Name = "button18";
             this.button18.Size = new System.Drawing.Size(113, 31);
             this.button18.TabIndex = 6;
@@ -3082,26 +3106,26 @@ namespace C2S150_ML
             this.button18.UseVisualStyleBackColor = true;
             this.button18.Click += new System.EventHandler(this.button18_Click);
             // 
-            // comboBox2
+            // comboBoxBedGood
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
+            this.comboBoxBedGood.FormattingEnabled = true;
+            this.comboBoxBedGood.Items.AddRange(new object[] {
             "Good",
             "Bed"});
-            this.comboBox2.Location = new System.Drawing.Point(164, 127);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.comboBox2.Size = new System.Drawing.Size(121, 24);
-            this.comboBox2.TabIndex = 5;
-            this.comboBox2.Text = "Good";
+            this.comboBoxBedGood.Location = new System.Drawing.Point(164, 127);
+            this.comboBoxBedGood.Name = "comboBoxBedGood";
+            this.comboBoxBedGood.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.comboBoxBedGood.Size = new System.Drawing.Size(121, 24);
+            this.comboBoxBedGood.TabIndex = 5;
+            this.comboBoxBedGood.Text = "Good";
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(166, 154);
+            this.button17.Location = new System.Drawing.Point(163, 162);
             this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(119, 31);
+            this.button17.Size = new System.Drawing.Size(119, 28);
             this.button17.TabIndex = 4;
-            this.button17.Text = "Add Images";
+            this.button17.Text = "Save Images";
             this.button17.UseVisualStyleBackColor = true;
             this.button17.Click += new System.EventHandler(this.button17_Click);
             // 
@@ -3109,7 +3133,7 @@ namespace C2S150_ML
             // 
             this.button16.Location = new System.Drawing.Point(3, 188);
             this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(119, 31);
+            this.button16.Size = new System.Drawing.Size(119, 28);
             this.button16.TabIndex = 3;
             this.button16.Text = "Clean Images";
             this.button16.UseVisualStyleBackColor = true;
@@ -3118,7 +3142,7 @@ namespace C2S150_ML
             // MouseAddImage
             // 
             this.MouseAddImage.AutoSize = true;
-            this.MouseAddImage.Location = new System.Drawing.Point(0, 128);
+            this.MouseAddImage.Location = new System.Drawing.Point(523, 123);
             this.MouseAddImage.Name = "MouseAddImage";
             this.MouseAddImage.Size = new System.Drawing.Size(136, 20);
             this.MouseAddImage.TabIndex = 2;
@@ -3130,7 +3154,7 @@ namespace C2S150_ML
             this.listView2.HideSelection = false;
             this.listView2.Location = new System.Drawing.Point(3, 0);
             this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(1168, 120);
+            this.listView2.Size = new System.Drawing.Size(1168, 114);
             this.listView2.TabIndex = 1;
             this.listView2.UseCompatibleStateImageBehavior = false;
             // 
@@ -3527,6 +3551,50 @@ namespace C2S150_ML
             this.timer3.Interval = 1000;
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
+            // MaxImagesMmosaic
+            // 
+            this.MaxImagesMmosaic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.MaxImagesMmosaic.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.MaxImagesMmosaic.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
+            this.MaxImagesMmosaic.Location = new System.Drawing.Point(1057, 31);
+            this.MaxImagesMmosaic.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.MaxImagesMmosaic.Name = "MaxImagesMmosaic";
+            this.MaxImagesMmosaic.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.MaxImagesMmosaic.Size = new System.Drawing.Size(76, 26);
+            this.MaxImagesMmosaic.TabIndex = 45;
+            this.MaxImagesMmosaic.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // LabelMaxImagesMmosaic
+            // 
+            this.LabelMaxImagesMmosaic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.LabelMaxImagesMmosaic.AutoSize = true;
+            this.LabelMaxImagesMmosaic.Location = new System.Drawing.Point(911, 38);
+            this.LabelMaxImagesMmosaic.Name = "LabelMaxImagesMmosaic";
+            this.LabelMaxImagesMmosaic.Size = new System.Drawing.Size(140, 16);
+            this.LabelMaxImagesMmosaic.TabIndex = 46;
+            this.LabelMaxImagesMmosaic.Text = "Max images in mosaic";
+            // 
+            // MosaicRealTime
+            // 
+            this.MosaicRealTime.AutoSize = true;
+            this.MosaicRealTime.Location = new System.Drawing.Point(398, 137);
+            this.MosaicRealTime.Name = "MosaicRealTime";
+            this.MosaicRealTime.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.MosaicRealTime.Size = new System.Drawing.Size(137, 20);
+            this.MosaicRealTime.TabIndex = 2020;
+            this.MosaicRealTime.Text = "Mosaic in real time";
+            this.MosaicRealTime.UseVisualStyleBackColor = true;
+            // 
             // Sorter
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -3654,6 +3722,7 @@ namespace C2S150_ML
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxImagesMmosaic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3770,7 +3839,7 @@ namespace C2S150_ML
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.ListView listView2;
         private System.Windows.Forms.CheckBox MouseAddImage;
-        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ComboBox comboBoxBedGood;
         private System.Windows.Forms.Button button17;
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Button button18;
@@ -3797,9 +3866,6 @@ namespace C2S150_ML
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer4;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label NabrMosaicVisul;
-        private System.Windows.Forms.Button button26;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox PageCauntMosaic;
         private System.Windows.Forms.SplitContainer splitContainer5;
@@ -3910,5 +3976,12 @@ namespace C2S150_ML
         private System.Windows.Forms.GroupBox groupBox20;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton AnalysisTest;
+        private System.Windows.Forms.Button button60;
+        private System.Windows.Forms.Button button61;
+        private System.Windows.Forms.Button button62;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label LabelMaxImagesMmosaic;
+        private System.Windows.Forms.NumericUpDown MaxImagesMmosaic;
+        private System.Windows.Forms.CheckBox MosaicRealTime;
     }
 }

@@ -1112,7 +1112,7 @@ namespace C2S150_ML
                         ImgsMosaic   .Clear();
                         ImgsRectangle.Clear();
                     }
-                 USB_HID.PLC_C2S150.FLAPS.SET();
+                 //USB_HID.PLC_C2S150.FLAPS.SET();
                 }
                       Thread.Sleep(1);  }
 
@@ -1124,10 +1124,11 @@ namespace C2S150_ML
 
 
         //Визначення кaналу для відправки на контролер
-        const int Fleps = 16;/* кількість лопаток*/
+
          public int[] SeparationChenal(int Position, int Length, bool RES)
         {
-          
+          //293- flaps
+
             double ShouldDobl = (double)((double)((double)(ANLImg_M.AperturaWidth / (double)Fleps))/100) * (double)SETS.Data.DoublingFlaps/* % від ширини лопатки*/;
             int[] Output = new int[3];
             double Shoulder = ((double)(ANLImg_M.AperturaWidth) / (double)Fleps);
@@ -1140,6 +1141,31 @@ namespace C2S150_ML
 
             return Output;
         }
+
+        const int Fleps = 17; // Кількість лопаток
+        double CameraWidth = ANLImg_M.AperturaWidth; // Ширина видимості камери в міліметрах
+        double FlapWidth = 293.0; // Ширина однієї лопатки в міліметрах
+
+        public int[] SeparationChenal2(int Position, int Length, bool RES)
+        {
+            // Визначаємо ширину однієї лопатки на основі загальної ширини лопаток
+            double SingleFlapWidth = FlapWidth / Fleps;
+
+            // Визначаємо ширину видимості однієї лопатки відносно ширини видимості камери
+            double VisibleWidth = (SingleFlapWidth * CameraWidth) / FlapWidth;
+
+            int[] Output = new int[3];
+
+            // Визначаємо позиції для кожної з лопаток
+            Output[0] = (int)((Position + (Length / 2) + (VisibleWidth / 2)) / VisibleWidth);
+            Output[1] = (int)((Position + (Length / 2)) / VisibleWidth);
+            Output[2] = (int)((Position + (Length / 2) - (VisibleWidth / 2)) / VisibleWidth);
+
+            return Output;
+        }
+
+
+
 
 
     }

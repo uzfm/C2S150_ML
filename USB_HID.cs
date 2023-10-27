@@ -248,7 +248,10 @@ namespace C2S150_ML
                         OUTPUT2_BIT &= BIT0_RES;
                         OUTPUT2_BIT &= BIT1_RES;
                         OUTPUT2_BIT &= BIT2_RES;
-    
+                        Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
+                        Buffer_USB_RX[REG_31] = OUTPUT1_BIT;
+                        Buffer_USB_RX[REG_32] = OUTPUT2_BIT; //32
+
 
                     }
                 }
