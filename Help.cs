@@ -6,22 +6,20 @@ using System.Threading.Tasks;
 
 using System.Windows.Forms;
 
+
 namespace C2S150_ML
 {
     class Help
     {
-
+      static  ToolStripStatusLabel ConsolMesg = new ToolStripStatusLabel();
 
       static  string StringHalp;
 
-        static public void SendHalp() {
-
-
+        static public void Set_Halp() {
            if (StringHalp!=null) 
            { MessageBox.Show(StringHalp); }
 
             StringHalp = "";
-
         }
 
 
@@ -38,7 +36,19 @@ namespace C2S150_ML
         }
 
 
+        static public  void WriteLineInstal(ToolStripStatusLabel Consol)
+        {
+            ConsolMesg = Consol;
 
 
-    }
+        }
+
+          static public void WriteLine(string Consol){
+        
+            ConsolMesg.Text = Consol;
+        }
+
+
+
+   }
 }

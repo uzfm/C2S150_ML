@@ -671,9 +671,11 @@ namespace C2S150_ML
     }
 
     class CutImg{
-        public Mat Img { get; set; }
+        public Mat Img       { get; set; }
         public Rectangle ROI { get; set; }
+        public int ID        { get; set; }
     }
+
 
 
     class Trace
@@ -692,13 +694,12 @@ namespace C2S150_ML
     class DTLimg
     {
         public Image<Gray, Byte> Img ; // зображення з двох сторін
-        public int ID;                          // індефікатор масива назва семпла по сторонам
-        public String[] Name = new string[2];    // назва семпла по сторонам
-        public float[] Value;                       // детальна значеня по усіх назвах сеплів для двох сторін
-        public int IdxOut;                       // ідекс розташування в таблиці
-                                                 //------static---------//
-        static public String[] NameGp;  // назви семплів
-        static public List<int> SelectITM = new List<int>(); // вибираєм семпли та заносим в даний ліст для подальшої обробки.
+        public int ID;                 // індефікатор масива назва семпла по сторонам
+        public String Name ;           // назва семпла по сторонам
+        public float  Value;           // детальна значеня по усіх назвах сеплів для двох сторін
+
+                                            
+
     };
 
 }

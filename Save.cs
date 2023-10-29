@@ -27,13 +27,17 @@ namespace C2S150_ML
         public class Data_Serializable
         {
 
-            public bool BlobsInvert      { get; set; }
-            public bool MosaicRealTime   { get; set; }
-            public int  MaxImagesMmosaic { get; set; }
-            public bool LiveVideoOFF     { get; set; }
-            public int  DoublingFlaps    { get; set; }
-            public bool ShowGoodMosaic   { get; set; }
+            public bool BlobsInvert        { get; set; }
+            public bool MosaicRealTime     { get; set; }
+            public int  MaxImagesMmosaic   { get; set; }
+            public bool LiveVideoOFF       { get; set; }
+            public int  LiveVideoDelay     { get; set; }
+            public int  DoublingFlaps      { get; set; }
+            public string PachXLSX         { get; set; }
+            public string PachDB           { get; set; }
+            public string PathAnalysisTest { get; set; }
 
+           
             //GRAF ML
             public int LimitinGraphPoints { get; set; }
             public int UpdateVisibleArea { get; set; }

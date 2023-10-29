@@ -22,10 +22,12 @@
     <PackageReference Include="Emgu.CV.Bitmap" Version="4.5.4.4788" />
     <PackageReference Include="Emgu.CV.runtime.windows" Version="4.5.4.4788" />
     <PackageReference Include="Emgu.CV.UI" Version="4.5.4.4788" />
+    <PackageReference Include="EPPlus" Version="5.0.3" />
     <PackageReference Include="HidSharp" Version="2.1.0" />
     <PackageReference Include="LiveCharts.WinForms.NetCore3" Version="0.9.7" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WinForms" Version="2.0.0-beta.710" />
     <PackageReference Include="SciSharp.TensorFlow.Redist-Windows-GPU" Version="2.6.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="TensorFlow.Keras" Version="0.10.2" />
   </ItemGroup>
 

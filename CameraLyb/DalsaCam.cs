@@ -48,7 +48,7 @@ namespace C2S150_ML
 
     public partial class DLS
     {
-        public static bool StartStatus = false;
+       // public static bool StartStatus = false;
         public const int Master = 0;
         public const int Slave = 1;
 
@@ -854,6 +854,42 @@ namespace C2S150_ML
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// /////////////////////////////////   FFC     //////////////////////////
+        /// </summary>
+
         private const String DEFAULT_FFC_FILENAME = "FFC.tif";
         private const String STANDARD_FILTER = "TIFF Files (*.tif)|*.tif||";
 
@@ -1440,6 +1476,8 @@ namespace C2S150_ML
             Warning,
             Info
         };
+
+
         private void LogMessage(LogTypes messageType, String str)
         {
             String message = "";

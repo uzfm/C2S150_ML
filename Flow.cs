@@ -210,9 +210,10 @@ namespace C2S150_ML
                     //HID.OutputHRD_Set(19);  // ON Ionizer
                     ///Thread.Sleep(200);
                     //Start Cameras
-                    DLS.StartStatus = true;
-                    DLS. DalsaVal.m_Xfer[Master].Grab();
-                    DLS. DalsaVal.m_Xfer[Slave].Grab();
+
+                    if (!SETS.Data.CameraAnalis_1) { DLS.DalsaVal.m_Xfer[Master].Grab(); }
+                    if (!SETS.Data.CameraAnalis_2) { DLS.DalsaVal.m_Xfer[Slave].Grab();  }
+
                     //if (SV.DT.AnalCamer2) { DLS.DalsaVal.m_Xfer[Slave].Grab(); }
                     Thread.Sleep(100);
                     //HID.OutputHRD_Set(21); // "ON Conveyor";
@@ -249,7 +250,7 @@ namespace C2S150_ML
                        if (DLS.DalsaVal.m_Xfer[Slave].Freeze()) { DLS.DalsaVal.m_Xfer[Slave].Abort(); }
                 //}
                  
-                      DLS.StartStatus = false;
+                    
                     //    //Thread.Sleep(500);
                     //    //HID.OutputHRD_Res(21);  // "OFF Conveyor";
                     //    //Thread.Sleep(200);

@@ -62,15 +62,19 @@ namespace C2S150_ML
         private ChartValues<ObservablePoint> chartValues;
         private DateTime startTime;
         STGS STGS = new STGS();
-
+     
 
         public Sorter()
         {
+
+
             InitializeComponent();
+            Help.WriteLineInstal(ConsolMesg);
 
-            // Додайте обробник подій MouseWheel до вашої форми
-          
 
+
+
+            //SQL.UpdateGridSet(false,dataGridView2, SQL.TimSQL.Now, SQL.TimSQL.AddDayst);
 
 
             ////******   USB HID INSTAL *********//
@@ -129,22 +133,40 @@ namespace C2S150_ML
 
             //////////////////////////Налаштування вісей графіка
             cartesianChart1.AxisX.Add(new Axis { Title = "TIME" });
-            cartesianChart1.AxisY.Add(new Axis { Title = "DATA" });
+            cartesianChart1.AxisY.Add(new Axis { Title = "DATA"  });
 
             // Додавання осі X з часовою міткою
             //cartesianChart1.AxisX.Add(new Axis { LabelFormatter = value => new DateTime((long)value).ToString("HH:mm:ss") });
             //cartesianChart1.AxisY.Add(new Axis { LabelFormatter = val => val.ToString("F0") });
-            // Додавання серії даних
-            LineSeries series = new LineSeries
-            {
-                Title = "Відношення хороших/поганих зразків",
-                Values = chartValues,
-                DataLabels = true,
 
 
-            };
 
+            //YourSeries.DataLabelsTemplate = dataLabelTemplate;
 
+            // Додавання до Графіка даних
+            LineSeries series = new LineSeries {
+
+                Title = "The number of bad samples per set time interval",
+                Values  =     chartValues,
+                DataLabels = true, // Відображення міток даних
+
+                LabelPoint = point =>{
+                    double percentage = RatioBed;
+               return $"{percentage:F0} PCS";
+
+           },
+                
+                DataLabelsTemplate = new System.Windows.DataTemplate(    ),
+                
+                };
+
+            /////----------  SQL  ----------------------------------------------------------//
+            SQL.DataGridNames(dataGridView1);
+            SQL.Conect();
+            SQL.Updat(false, dataGridView2, dateTimePicker1.Text, dateTimePicker2.Text);
+            dateTimePicker1.Text = SQL.TimSQL.Now;
+            dateTimePicker2.Text = SQL.TimSQL.AddDayst;
+            //-------------------------------------------------------------------------------//
 
             // Додавання серії даних до Cartesian Chart
             cartesianChart1.Series.Add(series);
@@ -155,9 +177,28 @@ namespace C2S150_ML
             solidGauge1.To = 150;
 
             LoadSempelsName();
-
+            FlowCamera.LiveViewTV(LiveView);
+            USB_HID.PLC_C2S150.FLAPS.FlepsLightInstal(
+              Fleps1, Fleps2, Fleps3, Fleps4, Fleps5, Fleps6, Fleps7, Fleps8, Fleps9, 
+              Fleps10, Fleps11, Fleps12, Fleps13, Fleps14, Fleps15, Fleps16, Fleps17 );
+               
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         private void button54_Click(object sender, EventArgs e) {
             Calc.GoodSamples = 0;
@@ -181,11 +222,17 @@ namespace C2S150_ML
         private int rowIndex = 0;
         const int sampleCount = 25000; // Кількість семплів на кілограм
         double timeInSeconds = 3600; // Інтервал часу в секундах
+
+        static int RatioBed = 0;
+        static bool StartStopGrid = false;
+
         private void TimerRefreshChart()
         {
+             double PisBed = 0;
+            double PcsBed = 0;
 
+            if ((buttonStartAnalic.Text == "Stop Analysis")||(StartStopGrid)) {
 
-            if (buttonStartAnalic.Text == "Stop Analysis") {
                 TimOutRefresh++;
 
                 if (SETS.Data.ID_CAM == DLS.Slave)
@@ -207,18 +254,19 @@ namespace C2S150_ML
 
 
                     // Обчислення відношення хороших/поганих зразків за хвилину
-                    double ratio = ((SamplsOLL - (double)Calc.BadSamples) / (double)((SamplsOLL - (double)Calc.BadSamples) + Calc.BadSamples)) * 100;
-                    double ratio1 = ((double)Calc.BadSamples / SamplsOLL) * 100;
+                    PisBed = ((SamplsOLL - (double)Calc.BadSamples) / (double)((SamplsOLL - (double)Calc.BadSamples) + Calc.BadSamples)) * 100;
+                    PcsBed = ((double)Calc.BadSamples / SamplsOLL) * 100;
 
                     double GoodKg = 0.0;
                     double TotalKg = 0.0;
-                    if (Calc.GoodSamples != 0) { GoodKg = ((SamplsOLL-(double)Calc.BadSamples) / (double)sampleCount); }                             // Кількість Good Kg
+                    if (Calc.GoodSamples != 0) { GoodKg = ((SamplsOLL - (double)Calc.BadSamples) / (double)sampleCount); }                             // Кількість Good Kg
                     if (Calc.BadSamples != 0) { TotalKg = (SamplsOLL / (double)sampleCount); }  // Кількість Total Kg
                     RatioSamplsOll = SamplsOLL;
+              
+                    if (Double.IsNaN ( PisBed) ) { PisBed = 0.0;  } else { PisBed = Math.Round(PisBed, 2); }
+                    if (Double.IsNaN(PisBed)   ) { PcsBed = 0.0;  } else { PcsBed = Math.Round(PcsBed, 2); }
 
 
-                    ratio = Math.Round(ratio, 4);
-                    ratio1 = Math.Round(ratio1, 4);
                     ratio2 = Math.Round(ratio2, 2);
                     ratio3 = Math.Round(ratio3, 2);
 
@@ -228,10 +276,21 @@ namespace C2S150_ML
 
 
                     ///////////// Додавання даних до таблиці ////////////
-                    dataGridView1.Rows.Add(currentTime, ratio, ratio1, ratio2, GoodKg, TotalKg);
+                    if ( (buttonStartAnalic.Text == "Stop Analysis") && (StartStopGrid) ) {
+                       dataGridView1.Rows.Add(currentTime, PisBed, PcsBed, ratio2, GoodKg, TotalKg, "START");    } else { 
+                    if (buttonStartAnalic.Text == "Stop Analysis") {
+                        dataGridView1.Rows.Add(currentTime, PisBed, PcsBed, ratio2, GoodKg, TotalKg, "WORK"); }else{
+                        dataGridView1.Rows.Add(currentTime, PisBed, PcsBed, ratio2, GoodKg, TotalKg, "STOP");
+                        }
+                      }
+                    
+                  
 
-                    /////////////// Діаграма швиткості ////////////////
-                    solidGauge1.Value = ratio2;        // Митєва швиткість раз в 5 секунд   
+                      if(StartStopGrid) { SQL.SaveRow(dataGridView1); StartStopGrid = false; }
+
+
+                        /////////////// Діаграма швиткості ////////////////
+                        solidGauge1.Value = ratio2;        // Митєва швиткість раз в 5 секунд   
                     SpidKgH.Text = ratio3.ToString();  // Швиткість Kg\H
 
                     // Прокрутка таблиці до останнього рядка
@@ -239,13 +298,17 @@ namespace C2S150_ML
                     rowIndex++;
 
                     //if (Calc.BadSamples != RatioSampls) {}
-                    int Ratio = Calc.BadSamples - RatioSampls;
+                    RatioBed = Calc.BadSamples - RatioSampls;
                     RatioSampls = Calc.BadSamples;
 
                     //double value = Math.Sin((currentTime - startTime).TotalSeconds);
                     // ratio = Math.Round(ratio, 2);
                     // Додавання даних до серії
-                    chartValues.Add(new ObservablePoint(currentTime.Ticks, Ratio));
+                    chartValues.Add(new ObservablePoint(currentTime.Ticks, RatioBed));
+
+      
+
+
 
                     // Оновлення видимої області графіка
                     cartesianChart1.AxisX[0].MaxValue = currentTime.Ticks;
@@ -270,37 +333,19 @@ namespace C2S150_ML
         }
 
 
-        ////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////    MOSAIC        /////////////////////////////////////////////////////
         static int ImgListCout = 0;
-        static int ErceCont = 0;
-        static int srtVisulMosaic;
-        static int chartIDX;
-        static int TimerCountChart1 = 0;
-        private static int MosaicsCoutOllBad = 0;
-        private static int MosaicsCoutOllGood = 0;
+
 
 
         private async void RefreshMosaics()
         {
 
 
-            if ((button2.Text != "Start Analysis") && (TimerCountChart1 >= (numericUpDown3.Value * 2)))
-            {
-
-                chartIDX++;
-                // FlowAnalis.ContaminationCount = 0;
-                TimerCountChart1 = 0;
-            }
-
-            TimerCountChart1++;
-
-
-
             if ((MosaicDTlist.Count != 0)// && (ImgListCout <= (Convert.ToInt32(PageCauntMosaic.Text)))
                 ){
 
                 //візуалізація мозаїки
-                //int Q = ImgListCout;
                 for (; ImgListCout < MosaicDTlist.Count; ImgListCout++)
                 {
                     if ( ImgListCout >= SETS.Data.MaxImagesMmosaic ) { ClearMosaic();  break; }
@@ -310,40 +355,18 @@ namespace C2S150_ML
                         {
                             if (MouseAddImage.Checked) { }
                         ImageData dt = new ImageData();
-                        //dt.Image= (Image<Gray, byte>) MosaicDTlist[ImgListCout].Img[0];
-                        //dt.Group = "TEST";
-
 
                         Mosaics.Images.Add(MosaicDTlist[ImgListCout].Img[0].AsBitmap());
                         listView1.LargeImageList = Mosaics;
                         listView1.VirtualListSize = ImgListCout;// Задайте загальну кількість елементів
 
-      
-                        //ListViewItem item = new ListViewItem
-                        //    {
-                        //        ImageIndex = ImgListCout ,
-                        //        Text = dt.Group,
-                        //       Group = listView1.Groups[dt.Group],
-                     
-
-                        //};
-                        //    listView1.Items.Add(item);
-                        
-
-
-
-
-
-                        //listView1.Items.Add(new ListViewItem { ImageIndex = MosaicsCoutOllBad, Text = MosaicsCoutOllBad.ToString() + "S",  /*BackColor = Color.Blue,*/  });
-                        MosaicsCoutOllBad++;
-                            srtVisulMosaic++;
+                 
+                      
                          
 
                         }    
                         
 
-                   //listView1.LargeImageList = Mosaics;
-                    //listView1.VirtualListSize = ImgListCout;// Задайте загальну кількість елементів
                     if (SETS.Data.MosaicRealTime) {
                     if ((visibleItemsPerPage == 0)||(ImgListCout == 0)) { listView1_Resize(null, null); } else {
                     int startIndex = Math.Max(0, ImgListCout - visibleItemsPerPage); // Отримайте індекс першого елемента для відображення
@@ -388,7 +411,14 @@ namespace C2S150_ML
                     // Створіть об'єкт для відображення
                     ListViewItem listViewItem = new ListViewItem();
                                  listViewItem.ImageIndex = e.ItemIndex; // Індекс зображення (залежить від ваших даних)
-                                 listViewItem.Text = e.ItemIndex.ToString();
+
+                     listViewItem.Text = MosaicDTlist[e.ItemIndex].ID.ToString()+"_"+ MosaicDTlist[e.ItemIndex].Name + e.ItemIndex.ToString();
+                              // Встановіть колір тексту
+                    if (MosaicDTlist[e.ItemIndex].Name == "good") { listViewItem.ForeColor = Color.Black; } else {
+                    if (MosaicDTlist[e.ItemIndex].Name==  "bad")  { listViewItem.ForeColor = Color.Blue; } else { 
+                    if (MosaicDTlist[e.ItemIndex].Name == "Bad")  { listViewItem.ForeColor = Color.Red; } else { 
+                    if (MosaicDTlist[e.ItemIndex].Name == "Good") { listViewItem.ForeColor = Color.Gray; } } }  }
+
                     // Передайте об'єкт для відображення у подію
                     e.Item = listViewItem;
                 }
@@ -403,10 +433,6 @@ namespace C2S150_ML
 
 
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-           
-        }
 
 
         void ClearMosaic()
@@ -415,9 +441,8 @@ namespace C2S150_ML
             listView1.VirtualListSize = 0; // Скидаємо кількість елементів у ListView
 
             listView1.Clear();
-            srtVisulMosaic = 0;
             MosaicDTlist = new List<DTLimg>();
-            MosaicsCoutOllBad = 0;
+ 
             MosaicsTeachGrey.Clear();
             ImgListCout = 0;
 
@@ -430,8 +455,6 @@ namespace C2S150_ML
             Mosaics.Images.Clear();
             listView1.VirtualListSize = 0; // Скидаємо кількість елементів у ListView
             listView1.Clear();
-            srtVisulMosaic = 0;
-            MosaicsCoutOllBad = 0;
             MosaicsTeachGrey.Clear();
             ImgListCout = 0;
 
@@ -502,14 +525,14 @@ namespace C2S150_ML
         private void button13_Click(object sender, EventArgs e)
         {
 
-
+              StartStopGrid = true;
             // buttonStartAnalic.Enabled = false;
             FlowAnalis.StartAnais = true;//включення живого відео
 
             if (buttonStartAnalic.Text == "Start Analysis"){
                 SEPARATOR.ON();  // Metal separator
                 AUTOLOADER.ON();  // Autoloder
-                buttonStartAnalic.BackColor = Color.Red;
+                buttonStartAnalic.BackColor = Color.Salmon;
 
                 LIGHT.ON();
                 COOLING.ON();
@@ -525,10 +548,9 @@ namespace C2S150_ML
                 Flow.StartSorting();
                 VIBR_TABLE.SET(VIBR_TABLE.Typ.ON);
             }else {
+                StartStopGrid = true;
 
                 buttonStartAnalic.BackColor = Color.GreenYellow;
-                
-
                 VIBR_TABLE.SET(VIBR_TABLE.Typ.OFF);
                 Flow.StartSorting();
                 Flow.STARTsorting = false;
@@ -582,10 +604,10 @@ namespace C2S150_ML
                 SETS.Data.ACQ_Pach = textBox5.Text;
                 SETS.Data.AnalisLock = AnalisLock.Checked;
             //-----------------------------------
-            SETS.Data.ShowGoodMosaic = checkBox1.Checked;
+ 
             SETS.Data.SetingsCameraStart = SetingsCameraStart.Checked;
-            SETS.Data.CameraAnalis_1     = checkBox4.Checked;
-            SETS.Data.CameraAnalis_2     = checkBox3.Checked;
+            SETS.Data.CameraAnalis_1     = Camera1Lock.Checked;
+            SETS.Data.CameraAnalis_2     = Camera2Lock.Checked;
             SETS.Data.PashTestIMG        = textBoxTestImg.Text;
           if (radioButtonCam1.Checked) { 
              SETS.Data.ID_CAM = DLS.Master;} else {
@@ -596,6 +618,10 @@ namespace C2S150_ML
 
 
             SETS.Data.BlobsInvert = InvertBlobs.Checked;
+            SETS.Data.PachXLSX    = richTextBox3.Text;
+            SETS.Data.PachDB      = richTextBox4.Text;
+            SETS.Data.PathAnalysisTest= textBox4.Text;
+            SETS.Data.LiveVideoDelay = (int)LiveViewDelay.Value;
 
             USB_HID.Data.Light_IR     = LockIR.Checked;
             USB_HID.Data.Light_Top    = LockTop.Checked;
@@ -603,15 +629,14 @@ namespace C2S150_ML
             USB_HID.Data.Light_Bottom = LockBottom.Checked;
 
 
-
-
             VIS.Data.blurA      = (byte)numericUpDown10.Value;
             VIS.Data.ThresholdA = (byte)numericUpDown11.Value;
-            VIS.Data.maxValueA  = (byte)numericUpDown9.Value;
+
 
             VIS.Data.blurB = (byte)numericUpDown12.Value;
             VIS.Data.ThresholdB = (byte)numericUpDown13.Value;
             VIS.Data.ArcLengthB = (int) numericUpDown5.Value;
+            VIS.Data.ArcLengthTest = (int) numericUpDown9.Value;
 
         }
 
@@ -622,11 +647,10 @@ namespace C2S150_ML
                  MosaicRealTime.Checked = SETS.Data.MosaicRealTime;
                 MaxImagesMmosaic.Value = SETS.Data.MaxImagesMmosaic;
                 SetingsCameraStart.Checked = SETS.Data.SetingsCameraStart;
-                checkBox4.Checked = SETS.Data.CameraAnalis_1;
-                checkBox3.Checked = SETS.Data.CameraAnalis_2;
+                Camera1Lock.Checked = SETS.Data.CameraAnalis_1;
+                Camera2Lock.Checked = SETS.Data.CameraAnalis_2;
                 textBoxTestImg.Text = SETS.Data.PashTestIMG;
-
-                 checkBox1.Checked = SETS.Data.ShowGoodMosaic;
+                LiveViewDelay.Value = SETS.Data.LiveVideoDelay;
 
                 if (SETS.Data.ID_CAM == DLS.Master) { radioButtonCam1.Checked = true; }
                                                 else{ radioButtonCam2.Checked = true; }
@@ -651,6 +675,9 @@ namespace C2S150_ML
                 numericUpDown6.Value = SETS.Data.LimitinGraphPoints;
                 numericUpDown7.Value = SETS.Data.UpdateVisibleArea;
                 numericUpDown8.Value = SETS.Data.AxisYMaxValue;
+                richTextBox3.Text    = SETS.Data.PachXLSX;
+                richTextBox4.Text    = SETS.Data.PachDB;
+                textBox4.Text        = SETS.Data.PathAnalysisTest;
 
                 GAIN1.Value        = SETS.Data.GEIN1;
                 GAIN2.Value        = SETS.Data.GEIN2;
@@ -674,11 +701,11 @@ namespace C2S150_ML
 
                 numericUpDown10.Value =  VIS.Data.blurA;
                 numericUpDown11.Value = VIS.Data.ThresholdA;
-                numericUpDown9.Value   = VIS.Data.maxValueA;
 
                 numericUpDown12.Value = VIS.Data.blurB;
                 numericUpDown13.Value = VIS.Data.ThresholdB;
                 numericUpDown5.Value = VIS.Data.ArcLengthB;
+                numericUpDown9.Value = VIS.Data.ArcLengthTest;
             }
             catch
             {
@@ -727,11 +754,16 @@ namespace C2S150_ML
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+
+
             if (USB_HID.HidStatus == true)
             {
                 HidConect.Text = "connected"; HidConect.ForeColor = Color.Green;
-            }
-            else { HidConect.Text = "not connected"; HidConect.ForeColor = Color.Red; }
+            }else { HidConect.Text = "not connected"; HidConect.ForeColor = Color.Red; }
+
+
+
+
 
             ProcesingAnalis.Text = Flow.CountProcesingCamera.ToString();
             BuferImgIdx.Text = FlowCamera.BuferImg.Count.ToString();
@@ -745,9 +777,7 @@ namespace C2S150_ML
             toolStripStatusLabel5.Text = DLS.elapsedMs.ToString();
             toolStripStatusLabel6.Text = FlowCamera.BatchSizePreict.ToString();
 
-            if (FlowCamera.LiveImage != null) {
-                LiveView.Image = FlowCamera.LiveImage.ToBitmap();
-            }
+      
             TimerRefreshChart();
 
             RefreshMosaics();
@@ -769,42 +799,8 @@ namespace C2S150_ML
 
         }
 
-        static Mat TestImage = new Mat();
-        private void button13_Click_1(object sender, EventArgs e)
-        {
-            openFileDialog1.Filter = "Image Files (*.bmp;*.jpg;*.jpeg,*.png)|*.BMP;*.JPG;*.JPEG;*.PNG";
-            openFileDialog1.FilterIndex = 1;
-            openFileDialog1.Multiselect = false;
-
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                // дії, які виконуються при виборі картинки
-
-                Stopwatch watch;
-                watch = Stopwatch.StartNew();
-                TestImage = CvInvoke.Imread(openFileDialog1.FileName);
-                LiveView.Image = TestImage.ToImage<Gray, Byte>().ToBitmap();
-                watch.Stop();
-                Console.WriteLine("Load Model: -- " + watch.ElapsedMilliseconds + " ms");
-            }
-        }
-
-        FlowAnalis flowAnalis = new FlowAnalis();
-        private void button14_Click(object sender, EventArgs e)
-        {
-            Image<Gray, Byte> img = new Image<Gray, Byte>(100, 100);
-
-            img = TestImage.ToImage<Gray, Byte>();
-
-            FlowAnalis.StartAnais = true;
 
 
-
-            IProducerConsumerCollection<Image<Gray, byte>> tmp2 = FlowCamera.BoxM; //створити ліст імідж
-            tmp2.TryAdd(img /*.Resize(4096, 50, Inter.Linear)*/);
-
-
-        }
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -836,7 +832,7 @@ namespace C2S150_ML
 
             if (MouseAddImage.Checked == true)
             {
-                DTLimg.SelectITM.Add(SelectITMs);
+         
 
                 MosaicsTeach.Images.Add(MosaicDTlist[SelectITMs].Img[0].ToBitmap());
                 MosaicsTeachGrey.Add(MosaicDTlist[SelectITMs].Img[0]);
@@ -864,7 +860,7 @@ namespace C2S150_ML
             if (listView1.FocusedItem != null)
             {
                 int idx = listView1.SelectedIndices[0]; //початковий індекс з масиву
-                for (int Q = 0; Q < listView1.SelectedItems.Count; Q++)
+                for (int Q = 0; Q < MosaicDTlist.Count; Q++)
                 {
                     MosaicsTeach.Images.Add(MosaicDTlist[idx].Img[0].ToBitmap());
                     MosaicsTeachGrey.Add(MosaicDTlist[idx].Img[0]);
@@ -882,7 +878,6 @@ namespace C2S150_ML
             ImagCouAnn = 0;
             listView2.Clear();
             MosaicsTeach.Images.Clear();
-            DTLimg.SelectITM.Clear();
             MosaicsTeachGrey.Clear();
         }
 
@@ -920,7 +915,7 @@ namespace C2S150_ML
             string PshSampleType = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text); //створити шлях до каталога "Data"
             string PshData       = Path.Combine(PshSampleType, "Data"); //створити шлях до каталога "Data"
             string PshSempls     = Path.Combine(PshData, "SAMPLES"); //створити шлях до каталога "SAMPLES"
-            string PashImg       = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bed Good"
+            string PashImg       = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bad Good"
 
             if (false == Directory.Exists(PshData))   { Directory.CreateDirectory(PshData); }// якщо нема пакі то створюєм
             if (false == Directory.Exists(PshSempls)) { Directory.CreateDirectory(PshSempls); }// якщо нема пакі то створюєм
@@ -1023,12 +1018,6 @@ namespace C2S150_ML
             }
         }
 
-        private void button19_Click(object sender, EventArgs e)
-        {
-            // Flow flow = new Flow();
-            Flow.BlobsPredict();
-            //Flow.FindBlobCam();
-        }
 
 
         private void PWM_Table_Click(object sender, EventArgs e)
@@ -1166,17 +1155,21 @@ namespace C2S150_ML
             {
                 try
                 {
+
+                    if (SETS.Data.ID_CAM == 0) { 
                     Bitmap imM = new Bitmap(urlMaster);
                     textBox2.Text = IdxShou.ToString();
                     Emgu.CV.Mat imOriginalM = imM.ToImage<Bgr, byte>().Mat;
                     IProducerConsumerCollection<Image<Gray, byte>> CollecTempM = FlowCamera.BoxImgM;
                     CollecTempM.TryAdd(imOriginalM.ToImage<Gray, byte>());
-
+                    } else {
+                   
                     Bitmap imS = new Bitmap(urlMaster);
                     textBox2.Text = IdxShou.ToString();
                     Emgu.CV.Mat imOriginalS = imS.ToImage<Bgr, byte>().Mat;
                     IProducerConsumerCollection<Image<Gray, byte>> CollecTempS = FlowCamera.BoxImgS;
-                    CollecTempS.TryAdd(imOriginalS.ToImage<Gray, byte>());
+                    CollecTempS.TryAdd(imOriginalS.ToImage<Gray, byte>()); 
+                    }
 
 
 
@@ -1304,60 +1297,69 @@ namespace C2S150_ML
 
         Emgu.CV.Mat imOriginalM;
 
-       void TestImgBlb() {
+        void TestImgBlb()
+        {
 
+                try
+                {
             string urlMaster = textBox4.Text + "\\" + "Image" + IdxShouTest++ + ".jpg";
-        
-           files = Directory.GetFiles(@textBox4.Text, "*.jpg");
+
+            files = Directory.GetFiles(@textBox4.Text, "*.jpg");
 
             int count = files.Length;
 
-
-            if (IdxShouTest <= files.Length)
+            if (files != null)
             {
-                try
-                {
+                if (IdxShouTest <= files.Length)
+            {
                     Bitmap imM = new Bitmap(files[IdxShouTest]);
                     textBox3.Text = IdxShouTest.ToString();
 
-                    imOriginalM = imM.ToImage<Bgr, byte>().Resize(64,64,interpolationType: Inter.Linear).Mat;
+                    imOriginalM = imM.ToImage<Bgr, byte>().Resize(64, 64, interpolationType: Inter.Linear).Mat;
 
                     Stopwatch watch = Stopwatch.StartNew();
 
-                    //for (int i = 0; i < 100; i++){}
+               
 
-                    Image<Bgr, byte> ImagesViw = new Image<Bgr, byte>(100,100);
+                    Image<Bgr, byte> ImagesViw = new Image<Bgr, byte>(100, 100);
                     if (AnalysisTest.Checked)
                     {
-                             ImagesViw = vision.DetectBlob(imOriginalM);
-                    } else { 
-                        ImagesViw = vision.DetectBlobBlack(imOriginalM); }
-                    
+                        ImagesViw = vision.DetectBlob(imOriginalM, labelDectContur);
+                    }
+                    else
+                    {
+                        ImagesViw = vision.DetectBlobBlack(imOriginalM, labelDectContur);
+                    }
+
 
 
                     watch.Stop();
                     var elapsedMs = watch.ElapsedMilliseconds;
                     toolStripStatusLabel5.Text = elapsedMs.ToString();
-                   // Console.WriteLine("First Prediction took: " + elapsedMs + " ms");
+                    // Console.WriteLine("First Prediction took: " + elapsedMs + " ms");
 
                     pictureBox1.Image = ImagesViw.ToBitmap();
                     pictureBox2.Image = imOriginalM.ToBitmap();
 
 
-                }
-                catch { }
+               
             }
-            else { }
-
+        }
+       }
+                catch { }
         }
 
 
       void SetingsValGrayImg (){
- try{
-            if (IdxShouTest <= files.Length)
+            try
             {
-               
-                
+
+                if (files != null) { 
+
+                if (IdxShouTest <= files.Length)
+                {
+
+
                     Bitmap imM = new Bitmap(files[IdxShouTest]);
                     textBox3.Text = IdxShouTest.ToString();
 
@@ -1370,11 +1372,11 @@ namespace C2S150_ML
 
                     if (AnalysisTest.Checked)
                     {
-                        ImagesViw = vision.DetectBlob(imOriginalM);
+                        ImagesViw = vision.DetectBlob(imOriginalM, labelDectContur);
                     }
                     else
                     {
-                        ImagesViw = vision.DetectBlobBlack(imOriginalM);
+                        ImagesViw = vision.DetectBlobBlack(imOriginalM, labelDectContur);
                     }
 
 
@@ -1388,6 +1390,7 @@ namespace C2S150_ML
 
 
                 }
+            }
                
             } catch { }
 
@@ -1674,8 +1677,7 @@ namespace C2S150_ML
 
                 foreach (var i in pathSmpl)
                 {
-                    if ((DTLimg.NameGp == null) || (DTLimg.NameGp.Length != NemSmpls.Length)) { DTLimg.NameGp = new string[pathSmpl.Length]; }
-                    DTLimg.NameGp[x] = i;
+    
                     comboBoxSetingsName.Items.Add(i);
                     comboBox1.Items.Add(i);
                     NemSmpls[x++] = i;
@@ -1760,7 +1762,64 @@ namespace C2S150_ML
             FLAPS.Time_OFF(OutputDelay.Value);
         }
 
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            AnalisPredict.FlapsTestBleak = checkBox2.Checked;
+            VIS.ArcLengTestChecd = checkBox2.Checked;
+        }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            AnalisPredict.MosaicShowGood = checkBox1.Checked;
+        }
+
+
+        private void button63_Click(object sender, EventArgs e)
+        {SQL.Updat(true, dataGridView2, dateTimePicker1.Text, dateTimePicker2.Text);  }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SQL.XLSX_Save(richTextBox3);
+        }
+
+
+      private void button66_Click(object sender, EventArgs e)
+        {
+            SQL.DeleteRow(dataGridView2);
+        }
+
+
+        private void button26_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FolderBrowserDialog FBD = new FolderBrowserDialog();
+                if (FBD.ShowDialog() == DialogResult.OK)
+                {
+
+                    richTextBox3.Text = FBD.SelectedPath;
+                }
+                else { MessageBox.Show("Choose directory please", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+
+        private void button64_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FolderBrowserDialog FBD = new FolderBrowserDialog();
+                if (FBD.ShowDialog() == DialogResult.OK)
+                {
+
+                    richTextBox4.Text = FBD.SelectedPath;
+                }
+                else { MessageBox.Show("Choose directory please", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+
+  
     }
 
 }

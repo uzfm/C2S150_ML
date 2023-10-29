@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 //using HidLibrary;
 using HidSharp;
+
 
 
 
@@ -160,7 +163,128 @@ namespace C2S150_ML
                 /// </summary>
                 public enum Typ { Fps1, Fps2, Fps3, Fps4, Fps5, Fps6, Fps7, Fps8, Fps9, Fps10, Fps11, Fps12, Fps13, Fps14, Fps15, Fps16, Fps17 }
 
+         static Button Flaps1 = new Button();
+         static Button Flaps2 = new Button();
+         static Button Flaps3 = new Button();
+         static Button Flaps4 = new Button();
+        static Button Flaps5 = new Button();
+         static Button Flaps6 = new Button();
+         static Button Flaps7 = new Button();
+        static Button Flaps8 = new Button();
+         static Button Flaps9 = new Button();
+         static Button Flaps10 = new Button();
+        static Button Flaps11 = new Button();
+         static Button Flaps12 = new Button();
+         static Button Flaps13 = new Button();
+         static Button Flaps14 = new Button();
+         static Button Flaps15 = new Button();
+         static Button Flaps16 = new Button();
+         static Button Flaps17 = new Button();
+
+          static  Timer TimerFlepsColour = new Timer();
+
+                
+                static public void FlepsLightInstal(
+            Button Flaps_1, Button Flaps_2, Button Flaps_3, Button Flaps_4,
+            Button Flaps_5, Button Flaps_6, Button Flaps_7, Button Flaps_8,
+            Button Flaps_9, Button Flaps_10, Button Flaps_11, Button Flaps_12,
+            Button Flaps_13, Button Flaps_14, Button Flaps_15, Button Flaps_16, Button Flaps_17
+            ) {
+            Flaps1 = Flaps_1;
+            Flaps2 = Flaps_2;
+            Flaps3= Flaps_3;
+            Flaps4 = Flaps_4;
+            Flaps5 = Flaps_5;
+            Flaps6 = Flaps_6;
+            Flaps7 = Flaps_7;
+            Flaps8 = Flaps_8;
+            Flaps9 = Flaps_9;
+            Flaps10 = Flaps_10;
+            Flaps11 = Flaps_11;
+            Flaps12 = Flaps_12;
+            Flaps13 = Flaps_13;
+            Flaps14 = Flaps_14;
+            Flaps15 = Flaps_15;
+            Flaps16 = Flaps_16;
+            Flaps17 = Flaps_17;
+
+                    // Встановлення інтервалу в мілісекундах (100 мілісекунд)
+                    TimerFlepsColour.Interval = 100;
+                    // Додавання обробника події Tick
+                    TimerFlepsColour.Tick += TimerFlepsColourTick;
+                    // Активація таймера
+                    TimerFlepsColour.Enabled=true;
+                    TimerFlepsColour.Start();
+
+                }
+
+  
+
+                // Обробник події, який буде викликатися при кожному таймауті
+              static  private  void TimerFlepsColourTick (object sender, EventArgs e)
+                {
+                    FlepsLightRES();
+          
+                }
+
+
+                static public void FlepsLightSET(Typ FlapsSet)
+                {
+                    switch (FlapsSet){
+                        case Typ.Fps1: Flaps1.BackColor = Color.Salmon; break;
+                        case Typ.Fps2: Flaps2.BackColor = Color.Salmon; break;
+                        case Typ.Fps3: Flaps3.BackColor = Color.Salmon; break;
+                        case Typ.Fps4: Flaps4.BackColor = Color.Salmon; break;
+                        case Typ.Fps5: Flaps5.BackColor = Color.Salmon; break;
+                        case Typ.Fps6: Flaps6.BackColor = Color.Salmon; break;
+                        case Typ.Fps7: Flaps7.BackColor = Color.Salmon; break;
+                        case Typ.Fps8: Flaps8.BackColor = Color.Salmon; break;
+                        case Typ.Fps9: Flaps9.BackColor = Color.Salmon; break;
+                        case Typ.Fps10: Flaps10.BackColor = Color.Salmon; break;
+                        case Typ.Fps11: Flaps11.BackColor = Color.Salmon; break;
+                        case Typ.Fps12: Flaps12.BackColor = Color.Salmon; break;
+                        case Typ.Fps13: Flaps13.BackColor = Color.Salmon; break;
+                        case Typ.Fps14: Flaps14.BackColor = Color.Salmon; break;
+                        case Typ.Fps15: Flaps15.BackColor = Color.Salmon; break;
+                        case Typ.Fps16: Flaps16.BackColor = Color.Salmon; break;
+                        case Typ.Fps17: Flaps17.BackColor = Color.Salmon; break;
+
+                    }
+                }
+
+                static public void FlepsLightRES() {
+
+                    if ((SetFlapsColourDelay) && (SetFlapsColour)){
+                    
+                        Flaps1.BackColor = Color.ForestGreen;
+                        Flaps2.BackColor = Color.ForestGreen;
+                        Flaps3.BackColor = Color.ForestGreen;
+                        Flaps4.BackColor = Color.ForestGreen;
+                        Flaps5.BackColor = Color.ForestGreen;
+                        Flaps6.BackColor = Color.ForestGreen;
+                        Flaps7.BackColor = Color.ForestGreen;
+                        Flaps8.BackColor = Color.ForestGreen;
+                        Flaps9.BackColor = Color.ForestGreen;
+                        Flaps10.BackColor = Color.ForestGreen;
+                        Flaps11.BackColor = Color.ForestGreen;
+                        Flaps12.BackColor = Color.ForestGreen;
+                        Flaps13.BackColor = Color.ForestGreen;
+                        Flaps14.BackColor = Color.ForestGreen;
+                        Flaps15.BackColor = Color.ForestGreen;
+                        Flaps16.BackColor = Color.ForestGreen;
+                        Flaps17.BackColor = Color.ForestGreen;
+                        SetFlapsColourDelay = false;
+                        SetFlapsColour = false;
+                     } else { if (SetFlapsColour) { SetFlapsColourDelay = true;  }   }
+
+                }
+
+
+
                 static bool SetFlaps = false;
+                static bool SetFlapsColour = false;
+                static bool SetFlapsColourDelay = false;
+
 
                 /// <summary>
                 ///  Selected fleps to on);
@@ -180,8 +304,6 @@ namespace C2S150_ML
                         case Typ.Fps9: OUTPUT1_BIT |= BIT0_SET; break;
                         case Typ.Fps10: OUTPUT1_BIT |= BIT1_SET; break;
                         case Typ.Fps11: OUTPUT1_BIT |= BIT2_SET; break;
-                        //case Typ.Fps12: OUTPUT1_BIT |= BIT3_SET; break;
-                        //case Typ.Fps13: OUTPUT1_BIT |= BIT4_SET; break;
                         case Typ.Fps12: OUTPUT1_BIT |= BIT5_SET; break;
                         case Typ.Fps13: OUTPUT1_BIT |= BIT6_SET; break;
                         case Typ.Fps14: OUTPUT1_BIT |= BIT7_SET; break;
@@ -189,8 +311,10 @@ namespace C2S150_ML
                         case Typ.Fps16: OUTPUT2_BIT |= BIT1_SET; break;
                         case Typ.Fps17: OUTPUT2_BIT |= BIT2_SET; break;
                     }
+                    FlepsLightSET(Type);
+                    TimerFlepsColour.Start();
                     SetFlaps = true;
-
+                    SetFlapsColour = true;
                 }
 
                 static public void SET()
@@ -222,8 +346,11 @@ namespace C2S150_ML
                         case Typ.Fps15: OUTPUT2_BIT |= BIT0_SET; break;
                         case Typ.Fps16: OUTPUT2_BIT |= BIT1_SET; break;
                         case Typ.Fps17: OUTPUT2_BIT |= BIT2_SET; break;
-                    }
+                    } 
+                    FlepsLightSET(Type);
+                    TimerFlepsColour.Start();
                     SetFlaps = true;
+                    SetFlapsColour = true;
                     if (Set) { RUN(); }
 
                 }
@@ -419,6 +546,7 @@ namespace C2S150_ML
                 }       
 
             }
+
 
 
 
