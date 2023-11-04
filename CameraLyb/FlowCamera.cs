@@ -36,7 +36,8 @@ namespace C2S150_ML
         public static ConcurrentQueue<CutImg> BuferImg = new ConcurrentQueue<CutImg>();
 
 
-        public static int BatchSizePreict;
+        public static int  BatchSizePreict;
+        static public bool AnalisLock = false;
         //Live Viwe
 
 
@@ -160,7 +161,12 @@ namespace C2S150_ML
 
         public void AnalisBlobs()
         {
-
+            CutCTR_Old.CUT     = new bool[1];
+            CutCTR_Old.CUT[0]  = new bool();
+            CutCTR_Old.NULL    = new bool[1];
+            CutCTR_Old.NULL[0] = new bool();
+            CutCTR_Old.ROI     = new Rectangle[1];
+            CutCTR_Old.ROI[0]  = new Rectangle();
 
             while (PotocStartAnalisBlobs)
             {
@@ -241,14 +247,14 @@ namespace C2S150_ML
 
 
                                     //Контур не знайдений вирізаєм що знайшло TOP (Позначаєм Оранжевим но не враховуємо)
-                                    if ((CutCTR_Old.CUT.Length == 0) || (RoiX >= 20))
+                                    if ((CutCTR_Old.CUT.Length == 0) || (RoiX >= 100))
                                     {
                                         ImagAI.ROI = BoxROI;
                                         CutImgClass.Img = ImagAI.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                         CutImgClass.ROI = BoxROI;
                                         CutImgClass.ID = Master;
 
-                                        if (!SETS.Data.AnalisLock) { Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
+                                        if (!FlowCamera.AnalisLock) { Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.DarkOrange).MCvScalar, 5); }
@@ -297,7 +303,7 @@ namespace C2S150_ML
                                     CutImgClass.ROI = BoxROI;
                                     CutImgClass.ID  = Master;
 
-                                    if (!SETS.Data.AnalisLock) {Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
+                                    if (!FlowCamera.AnalisLock) {Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
                                     CutCTR_Old.NULL[closestIndex] = false;
                                     if (!SETS.Data.LiveVideoOFF)
@@ -316,7 +322,7 @@ namespace C2S150_ML
                                         CutImgClass.ROI = BoxROI;
                                         CutImgClass.ID = Master;
 
-                                        if (!SETS.Data.AnalisLock) {  Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
+                                        if (!FlowCamera.AnalisLock) {  Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Green).MCvScalar, 5); }
@@ -351,7 +357,7 @@ namespace C2S150_ML
                                     CutImgClass.ROI = BoxROI;
                                     CutImgClass.ID = Master;
 
-                                    if (!SETS.Data.AnalisLock) {Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
+                                    if (!FlowCamera.AnalisLock) {Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
                                     ///if (!SETS.Data.LiveVideoOFF) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
                                 }
@@ -551,6 +557,13 @@ namespace C2S150_ML
         {
 
 
+            CutCTR_Old.CUT = new bool[1];
+            CutCTR_Old.CUT[0] = new bool();
+            CutCTR_Old.NULL = new bool[1];
+            CutCTR_Old.NULL[0] = new bool();
+            CutCTR_Old.ROI = new Rectangle[1];
+            CutCTR_Old.ROI[0] = new Rectangle();
+
             while (PotocStartAnalisBlobs)
             {
 
@@ -638,7 +651,7 @@ namespace C2S150_ML
                                         CutImgClass.ROI = BoxROI;
                                         CutImgClass.ID =  Slave;
 
-                                        if (!SETS.Data.AnalisLock) {Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
+                                        if (!FlowCamera.AnalisLock) {Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Red).MCvScalar, 5); }
@@ -684,7 +697,7 @@ namespace C2S150_ML
                                     CutImgClass.ROI = BoxROI;
                                    CutImgClass.ID =  Slave;
 
-                                    if (!SETS.Data.AnalisLock) { Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
+                                    if (!FlowCamera.AnalisLock) { Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
                                     CutCTR_Old.NULL[closestIndex] = false;
                                     if (!SETS.Data.LiveVideoOFF)
@@ -703,7 +716,7 @@ namespace C2S150_ML
                                         CutImgClass.ROI = BoxROI;
                                         CutImgClass.ID = Slave;
 
-                                        if (!SETS.Data.AnalisLock) {Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
+                                        if (!FlowCamera.AnalisLock) {Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Green).MCvScalar, 5); }
@@ -740,7 +753,7 @@ namespace C2S150_ML
                                     CutImgClass.ROI = BoxROI;
                                     CutImgClass.ID = Slave;
 
-                                    if (!SETS.Data.AnalisLock) {Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
+                                    if (!FlowCamera.AnalisLock) {Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
                                //     if ((!SETS.Data.LiveVideoOFF) && (SETS.Data.ID_CAM == DLS.Slave)) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
                                 } 
@@ -806,6 +819,8 @@ namespace C2S150_ML
                     }
                 }
             }
+         
+
         }
 
 

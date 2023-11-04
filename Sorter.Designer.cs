@@ -194,6 +194,9 @@ namespace C2S150_ML
             this.label11 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.groupBox33 = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.SampleWeight = new System.Windows.Forms.NumericUpDown();
             this.groupBox28 = new System.Windows.Forms.GroupBox();
             this.textBoxСreateSample = new System.Windows.Forms.TextBox();
             this.button62 = new System.Windows.Forms.Button();
@@ -219,21 +222,18 @@ namespace C2S150_ML
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.button56 = new System.Windows.Forms.Button();
+            this.button13 = new System.Windows.Forms.Button();
             this.numericACQ_Gain = new System.Windows.Forms.NumericUpDown();
-            this.button59 = new System.Windows.Forms.Button();
             this.label33 = new System.Windows.Forms.Label();
             this.button57 = new System.Windows.Forms.Button();
             this.checkBoxAcqSet = new System.Windows.Forms.CheckBox();
-            this.button58 = new System.Windows.Forms.Button();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.button19 = new System.Windows.Forms.Button();
             this.label32 = new System.Windows.Forms.Label();
             this.GAIN1 = new System.Windows.Forms.NumericUpDown();
             this.GAIN2 = new System.Windows.Forms.NumericUpDown();
             this.label31 = new System.Windows.Forms.Label();
             this.SetingsCameraStart = new System.Windows.Forms.CheckBox();
-            this.button55 = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.label43 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -369,6 +369,8 @@ namespace C2S150_ML
             ((System.ComponentModel.ISupportInitialize)(this.GreyScaleMin_)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.groupBox17.SuspendLayout();
+            this.groupBox33.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SampleWeight)).BeginInit();
             this.groupBox28.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -552,6 +554,7 @@ namespace C2S150_ML
             this.ProgresBar.Name = "ProgresBar";
             this.ProgresBar.Size = new System.Drawing.Size(200, 29);
             this.ProgresBar.Step = 1;
+            this.ProgresBar.Value = 90;
             // 
             // toolStripStatusLabel4
             // 
@@ -563,7 +566,7 @@ namespace C2S150_ML
             // Warning
             // 
             this.Warning.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.Warning.ForeColor = System.Drawing.Color.Red;
+            this.Warning.ForeColor = System.Drawing.Color.DimGray;
             this.Warning.LinkColor = System.Drawing.Color.Black;
             this.Warning.Name = "Warning";
             this.Warning.Size = new System.Drawing.Size(97, 30);
@@ -752,7 +755,7 @@ namespace C2S150_ML
             // 
             this.splitContainer5.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer5.Size = new System.Drawing.Size(1000, 195);
-            this.splitContainer5.SplitterDistance = 154;
+            this.splitContainer5.SplitterDistance = 165;
             this.splitContainer5.TabIndex = 0;
             // 
             // LiveView
@@ -761,7 +764,7 @@ namespace C2S150_ML
             this.LiveView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LiveView.Location = new System.Drawing.Point(0, 0);
             this.LiveView.Name = "LiveView";
-            this.LiveView.Size = new System.Drawing.Size(1000, 154);
+            this.LiveView.Size = new System.Drawing.Size(1000, 165);
             this.LiveView.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.LiveView.TabIndex = 0;
             this.LiveView.TabStop = false;
@@ -811,7 +814,7 @@ namespace C2S150_ML
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1000, 37);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1000, 26);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // Fleps17
@@ -820,7 +823,7 @@ namespace C2S150_ML
             this.Fleps17.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps17.Location = new System.Drawing.Point(929, 3);
             this.Fleps17.Name = "Fleps17";
-            this.Fleps17.Size = new System.Drawing.Size(68, 31);
+            this.Fleps17.Size = new System.Drawing.Size(68, 20);
             this.Fleps17.TabIndex = 2040;
             this.Fleps17.Text = "17";
             this.Fleps17.UseVisualStyleBackColor = false;
@@ -832,7 +835,7 @@ namespace C2S150_ML
             this.Fleps16.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps16.Location = new System.Drawing.Point(871, 3);
             this.Fleps16.Name = "Fleps16";
-            this.Fleps16.Size = new System.Drawing.Size(52, 31);
+            this.Fleps16.Size = new System.Drawing.Size(52, 20);
             this.Fleps16.TabIndex = 2039;
             this.Fleps16.Text = "16";
             this.Fleps16.UseVisualStyleBackColor = false;
@@ -844,7 +847,7 @@ namespace C2S150_ML
             this.Fleps15.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps15.Location = new System.Drawing.Point(813, 3);
             this.Fleps15.Name = "Fleps15";
-            this.Fleps15.Size = new System.Drawing.Size(52, 31);
+            this.Fleps15.Size = new System.Drawing.Size(52, 20);
             this.Fleps15.TabIndex = 2038;
             this.Fleps15.Text = "15";
             this.Fleps15.UseVisualStyleBackColor = false;
@@ -856,7 +859,7 @@ namespace C2S150_ML
             this.Fleps14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps14.Location = new System.Drawing.Point(755, 3);
             this.Fleps14.Name = "Fleps14";
-            this.Fleps14.Size = new System.Drawing.Size(52, 31);
+            this.Fleps14.Size = new System.Drawing.Size(52, 20);
             this.Fleps14.TabIndex = 2037;
             this.Fleps14.Text = "14";
             this.Fleps14.UseVisualStyleBackColor = false;
@@ -868,7 +871,7 @@ namespace C2S150_ML
             this.Fleps13.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps13.Location = new System.Drawing.Point(697, 3);
             this.Fleps13.Name = "Fleps13";
-            this.Fleps13.Size = new System.Drawing.Size(52, 31);
+            this.Fleps13.Size = new System.Drawing.Size(52, 20);
             this.Fleps13.TabIndex = 2036;
             this.Fleps13.Text = "13";
             this.Fleps13.UseVisualStyleBackColor = false;
@@ -880,7 +883,7 @@ namespace C2S150_ML
             this.Fleps12.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps12.Location = new System.Drawing.Point(639, 3);
             this.Fleps12.Name = "Fleps12";
-            this.Fleps12.Size = new System.Drawing.Size(52, 31);
+            this.Fleps12.Size = new System.Drawing.Size(52, 20);
             this.Fleps12.TabIndex = 2035;
             this.Fleps12.Text = "12";
             this.Fleps12.UseVisualStyleBackColor = false;
@@ -892,7 +895,7 @@ namespace C2S150_ML
             this.Fleps11.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps11.Location = new System.Drawing.Point(581, 3);
             this.Fleps11.Name = "Fleps11";
-            this.Fleps11.Size = new System.Drawing.Size(52, 31);
+            this.Fleps11.Size = new System.Drawing.Size(52, 20);
             this.Fleps11.TabIndex = 2034;
             this.Fleps11.Text = "11";
             this.Fleps11.UseVisualStyleBackColor = false;
@@ -904,7 +907,7 @@ namespace C2S150_ML
             this.Fleps10.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps10.Location = new System.Drawing.Point(523, 3);
             this.Fleps10.Name = "Fleps10";
-            this.Fleps10.Size = new System.Drawing.Size(52, 31);
+            this.Fleps10.Size = new System.Drawing.Size(52, 20);
             this.Fleps10.TabIndex = 2033;
             this.Fleps10.Text = "10";
             this.Fleps10.UseVisualStyleBackColor = false;
@@ -916,7 +919,7 @@ namespace C2S150_ML
             this.Fleps9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps9.Location = new System.Drawing.Point(465, 3);
             this.Fleps9.Name = "Fleps9";
-            this.Fleps9.Size = new System.Drawing.Size(52, 31);
+            this.Fleps9.Size = new System.Drawing.Size(52, 20);
             this.Fleps9.TabIndex = 2032;
             this.Fleps9.Text = "9";
             this.Fleps9.UseVisualStyleBackColor = false;
@@ -928,7 +931,7 @@ namespace C2S150_ML
             this.Fleps8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps8.Location = new System.Drawing.Point(407, 3);
             this.Fleps8.Name = "Fleps8";
-            this.Fleps8.Size = new System.Drawing.Size(52, 31);
+            this.Fleps8.Size = new System.Drawing.Size(52, 20);
             this.Fleps8.TabIndex = 2031;
             this.Fleps8.Text = "8";
             this.Fleps8.UseVisualStyleBackColor = false;
@@ -940,7 +943,7 @@ namespace C2S150_ML
             this.Fleps7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps7.Location = new System.Drawing.Point(349, 3);
             this.Fleps7.Name = "Fleps7";
-            this.Fleps7.Size = new System.Drawing.Size(52, 31);
+            this.Fleps7.Size = new System.Drawing.Size(52, 20);
             this.Fleps7.TabIndex = 2030;
             this.Fleps7.Text = "7";
             this.Fleps7.UseVisualStyleBackColor = false;
@@ -952,7 +955,7 @@ namespace C2S150_ML
             this.Fleps6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps6.Location = new System.Drawing.Point(291, 3);
             this.Fleps6.Name = "Fleps6";
-            this.Fleps6.Size = new System.Drawing.Size(52, 31);
+            this.Fleps6.Size = new System.Drawing.Size(52, 20);
             this.Fleps6.TabIndex = 2029;
             this.Fleps6.Text = "6";
             this.Fleps6.UseVisualStyleBackColor = false;
@@ -964,7 +967,7 @@ namespace C2S150_ML
             this.Fleps5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps5.Location = new System.Drawing.Point(234, 3);
             this.Fleps5.Name = "Fleps5";
-            this.Fleps5.Size = new System.Drawing.Size(51, 31);
+            this.Fleps5.Size = new System.Drawing.Size(51, 20);
             this.Fleps5.TabIndex = 2028;
             this.Fleps5.Text = "5";
             this.Fleps5.UseVisualStyleBackColor = false;
@@ -976,7 +979,7 @@ namespace C2S150_ML
             this.Fleps4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps4.Location = new System.Drawing.Point(177, 3);
             this.Fleps4.Name = "Fleps4";
-            this.Fleps4.Size = new System.Drawing.Size(51, 31);
+            this.Fleps4.Size = new System.Drawing.Size(51, 20);
             this.Fleps4.TabIndex = 2027;
             this.Fleps4.Text = "4";
             this.Fleps4.UseVisualStyleBackColor = false;
@@ -988,7 +991,7 @@ namespace C2S150_ML
             this.Fleps3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps3.Location = new System.Drawing.Point(119, 3);
             this.Fleps3.Name = "Fleps3";
-            this.Fleps3.Size = new System.Drawing.Size(52, 31);
+            this.Fleps3.Size = new System.Drawing.Size(52, 20);
             this.Fleps3.TabIndex = 2026;
             this.Fleps3.Text = "3";
             this.Fleps3.UseVisualStyleBackColor = false;
@@ -1000,7 +1003,7 @@ namespace C2S150_ML
             this.Fleps2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps2.Location = new System.Drawing.Point(61, 3);
             this.Fleps2.Name = "Fleps2";
-            this.Fleps2.Size = new System.Drawing.Size(52, 31);
+            this.Fleps2.Size = new System.Drawing.Size(52, 20);
             this.Fleps2.TabIndex = 2025;
             this.Fleps2.Text = "2";
             this.Fleps2.UseVisualStyleBackColor = false;
@@ -1012,7 +1015,7 @@ namespace C2S150_ML
             this.Fleps1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Fleps1.Location = new System.Drawing.Point(3, 3);
             this.Fleps1.Name = "Fleps1";
-            this.Fleps1.Size = new System.Drawing.Size(52, 31);
+            this.Fleps1.Size = new System.Drawing.Size(52, 20);
             this.Fleps1.TabIndex = 2024;
             this.Fleps1.Text = "1";
             this.Fleps1.UseVisualStyleBackColor = false;
@@ -1243,10 +1246,11 @@ namespace C2S150_ML
             // 
             // buttonLiveVideo
             // 
-            this.buttonLiveVideo.BackColor = System.Drawing.Color.SandyBrown;
+            this.buttonLiveVideo.BackColor = System.Drawing.Color.LightGreen;
+            this.buttonLiveVideo.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.buttonLiveVideo.Location = new System.Drawing.Point(12, 8);
             this.buttonLiveVideo.Name = "buttonLiveVideo";
-            this.buttonLiveVideo.Size = new System.Drawing.Size(119, 33);
+            this.buttonLiveVideo.Size = new System.Drawing.Size(136, 49);
             this.buttonLiveVideo.TabIndex = 2020;
             this.buttonLiveVideo.Text = "LIVE VIDEO ON";
             this.buttonLiveVideo.UseVisualStyleBackColor = false;
@@ -1267,9 +1271,9 @@ namespace C2S150_ML
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button2.BackColor = System.Drawing.Color.LightSalmon;
-            this.button2.Location = new System.Drawing.Point(12, 49);
+            this.button2.Location = new System.Drawing.Point(12, 68);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(119, 41);
+            this.button2.Size = new System.Drawing.Size(136, 41);
             this.button2.TabIndex = 2013;
             this.button2.Text = "Clear Analysis";
             this.button2.UseVisualStyleBackColor = false;
@@ -1999,7 +2003,6 @@ namespace C2S150_ML
             this.textBoxTestImg.Name = "textBoxTestImg";
             this.textBoxTestImg.Size = new System.Drawing.Size(173, 26);
             this.textBoxTestImg.TabIndex = 381;
-            this.textBoxTestImg.Text = "C:\\Users\\MICROPTIK\\Documents\\ImagesAnalis\\New folder";
             // 
             // WorkTable
             // 
@@ -2026,7 +2029,7 @@ namespace C2S150_ML
             this.groupBox29.Size = new System.Drawing.Size(178, 141);
             this.groupBox29.TabIndex = 2022;
             this.groupBox29.TabStop = false;
-            this.groupBox29.Text = "groupBox29";
+            this.groupBox29.Text = "Flaps / Mosaic";
             // 
             // MosaicRealTime
             // 
@@ -2059,7 +2062,7 @@ namespace C2S150_ML
             this.СontourSelect.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.СontourSelect.Size = new System.Drawing.Size(107, 20);
             this.СontourSelect.TabIndex = 346;
-            this.СontourSelect.Text = "Flaps Test oll";
+            this.СontourSelect.Text = "Flaps Test all";
             this.СontourSelect.UseVisualStyleBackColor = true;
             this.СontourSelect.CheckedChanged += new System.EventHandler(this.СontourSelect_CheckedChanged);
             // 
@@ -2094,9 +2097,9 @@ namespace C2S150_ML
             this.groupBox15.Controls.Add(this.Camera1Lock);
             this.groupBox15.Controls.Add(this.checkBox13);
             this.groupBox15.Controls.Add(this.Flapslocking);
-            this.groupBox15.Location = new System.Drawing.Point(487, 18);
+            this.groupBox15.Location = new System.Drawing.Point(484, 14);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(155, 141);
+            this.groupBox15.Size = new System.Drawing.Size(112, 141);
             this.groupBox15.TabIndex = 2018;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "Lock";
@@ -2105,19 +2108,20 @@ namespace C2S150_ML
             // 
             this.AnalisLock.AutoSize = true;
             this.AnalisLock.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.AnalisLock.Location = new System.Drawing.Point(61, 82);
+            this.AnalisLock.Location = new System.Drawing.Point(22, 87);
             this.AnalisLock.Name = "AnalisLock";
             this.AnalisLock.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.AnalisLock.Size = new System.Drawing.Size(77, 20);
             this.AnalisLock.TabIndex = 2012;
             this.AnalisLock.Text = "Analysis";
             this.AnalisLock.UseVisualStyleBackColor = true;
+            this.AnalisLock.Click += new System.EventHandler(this.AnalisLock_Click);
             // 
             // Camera2Lock
             // 
             this.Camera2Lock.AutoSize = true;
             this.Camera2Lock.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Camera2Lock.Location = new System.Drawing.Point(54, 61);
+            this.Camera2Lock.Location = new System.Drawing.Point(15, 66);
             this.Camera2Lock.Name = "Camera2Lock";
             this.Camera2Lock.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.Camera2Lock.Size = new System.Drawing.Size(84, 20);
@@ -2129,7 +2133,7 @@ namespace C2S150_ML
             // 
             this.Camera1Lock.AutoSize = true;
             this.Camera1Lock.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Camera1Lock.Location = new System.Drawing.Point(54, 40);
+            this.Camera1Lock.Location = new System.Drawing.Point(15, 45);
             this.Camera1Lock.Name = "Camera1Lock";
             this.Camera1Lock.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.Camera1Lock.Size = new System.Drawing.Size(84, 20);
@@ -2140,7 +2144,7 @@ namespace C2S150_ML
             // checkBox13
             // 
             this.checkBox13.AutoSize = true;
-            this.checkBox13.Location = new System.Drawing.Point(55, 103);
+            this.checkBox13.Location = new System.Drawing.Point(16, 108);
             this.checkBox13.Name = "checkBox13";
             this.checkBox13.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkBox13.Size = new System.Drawing.Size(83, 20);
@@ -2152,14 +2156,13 @@ namespace C2S150_ML
             // Flapslocking
             // 
             this.Flapslocking.AutoSize = true;
-            this.Flapslocking.Location = new System.Drawing.Point(78, 19);
+            this.Flapslocking.Location = new System.Drawing.Point(39, 24);
             this.Flapslocking.Name = "Flapslocking";
             this.Flapslocking.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.Flapslocking.Size = new System.Drawing.Size(60, 20);
             this.Flapslocking.TabIndex = 341;
             this.Flapslocking.Text = "Flaps";
             this.Flapslocking.UseVisualStyleBackColor = true;
-
             this.Flapslocking.Click += new System.EventHandler(this.Flapslocking_Click);
             // 
             // groupBox9
@@ -2371,6 +2374,7 @@ namespace C2S150_ML
             // 
             // groupBox17
             // 
+            this.groupBox17.Controls.Add(this.groupBox33);
             this.groupBox17.Controls.Add(this.groupBox28);
             this.groupBox17.Controls.Add(this.groupBox13);
             this.groupBox17.Controls.Add(this.groupBox7);
@@ -2382,6 +2386,50 @@ namespace C2S150_ML
             this.groupBox17.Size = new System.Drawing.Size(1161, 205);
             this.groupBox17.TabIndex = 292;
             this.groupBox17.TabStop = false;
+            // 
+            // groupBox33
+            // 
+            this.groupBox33.Controls.Add(this.label12);
+            this.groupBox33.Controls.Add(this.SampleWeight);
+            this.groupBox33.Location = new System.Drawing.Point(229, 118);
+            this.groupBox33.Name = "groupBox33";
+            this.groupBox33.Size = new System.Drawing.Size(153, 78);
+            this.groupBox33.TabIndex = 2025;
+            this.groupBox33.TabStop = false;
+            this.groupBox33.Text = "Sample weight";
+            // 
+            // label12
+            // 
+            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(6, 34);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(47, 16);
+            this.label12.TabIndex = 46;
+            this.label12.Text = "Qty/Kg";
+            // 
+            // SampleWeight
+            // 
+            this.SampleWeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.SampleWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.SampleWeight.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.SampleWeight.Location = new System.Drawing.Point(59, 29);
+            this.SampleWeight.Maximum = new decimal(new int[] {
+            99000,
+            0,
+            0,
+            0});
+            this.SampleWeight.Name = "SampleWeight";
+            this.SampleWeight.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.SampleWeight.Size = new System.Drawing.Size(72, 26);
+            this.SampleWeight.TabIndex = 45;
+            this.SampleWeight.Value = new decimal(new int[] {
+            22000,
+            0,
+            0,
+            0});
             // 
             // groupBox28
             // 
@@ -2395,7 +2443,7 @@ namespace C2S150_ML
             this.groupBox28.Size = new System.Drawing.Size(194, 168);
             this.groupBox28.TabIndex = 2024;
             this.groupBox28.TabStop = false;
-            this.groupBox28.Text = "groupBox28";
+            this.groupBox28.Text = "Settings Type";
             // 
             // textBoxСreateSample
             // 
@@ -2702,8 +2750,7 @@ namespace C2S150_ML
             this.groupBox1.Controls.Add(this.groupBox14);
             this.groupBox1.Controls.Add(this.groupBox11);
             this.groupBox1.Controls.Add(this.SetingsCameraStart);
-            this.groupBox1.Controls.Add(this.button55);
-            this.groupBox1.Location = new System.Drawing.Point(713, 18);
+            this.groupBox1.Location = new System.Drawing.Point(731, 21);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(425, 181);
             this.groupBox1.TabIndex = 375;
@@ -2712,39 +2759,27 @@ namespace C2S150_ML
             // 
             // groupBox14
             // 
-            this.groupBox14.Controls.Add(this.textBox5);
-            this.groupBox14.Controls.Add(this.button56);
+            this.groupBox14.Controls.Add(this.button13);
             this.groupBox14.Controls.Add(this.numericACQ_Gain);
-            this.groupBox14.Controls.Add(this.button59);
             this.groupBox14.Controls.Add(this.label33);
             this.groupBox14.Controls.Add(this.button57);
             this.groupBox14.Controls.Add(this.checkBoxAcqSet);
-            this.groupBox14.Controls.Add(this.button58);
-            this.groupBox14.Location = new System.Drawing.Point(165, 26);
+            this.groupBox14.Location = new System.Drawing.Point(288, 21);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(251, 152);
+            this.groupBox14.Size = new System.Drawing.Size(128, 157);
             this.groupBox14.TabIndex = 383;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "ACQ";
             // 
-            // textBox5
+            // button13
             // 
-            this.textBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox5.Location = new System.Drawing.Point(11, 118);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(182, 26);
-            this.textBox5.TabIndex = 384;
-            // 
-            // button56
-            // 
-            this.button56.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button56.Location = new System.Drawing.Point(199, 120);
-            this.button56.Name = "button56";
-            this.button56.Size = new System.Drawing.Size(38, 26);
-            this.button56.TabIndex = 383;
-            this.button56.Text = "//...";
-            this.button56.UseVisualStyleBackColor = true;
-            this.button56.Click += new System.EventHandler(this.ACQ_PachButton);
+            this.button13.Location = new System.Drawing.Point(19, 76);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(98, 25);
+            this.button13.TabIndex = 387;
+            this.button13.Text = "ACQ Gain";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click_1);
             // 
             // numericACQ_Gain
             // 
@@ -2758,7 +2793,7 @@ namespace C2S150_ML
             0,
             0,
             131072});
-            this.numericACQ_Gain.Location = new System.Drawing.Point(50, 16);
+            this.numericACQ_Gain.Location = new System.Drawing.Point(48, 18);
             this.numericACQ_Gain.Maximum = new decimal(new int[] {
             10,
             0,
@@ -2768,23 +2803,14 @@ namespace C2S150_ML
             this.numericACQ_Gain.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.numericACQ_Gain.Size = new System.Drawing.Size(69, 26);
             this.numericACQ_Gain.TabIndex = 42;
-            // 
-            // button59
-            // 
-            this.button59.Location = new System.Drawing.Point(139, 88);
-            this.button59.Name = "button59";
-            this.button59.Size = new System.Drawing.Size(98, 23);
-            this.button59.TabIndex = 382;
-            this.button59.Text = "Acq Save";
-            this.button59.UseVisualStyleBackColor = true;
-            this.button59.Click += new System.EventHandler(this.button59_Click);
+            this.numericACQ_Gain.Click += new System.EventHandler(this.numericACQ_Gain_Click);
             // 
             // label33
             // 
             this.label33.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(9, 21);
+            this.label33.Location = new System.Drawing.Point(7, 23);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(35, 16);
             this.label33.TabIndex = 44;
@@ -2792,9 +2818,9 @@ namespace C2S150_ML
             // 
             // button57
             // 
-            this.button57.Location = new System.Drawing.Point(139, 54);
+            this.button57.Location = new System.Drawing.Point(19, 122);
             this.button57.Name = "button57";
-            this.button57.Size = new System.Drawing.Size(98, 23);
+            this.button57.Size = new System.Drawing.Size(98, 28);
             this.button57.TabIndex = 380;
             this.button57.Text = "Acq Bright";
             this.button57.UseVisualStyleBackColor = true;
@@ -2803,7 +2829,7 @@ namespace C2S150_ML
             // checkBoxAcqSet
             // 
             this.checkBoxAcqSet.AutoSize = true;
-            this.checkBoxAcqSet.Location = new System.Drawing.Point(46, 56);
+            this.checkBoxAcqSet.Location = new System.Drawing.Point(44, 48);
             this.checkBoxAcqSet.Name = "checkBoxAcqSet";
             this.checkBoxAcqSet.Size = new System.Drawing.Size(73, 20);
             this.checkBoxAcqSet.TabIndex = 380;
@@ -2811,28 +2837,29 @@ namespace C2S150_ML
             this.checkBoxAcqSet.UseVisualStyleBackColor = true;
             this.checkBoxAcqSet.Click += new System.EventHandler(this.checkBox1_Click);
             // 
-            // button58
-            // 
-            this.button58.Location = new System.Drawing.Point(139, 20);
-            this.button58.Name = "button58";
-            this.button58.Size = new System.Drawing.Size(98, 23);
-            this.button58.TabIndex = 381;
-            this.button58.Text = "Acq Dark";
-            this.button58.UseVisualStyleBackColor = true;
-            this.button58.Click += new System.EventHandler(this.Acq_Dark_Click);
-            // 
             // groupBox11
             // 
+            this.groupBox11.Controls.Add(this.button19);
             this.groupBox11.Controls.Add(this.label32);
             this.groupBox11.Controls.Add(this.GAIN1);
             this.groupBox11.Controls.Add(this.GAIN2);
             this.groupBox11.Controls.Add(this.label31);
-            this.groupBox11.Location = new System.Drawing.Point(10, 83);
+            this.groupBox11.Location = new System.Drawing.Point(133, 57);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(149, 88);
+            this.groupBox11.Size = new System.Drawing.Size(149, 118);
             this.groupBox11.TabIndex = 377;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Gain";
+            // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(8, 88);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(129, 25);
+            this.button19.TabIndex = 388;
+            this.button19.Text = "Gain Default";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
             // 
             // label32
             // 
@@ -2907,22 +2934,12 @@ namespace C2S150_ML
             // SetingsCameraStart
             // 
             this.SetingsCameraStart.AutoSize = true;
-            this.SetingsCameraStart.Location = new System.Drawing.Point(10, 33);
+            this.SetingsCameraStart.Location = new System.Drawing.Point(166, 26);
             this.SetingsCameraStart.Name = "SetingsCameraStart";
             this.SetingsCameraStart.Size = new System.Drawing.Size(104, 20);
             this.SetingsCameraStart.TabIndex = 0;
             this.SetingsCameraStart.Text = "Camera Start";
             this.SetingsCameraStart.UseVisualStyleBackColor = true;
-            // 
-            // button55
-            // 
-            this.button55.Location = new System.Drawing.Point(16, 57);
-            this.button55.Name = "button55";
-            this.button55.Size = new System.Drawing.Size(98, 23);
-            this.button55.TabIndex = 378;
-            this.button55.Text = "Load FF File";
-            this.button55.UseVisualStyleBackColor = true;
-            this.button55.Click += new System.EventHandler(this.button55_Click);
             // 
             // groupBox6
             // 
@@ -3061,7 +3078,7 @@ namespace C2S150_ML
             this.comboBoxBedGood.FormattingEnabled = true;
             this.comboBoxBedGood.Items.AddRange(new object[] {
             "Good",
-            "Bed"});
+            "Bad"});
             this.comboBoxBedGood.Location = new System.Drawing.Point(324, 130);
             this.comboBoxBedGood.Name = "comboBoxBedGood";
             this.comboBoxBedGood.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -3535,7 +3552,7 @@ namespace C2S150_ML
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Size = new System.Drawing.Size(1182, 224);
             this.tabPage6.TabIndex = 8;
-            this.tabPage6.Text = "ReportXLS";
+            this.tabPage6.Text = "Report XLS";
             this.tabPage6.UseVisualStyleBackColor = true;
             // 
             // splitContainer4
@@ -3905,6 +3922,9 @@ namespace C2S150_ML
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.groupBox17.ResumeLayout(false);
+            this.groupBox33.ResumeLayout(false);
+            this.groupBox33.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SampleWeight)).EndInit();
             this.groupBox28.ResumeLayout(false);
             this.groupBox28.PerformLayout();
             this.groupBox13.ResumeLayout(false);
@@ -4166,16 +4186,11 @@ namespace C2S150_ML
         private System.Windows.Forms.CheckBox LockTop;
         private System.Windows.Forms.CheckBox LockIR;
         private System.Windows.Forms.CheckBox LockBack;
-        private System.Windows.Forms.Button button55;
         private System.Windows.Forms.Button button57;
-        private System.Windows.Forms.Button button58;
-        private System.Windows.Forms.Button button59;
         private System.Windows.Forms.CheckBox checkBoxAcqSet;
         private System.Windows.Forms.GroupBox groupBox14;
         private System.Windows.Forms.NumericUpDown numericACQ_Gain;
         private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.Button button56;
         private System.Windows.Forms.GroupBox groupBox15;
         private System.Windows.Forms.CheckBox AnalisLock;
         private System.Windows.Forms.Button CreatSamplTyp;
@@ -4249,5 +4264,10 @@ namespace C2S150_ML
         private System.Windows.Forms.GroupBox groupBox32;
         private System.Windows.Forms.NumericUpDown LiveViewDelay;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.GroupBox groupBox33;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown SampleWeight;
     }
 }

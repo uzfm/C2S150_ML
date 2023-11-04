@@ -26,6 +26,9 @@ using System.Collections.Concurrent;
 using System.Collections;
 using SaveFileDialog = System.Windows.Forms.SaveFileDialog;
 
+using LIGHT = C2S150_ML.USB_HID.PLC_C2S150.LIGHT;
+using System.IO;
+
 namespace C2S150_ML
 {
 
@@ -55,12 +58,8 @@ namespace C2S150_ML
         public static DalsaVal DalsaVal = new DalsaVal();
 
 
-
-    
-
-
      public static  class Devis {
-    public static bool[] Status = new bool[2];
+     public static   bool[] Status = new bool[2];
      public static double[] Gain = new double[2];
 
         }
@@ -810,12 +809,16 @@ namespace C2S150_ML
                 IProducerConsumerCollection<Image<Gray, byte>> CollecTemp = FlowCamera.BoxImgM;
                 CollecTemp.TryAdd(imOriginal.ToImage<Gray, byte>());
 
+                if (ImgSnapSet) { if (SETS.Data.ID_CAM == Master) { ImgSnap = imOriginal; ImgSnapSet = false; } }
+
             }
         }
 
 
                static       IntPtr DataS = new IntPtr(); // image pointer
 
+
+        public static bool ImgSnapSet = false;
 
         static public void CheckForLastFrameSlav(int number, bool trash) {
 
@@ -845,7 +848,10 @@ namespace C2S150_ML
 
                 IProducerConsumerCollection<Image<Gray, byte>> CollecTemp = FlowCamera.BoxImgS;
                 CollecTemp.TryAdd(imOriginal.ToImage<Gray, byte>());
-    
+
+
+                if (ImgSnapSet) { if (SETS.Data.ID_CAM==Slave) {ImgSnap = imOriginal; ImgSnapSet = false;} } 
+
 
 
             }
@@ -853,10 +859,16 @@ namespace C2S150_ML
 
 
 
+       static public void StopCAMERA(int ID_Cam) {
+
+            AbortDlg abortM = new AbortDlg(DLS.DalsaVal.m_Xfer[ID_Cam]);
+            if (DLS.DalsaVal.m_Xfer[ID_Cam].Freeze()) { DLS.DalsaVal.m_Xfer[ID_Cam].Abort(); }
+      
+        }
 
 
-
-
+        static public void StartCAMERA(int ID_Cam)
+        {     DLS.DalsaVal.m_Xfer[ID_Cam].Grab(); }
 
 
 
@@ -907,26 +919,9 @@ namespace C2S150_ML
                 if (!DalsaVal.m_FlatField[ID_Cam].Load(PathName))
                     return;
             }
-
-            //UpdateControls();
         }
 
-        public bool button_Load_FF_Click(string PathName)
-        {
 
-            if (PathName != "")
-            { 
-               string PathNameMaster= PathName+"\\"+  "CAM_" + Master + DEFAULT_FFC_FILENAME;
-                string PathNameSlave = PathName + "\\" + "CAM_" + Slave + DEFAULT_FFC_FILENAME;
-                // Load flat field correction file
-                if (!DalsaVal.m_FlatField[Master].Load(PathNameMaster))
-                if (!DalsaVal.m_FlatField[Slave].Load(PathNameSlave))
-                        return true;
-            }
-            else { Help.Mesag("Camera Background Alignment (FFC) file not found!!!"); }
-            return false;
-            //UpdateControls();
-        }
 
 
         public void checkBox_FaltField_Click(int ID_Cam, bool FaltField_Checked) {
@@ -953,8 +948,6 @@ namespace C2S150_ML
                     DalsaVal.m_Xfer[ID_Cam].Init(true);
            
                 }
-
-               /// UpdateControls();
             }
             
         }
@@ -965,22 +958,13 @@ namespace C2S150_ML
 
 
 
-       int textBox_Frame_Avg = 20;                  // Визначається кількість зображень, які використовуються для розрахунку Flat Field 
-        int textBox_Line_Avg = 64;                 // Кількість ліній для усереднення
-        int textBox_Max_Dev = 100;                   // Встановіть максимальне відхилення від середнього значення пікселя для темного зображення
-        int textBox_Vert_Offset = 0;                // вертикальний зсув
-        bool ClippedCoefsDefects_checkbox = false;   // вказує, чи слід вважати пікселі з обрізаними коефіцієнтами як дефектні.
 
-        //
+
+       
+        //     //     //     //     //     //     //     //     //     //     //     //     //     //     //     //     //     //     //
         // Step 1: Snap a Dark image to calculate the gain coefficients
         //
-
-
         public void Acq_Dark_Click(int ID_Cam) {
-
-     
-
-
 
 
                 if (ID_Cam==Master) {SetGain((double)SETS.Data.ACQGEIN1, Master); }else {
@@ -1084,13 +1068,9 @@ namespace C2S150_ML
             }
             DarkImage(ID_Cam);
         }
-
-
-
         //
         // Step 2: Snap a bright image to calculate the gain coefficients
         //
- 
         public void Acq_Bright_Click(int ID_Cam)
         {
          
@@ -1179,40 +1159,44 @@ namespace C2S150_ML
                 loadBuffer.Load(path, 0);
                 DalsaVal.m_pLocalBuffer[ID_Cam].Copy(loadBuffer);
 
-                String str;
+
+
+
+
+
+
+
+
+
+
+               // SapBuffer ааеа = DalsaVal.m_pLocalBuffer[ID_Cam];
+
+               
+
+
+               String str;
                 str = String.Format("Loaded bright image: '{0}'", path);
                 Console.WriteLine( str);
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
 
             BrightImage(ID_Cam);
         }
-
         //
         // Step 3: SAVE image to calculate the gain coefficients
         //
-
-        public void Save_Acq_File(int ID_Cam, string PachSave )
-        {
-  
-
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Title = "Save Flat Field Correction";
-            dlg.FileName ="CAM_"+ ID_Cam.ToString()+ DEFAULT_FFC_FILENAME;
-            dlg.Filter = STANDARD_FILTER;
-
-            if (PachSave == "") {
-
-                if (dlg.ShowDialog() == DialogResult.OK) {
-
-                    // Save flat field offset correction file
-                    DalsaVal.m_FlatField[ID_Cam].Save(dlg.FileName);
-                    LogMessage(LogTypes.Info, "File saved successfully.");
-                }
-            } else {
-                PachSave = PachSave + "\\"+ "CAM_" + ID_Cam.ToString() + DEFAULT_FFC_FILENAME;
-                DalsaVal.m_FlatField[ID_Cam].Save(PachSave); }
-        }
-
         private void DarkImage(int ID_Cam ){
 
 
@@ -1306,8 +1290,137 @@ namespace C2S150_ML
 
             }
         }
+        public bool Snap(int ID_Cam)
+        {
+            // Check if the transfer object is available
+            if (DalsaVal.m_Xfer[ID_Cam] == null || !DalsaVal.m_Xfer[ID_Cam].Initialized)
+                return false;
 
-        private void BrightImage(int ID_Cam )
+            for (int iFrame = 0; iFrame < DalsaVal.m_pLocalBuffer[ID_Cam].Count; iFrame++)
+            {
+                // Acquire one image
+                DalsaVal.m_Xfer[ID_Cam].Snap();
+
+                // Wait until the acquired image has been transferred into system memory
+                AbortDlg abort = new AbortDlg(DalsaVal.m_Xfer[ID_Cam]);
+                if (abort.ShowDialog() != DialogResult.OK)
+                {
+                    DalsaVal.m_Xfer[ID_Cam].Abort();
+                    return false;
+                }
+
+                //Add a short delay to ensure the transfer callback has time to arrive
+                System.Threading.Thread.Sleep(200);
+
+                if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                {
+           
+                    DalsaVal.m_pLocalBuffer[ID_Cam].Copy(DalsaVal.m_Buffers[ID_Cam]);  ///<- SapBuffer m_pBuffer;
+
+               
+
+                }
+            }
+            return true;
+        }
+        //     //     //     //     //     //     //     //     //     //     //     //     //     //     //     //
+
+
+
+
+
+        int textBox_Frame_Avg = 20;                  // Визначається кількість зображень, які використовуються для розрахунку Flat Field 
+        int textBox_Line_Avg = 64;                   // Кількість ліній для усереднення
+        int textBox_Max_Dev = 100;                   // Встановіть максимальне відхилення від середнього значення пікселя для темного зображення
+        int textBox_Vert_Offset = 0;                 // вертикальний зсув
+        bool ClippedCoefsDefects_checkbox = false;   // вказує, чи слід вважати пікселі з обрізаними коефіцієнтами як дефектні.
+
+        //----------------------------  ACQ Simply  -----------------------------------------------------------------//
+        static Emgu.CV.Mat ImgSnap;
+        public Bitmap Acq_Bright_Simply(int ID_Cam, string PashSV)
+        {           
+            if (ID_Cam == Master) { SetGain((double)SETS.Data.ACQGEIN1, Master); }
+            else  {SetGain((double)SETS.Data.ACQGEIN2, Slave);  }
+            System.Threading.Thread.Sleep(500);
+            LIGHT.ON();
+            DLS.ImgSnapSet = true;
+            DLS.StartCAMERA(SETS.Data.ID_CAM);
+            System.Threading.Thread.Sleep(500);
+            DLS.ImgSnapSet = true;
+            System.Threading.Thread.Sleep(500);
+            DLS.StopCAMERA(SETS.Data.ID_CAM);
+            LIGHT.OFF();
+
+
+          
+                
+          
+
+            int nbImagesUsed = DalsaVal.m_FlatField[ID_Cam].CorrectionType == SapFlatField.ScanCorrectionType.Field ? textBox_Frame_Avg : 1;
+
+            // Set maximum deviation from average pixel value for bright image
+            DalsaVal.m_FlatField[ID_Cam].DeviationMaxWhite = textBox_Max_Dev;
+
+            // Set number of lines to average and vertical offset
+            DalsaVal.m_FlatField[ID_Cam].NumLinesAverage = textBox_Line_Avg;
+            DalsaVal.m_FlatField[ID_Cam].VerticalOffset = textBox_Vert_Offset;
+
+            // Set wether to declare pixels with clipped coefficient as defective
+            DalsaVal.m_FlatField[ID_Cam].ClippedGainOffsetDefects = ClippedCoefsDefects_checkbox;
+
+
+
+          
+
+                // Load an image
+              //Створити буфер для вирівнювання
+            DalsaVal.m_pLocalBuffer[ID_Cam] = new SapBuffer(nbImagesUsed, DalsaVal.m_Buffers[ID_Cam], SapBuffer.MemoryType.Default);   ///<- SapBuffer m_pBuffer;
+            DalsaVal.m_pLocalBuffer[ID_Cam].Create();
+
+            Image<Gray, byte> rotatedImage ;
+            if (ID_Cam == Slave) {  rotatedImage = ImgSnap.ToImage<Gray, byte>().Rotate(180, new Gray() ).Clone()  ; } else
+                                 {  rotatedImage = ImgSnap.ToImage<Gray, byte>().Clone(); }
+
+            string Pash = Path.Combine(PashSV, "ImgAcq_" + SETS.Data.ID_CAM.ToString() + ".bmp"); //створити шлях до IMG
+            rotatedImage.Save(Pash);
+
+
+
+   
+
+                // Create a temporary buffer in order to know the selected file's native format and pixel depth
+
+                SapBuffer loadBuffer = new SapBuffer(Pash, SapBuffer.MemoryType.Default);
+
+                loadBuffer.Create();
+                 // Перевірка на одинаковий формат картинки
+                if (loadBuffer.Format != DalsaVal.m_Buffers[ID_Cam].Format || loadBuffer.PixelDepth != DalsaVal.m_Buffers[ID_Cam].PixelDepth) ///<- SapBuffer m_pBuffer;
+                {
+                    Console.WriteLine("Image file has a different format than expected.  Pixel values may get shifted.");
+                }
+                //перевірка на одинакову ширину довжину картинки
+                if (loadBuffer.Width != DalsaVal.m_Buffers[ID_Cam].Width || loadBuffer.Height != DalsaVal.m_Buffers[ID_Cam].Height)         ///<- SapBuffer m_pBuffer;
+                {
+                    Console.WriteLine("Image file selected doesn't have same dimensions as buffer.");
+                    if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                    {
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Destroy();
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Dispose();
+                        DalsaVal.m_pLocalBuffer[ID_Cam] = null;
+                    }
+                    return ImgSnap.ToImage<Gray, byte>().ToBitmap(); ;
+                }
+                //завантажити картинку з папки
+                loadBuffer.Load(Pash, 0);
+                //Копіюєм картинку до буферу
+                DalsaVal.m_pLocalBuffer[ID_Cam].Copy(loadBuffer);
+            
+            // Вирівняти картинку
+            BrightImage(ID_Cam);
+
+            return ImgSnap.ToImage<Gray, byte>().ToBitmap();
+        }
+        private  void BrightImage(int ID_Cam )
         {
   
             String str;
@@ -1411,8 +1524,34 @@ namespace C2S150_ML
             }
         }
 
+        public void Save_FF_File(int ID_Cam, string PachSave){
+        
 
-        String GetAverageStr(SapFlatFieldStats stats)
+
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Title = "Save Flat Field Correction";
+            dlg.FileName = ID_Cam.ToString() + "Cam_" + DEFAULT_FFC_FILENAME;
+            dlg.Filter = STANDARD_FILTER;
+
+            if (PachSave == "")
+            {
+
+                if (dlg.ShowDialog() == DialogResult.OK)
+                {
+
+                    // Save flat field offset correction file
+                    DalsaVal.m_FlatField[ID_Cam].Save(dlg.FileName);
+                    Help.Mesag(LogTypes.Info + "File saved successfully.");
+                }
+            }
+            else
+            {
+                string PathFile = Path.Combine(PachSave, "CAM_" + ID_Cam.ToString() + DEFAULT_FFC_FILENAME);
+               
+                DalsaVal.m_FlatField[ID_Cam].Save(PathFile);
+            }
+        }
+             String GetAverageStr(SapFlatFieldStats stats)
         {
             String str = "";
 
@@ -1438,36 +1577,32 @@ namespace C2S150_ML
             return str;
         }
 
-        public bool Snap(int ID_Cam)
+        public bool Load_FF_File(int ID_Cam,  string PathName)
         {
-            // Check if the transfer object is available
-            if (DalsaVal.m_Xfer[ID_Cam] == null || !DalsaVal.m_Xfer[ID_Cam].Initialized)
-                return false;
+            if (PathName != ""){
 
-            for (int iFrame = 0; iFrame < DalsaVal.m_pLocalBuffer[ID_Cam].Count; iFrame++)
-            {
-                // Acquire one image
-                DalsaVal.m_Xfer[ID_Cam].Snap();
+                string PathFile=  Path.Combine(PathName , "CAM_" + ID_Cam.ToString() + DEFAULT_FFC_FILENAME);
 
-                // Wait until the acquired image has been transferred into system memory
-                AbortDlg abort = new AbortDlg(DalsaVal.m_Xfer[ID_Cam]);
-                if (abort.ShowDialog() != DialogResult.OK)
-                {
-                    DalsaVal.m_Xfer[ID_Cam].Abort();
-                    return false;
-                }
-
-                //Add a short delay to ensure the transfer callback has time to arrive
-                System.Threading.Thread.Sleep(200);
-
-                if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
-                {
-           
-                    DalsaVal.m_pLocalBuffer[ID_Cam].Copy(DalsaVal.m_Buffers[ID_Cam]);  ///<- SapBuffer m_pBuffer;
-                }
+                // Load flat field correction file
+                if (!DalsaVal.m_FlatField[ID_Cam].Load(PathFile))
+                        return true;
             }
-            return true;
+            else { Help.Mesag("Camera Background Alignment (FFC) file not found!!!"); }
+            return false;
+   
         }
+
+        //-------------------------------------------------------------------------------------------------------//
+
+
+
+
+
+
+
+
+
+
         int m_RecommendedDark=64;
         int m_RecommendedBright;
         enum LogTypes

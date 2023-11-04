@@ -31,13 +31,14 @@ namespace C2S150_ML
             public bool MosaicRealTime     { get; set; }
             public int  MaxImagesMmosaic   { get; set; }
             public bool LiveVideoOFF       { get; set; }
-            public int  LiveVideoDelay     { get; set; }
+            public decimal  LiveVideoDelay     { get; set; }
             public int  DoublingFlaps      { get; set; }
             public string PachXLSX         { get; set; }
             public string PachDB           { get; set; }
             public string PathAnalysisTest { get; set; }
+            public decimal SampleWeight        { get; set; }
 
-           
+
             //GRAF ML
             public int LimitinGraphPoints { get; set; }
             public int UpdateVisibleArea { get; set; }
@@ -48,11 +49,13 @@ namespace C2S150_ML
             public bool CameraAnalis_2 { get; set; }
             public decimal GEIN1 { get; set; }
             public decimal GEIN2 { get; set; }
-            public bool AnalisLock { get; set; }
+     
             //ACQ
             public decimal ACQGEIN1 { get; set; }
             public decimal ACQGEIN2 { get; set; }
-            public string ACQ_Pach { get; set; }
+            public bool    ACQ_SET1 { get; set; }
+            public bool    ACQ_SET2 { get; set; }
+
 
 
 

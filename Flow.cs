@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-using DALSA.SaperaLT.SapClassGui;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
@@ -211,8 +209,8 @@ namespace C2S150_ML
                     ///Thread.Sleep(200);
                     //Start Cameras
 
-                    if (!SETS.Data.CameraAnalis_1) { DLS.DalsaVal.m_Xfer[Master].Grab(); }
-                    if (!SETS.Data.CameraAnalis_2) { DLS.DalsaVal.m_Xfer[Slave].Grab();  }
+                    if (!SETS.Data.CameraAnalis_1) {  DLS.StartCAMERA(Master); }
+                    if (!SETS.Data.CameraAnalis_2) {  DLS.StartCAMERA(Slave); }
 
                     //if (SV.DT.AnalCamer2) { DLS.DalsaVal.m_Xfer[Slave].Grab(); }
                     Thread.Sleep(100);
@@ -243,14 +241,13 @@ namespace C2S150_ML
                     //HID.OutputHRD_Res(24);  // Metal separator
                     //Thread.Sleep(7000);
 
-                    AbortDlg abortM = new AbortDlg(DLS.DalsaVal.m_Xfer[Master]);
-                    if (DLS.DalsaVal.m_Xfer[Master].Freeze()) { DLS.DalsaVal.m_Xfer[Master].Abort(); }
-                    //    if (SV.DT.AnalCamer2){
-                    AbortDlg abortS = new AbortDlg(DLS.DalsaVal.m_Xfer[Slave]);
-                       if (DLS.DalsaVal.m_Xfer[Slave].Freeze()) { DLS.DalsaVal.m_Xfer[Slave].Abort(); }
-                //}
-                 
-                    
+
+                    DLS.StopCAMERA(Master);
+                    DLS.StopCAMERA(Slave);
+
+                    //}
+
+
                     //    //Thread.Sleep(500);
                     //    //HID.OutputHRD_Res(21);  // "OFF Conveyor";
                     //    //Thread.Sleep(200);
@@ -260,7 +257,7 @@ namespace C2S150_ML
                     //    //HID.OutputHRD_Res(18);  // "OFF LIGHT";
                     //    //HID.OutputHRD_Res(31);
                     //    //HID.OutputHRD_Set(32);  // "Червоний зупинено або аварія ";
-                        PotocStartSorting = false;
+                    PotocStartSorting = false;
                     //}
 
                 }
