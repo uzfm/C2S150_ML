@@ -82,7 +82,7 @@ namespace C2S150_ML
                     var sheet = package.Workbook.Worksheets.Add("Report"); //name List
 
 
-                    sheet.Cells["B3"].Value = "C2 150";
+                    sheet.Cells["B3"].Value = "C2S 150";
                     sheet.Cells["B3"].Style.Font.Size = 26;
                     sheet.Cells["B3"].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
                     // Змінити висоту рядка для відображення тексту
@@ -104,43 +104,58 @@ namespace C2S150_ML
                     sheet.Cells["B6:D6"].Merge = true; // Об'єднати клітинки з трьома справа
 
                    //Name Chart - Fulling 
-                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 2].LoadFromArrays(new object[][] { dTchart.Name });
-                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 2].Style.WrapText = true; // перенос по строкам
-                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 3].LoadFromArrays(new object[][] { dTchart.Name });
+                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 3].Style.WrapText = true; // перенос по строкам
+                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 3].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     
                     //------СТИЛЬ ЗАГОЛОВКА ТАБЛИЦІ
                     //заміна коліру заголовка 11-12
-                    sheet.Cells[8, 2, 8, 11].Style.Font.Color.SetColor(System.Drawing.Color.DarkRed);
+                    sheet.Cells[8, 2, 8, 20].Style.Font.Color.SetColor(System.Drawing.Color.DarkRed);
                     //sheet.Cells[8, 12, 8, dTchart.Name.Length + 2].Style.Font.Color.SetColor(System.Drawing.Color.DarkGreen);
 
-                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 2].Style.Font.Bold = true; // select text
-                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 2].Style.Font.Size = 14; // шрифт заголовка
-                    sheet.Cells[8, 2, 8, 2].Style.Font.UnderLine = true; // виділити підкреслення Select Row
+                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 3].Style.Font.Bold = true; // select text
+                    sheet.Cells[8, 2, 8, dTchart.Name.Length + 3].Style.Font.Size = 14; // шрифт заголовка
+                    sheet.Cells[8, 2, 8, 3].Style.Font.UnderLine = true; // виділити підкреслення Select Row
 
                     sheet.Column(1).Width = 5; //Ширина ID стовпця
-                    sheet.Column(2).Width = 22;// Ширина Tate Time стовпця
-                    sheet.Row(8).Height = 35; // Задайте необхідну висоту ЗАГОЛОВКА
+                    sheet.Column(2).Width = 12;// Ширина Date Time стовпця
+                    sheet.Column(3).Width = 24;// Ширина Date Time стовпця
+                    sheet.Column(4).Width = 9;// Ширина Date Time стовпця
+                    sheet.Row(8).Height = 45; // Задайте необхідну висоту ЗАГОЛОВКА
 
 
 
                 //Chart - Fulling
-                var row = 9;     // ROW START TABLE 
+                    var row = 9;     // ROW START TABLE 
                     var column = 2;  // COLUMN START TABLE 
                     int ID = 1;      // ID START TABLE 
 
                 //********* " string char " separate write  не стандартні дані (TATE TIME) *******//
                 foreach (DT item in dTchart.DT)
                     {
-                    
+                     int  i=0;
+
+                     //Name
+                    sheet.Cells[row, column - 1].Value = ID++;
+                    sheet.Cells[row, column + i].Value = item.Value[i];
+                     i++;
+
+                    //Data Time START
                         sheet.Cells[row, column - 1].Value = ID++;
-                        int i = 0;
                         sheet.Cells[row, column + i].Value = item.Value[i];
                         i++;
 
-                        //***********************************************//
-                        try
+                      //Time STOP
+                        sheet.Cells[row, column - 1].Value = ID++;
+                        sheet.Cells[row, column + i].Value = item.Value[i];
+                       i++;
+
+            
+
+                    //****************  Value Only INT *******************************//
+                    try
                         {
-                            for (; i < item.Value.Length-1; i++)
+                            for (; i < item.Value.Length; i++)
                             {
 
                                 if (item.Value[i] != "")
@@ -148,8 +163,7 @@ namespace C2S150_ML
                                     sheet.Cells[row, column + i].Value = Convert.ToDouble(item.Value[i]);
                                  }  
                             }
-                            //Останій запис String
-                        sheet.Cells[row, column + i].Value = item.Value[i];
+       
 
 
                     } catch { Help.Mesag("Input string was not in correct format (XLSX)"); }

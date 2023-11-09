@@ -36,7 +36,11 @@ namespace C2S150_ML
             public string PachXLSX         { get; set; }
             public string PachDB           { get; set; }
             public string PathAnalysisTest { get; set; }
-            public decimal SampleWeight        { get; set; }
+            public decimal SampleWeight    { get; set; }
+
+            //Filling Hopper Error
+            public decimal SignalLamp;
+            public decimal SystemOFF;
 
 
             //GRAF ML
@@ -72,18 +76,22 @@ namespace C2S150_ML
             public USB_HID.DATA_Save USB = new USB_HID.DATA_Save();
             public EMGU.DATA_Save EMGUDT = new EMGU.DATA_Save();
             public VIS.DATA_Save Vis = new VIS.DATA_Save();
+            public PDF.DATA_Save Pdf = new PDF.DATA_Save();
 
             public  void SET(){
+
                  Data.USB    = USB_HID.Data;
                  Data.EMGUDT = EMGU.Data;
-                 Data.Vis =    VIS.Data;
+                 Data.Vis    = VIS.Data;
+                 Data.Pdf    = PDF.Data;
             }
 
-            public void READ()
-            {
+            public void READ(){
+            
                 USB_HID.Data = Data.USB;
-                EMGU.Data = Data.EMGUDT;
-                VIS.Data  = Data.Vis;
+                EMGU.Data    = Data.EMGUDT;
+                VIS.Data     = Data.Vis;
+                PDF.Data     = Data.Pdf;
             }
 
         }

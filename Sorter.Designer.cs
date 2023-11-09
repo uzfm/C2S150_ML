@@ -55,16 +55,21 @@ namespace C2S150_ML
             this.ProgresBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.Warning = new System.Windows.Forms.ToolStripStatusLabel();
-            this.ConsolMesg = new System.Windows.Forms.ToolStripStatusLabel();
             this.FlapsShow_9 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -130,6 +135,7 @@ namespace C2S150_ML
             this.button11 = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.ShowImageInReport = new System.Windows.Forms.CheckBox();
             this.button35 = new System.Windows.Forms.Button();
             this.button51 = new System.Windows.Forms.Button();
             this.SempleTyp = new System.Windows.Forms.RichTextBox();
@@ -222,6 +228,7 @@ namespace C2S150_ML
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.button14 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.numericACQ_Gain = new System.Windows.Forms.NumericUpDown();
             this.label33 = new System.Windows.Forms.Label();
@@ -437,10 +444,9 @@ namespace C2S150_ML
             this.CauntSamls,
             this.toolStripStatusLabel3,
             this.toolStripStatusLabel5,
-            this.ProgresBar,
             this.toolStripStatusLabel4,
-            this.Warning,
-            this.ConsolMesg});
+            this.ProgresBar,
+            this.Warning});
             this.statusStrip1.Location = new System.Drawing.Point(0, 1006);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -566,19 +572,11 @@ namespace C2S150_ML
             // Warning
             // 
             this.Warning.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.Warning.ForeColor = System.Drawing.Color.DimGray;
+            this.Warning.ForeColor = System.Drawing.Color.Brown;
             this.Warning.LinkColor = System.Drawing.Color.Black;
             this.Warning.Name = "Warning";
             this.Warning.Size = new System.Drawing.Size(97, 30);
             this.Warning.Text = "Warning";
-            // 
-            // ConsolMesg
-            // 
-            this.ConsolMesg.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.ConsolMesg.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ConsolMesg.Name = "ConsolMesg";
-            this.ConsolMesg.Size = new System.Drawing.Size(34, 30);
-            this.ConsolMesg.Text = "NO";
             // 
             // FlapsShow_9
             // 
@@ -620,15 +618,21 @@ namespace C2S150_ML
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
+            this.Column7,
+            this.Column8,
             this.Column2,
             this.Column4,
             this.Column5,
             this.Column6,
-            this.Column3});
+            this.Column9,
+            this.Column3,
+            this.Column10,
+            this.Column11,
+            this.Column12});
             this.dataGridView1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView1.Size = new System.Drawing.Size(697, 210);
@@ -638,10 +642,20 @@ namespace C2S150_ML
             // 
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Column1.FillWeight = 50F;
-            this.Column1.HeaderText = "Data Time";
+            this.Column1.FillWeight = 80F;
+            this.Column1.HeaderText = "Data Time Start";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
+            // 
+            // Column7
+            // 
+            this.Column7.HeaderText = "Time Stop";
+            this.Column7.Name = "Column7";
+            // 
+            // Column8
+            // 
+            this.Column8.HeaderText = "Name";
+            this.Column8.Name = "Column8";
             // 
             // Column2
             // 
@@ -669,11 +683,31 @@ namespace C2S150_ML
             this.Column6.HeaderText = "Good Kg";
             this.Column6.Name = "Column6";
             // 
+            // Column9
+            // 
+            this.Column9.HeaderText = "Bad Kg";
+            this.Column9.Name = "Column9";
+            // 
             // Column3
             // 
             this.Column3.HeaderText = " Total Weight Kg";
             this.Column3.Name = "Column3";
             this.Column3.Width = 120;
+            // 
+            // Column10
+            // 
+            this.Column10.HeaderText = "Size 50-100";
+            this.Column10.Name = "Column10";
+            // 
+            // Column11
+            // 
+            this.Column11.HeaderText = "Size 100-500";
+            this.Column11.Name = "Column11";
+            // 
+            // Column12
+            // 
+            this.Column12.HeaderText = "Size 500-1000";
+            this.Column12.Name = "Column12";
             // 
             // splitContainer6
             // 
@@ -1155,6 +1189,7 @@ namespace C2S150_ML
             // 
             // splitContainer3.Panel1
             // 
+            this.splitContainer3.Panel1.AutoScroll = true;
             this.splitContainer3.Panel1.Controls.Add(this.groupBox3);
             this.splitContainer3.Panel1.Controls.Add(this.button10);
             this.splitContainer3.Panel1.Controls.Add(this.buttonStartAnalic);
@@ -1592,6 +1627,7 @@ namespace C2S150_ML
             // 
             // groupBox12
             // 
+            this.groupBox12.Controls.Add(this.ShowImageInReport);
             this.groupBox12.Controls.Add(this.button35);
             this.groupBox12.Controls.Add(this.button51);
             this.groupBox12.Controls.Add(this.SempleTyp);
@@ -1612,6 +1648,16 @@ namespace C2S150_ML
             this.groupBox12.TabIndex = 2002;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Report Settings";
+            // 
+            // ShowImageInReport
+            // 
+            this.ShowImageInReport.AutoSize = true;
+            this.ShowImageInReport.Location = new System.Drawing.Point(972, 29);
+            this.ShowImageInReport.Name = "ShowImageInReport";
+            this.ShowImageInReport.Size = new System.Drawing.Size(151, 20);
+            this.ShowImageInReport.TabIndex = 2004;
+            this.ShowImageInReport.Text = "Show image in report";
+            this.ShowImageInReport.UseVisualStyleBackColor = true;
             // 
             // button35
             // 
@@ -1636,6 +1682,7 @@ namespace C2S150_ML
             this.button51.TabIndex = 2002;
             this.button51.Text = "\\\\...";
             this.button51.UseVisualStyleBackColor = false;
+            this.button51.Click += new System.EventHandler(this.button51_Click);
             // 
             // SempleTyp
             // 
@@ -1768,6 +1815,7 @@ namespace C2S150_ML
             this.MakeReportButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.MakeReportButton.UseCompatibleTextRendering = true;
             this.MakeReportButton.UseVisualStyleBackColor = false;
+            this.MakeReportButton.Click += new System.EventHandler(this.MakeReportButton_Click);
             // 
             // tabPage1
             // 
@@ -2614,11 +2662,6 @@ namespace C2S150_ML
             0,
             0,
             0});
-            this.numericUpDown4.Minimum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.numericUpDown4.Name = "numericUpDown4";
             this.numericUpDown4.Size = new System.Drawing.Size(76, 26);
             this.numericUpDown4.TabIndex = 38;
@@ -2637,11 +2680,6 @@ namespace C2S150_ML
             this.TimHoperOff.Location = new System.Drawing.Point(106, 53);
             this.TimHoperOff.Maximum = new decimal(new int[] {
             3600,
-            0,
-            0,
-            0});
-            this.TimHoperOff.Minimum = new decimal(new int[] {
-            120,
             0,
             0,
             0});
@@ -2759,6 +2797,7 @@ namespace C2S150_ML
             // 
             // groupBox14
             // 
+            this.groupBox14.Controls.Add(this.button14);
             this.groupBox14.Controls.Add(this.button13);
             this.groupBox14.Controls.Add(this.numericACQ_Gain);
             this.groupBox14.Controls.Add(this.label33);
@@ -2771,9 +2810,19 @@ namespace C2S150_ML
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "ACQ";
             // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(19, 92);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(98, 25);
+            this.button14.TabIndex = 388;
+            this.button14.Text = "Acq Black";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
             // button13
             // 
-            this.button13.Location = new System.Drawing.Point(19, 76);
+            this.button13.Location = new System.Drawing.Point(19, 63);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(98, 25);
             this.button13.TabIndex = 387;
@@ -2829,7 +2878,7 @@ namespace C2S150_ML
             // checkBoxAcqSet
             // 
             this.checkBoxAcqSet.AutoSize = true;
-            this.checkBoxAcqSet.Location = new System.Drawing.Point(44, 48);
+            this.checkBoxAcqSet.Location = new System.Drawing.Point(44, 42);
             this.checkBoxAcqSet.Name = "checkBoxAcqSet";
             this.checkBoxAcqSet.Size = new System.Drawing.Size(73, 20);
             this.checkBoxAcqSet.TabIndex = 380;
@@ -3842,7 +3891,7 @@ namespace C2S150_ML
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Sorter";
-            this.Text = "Soreter";
+            this.Text = "Sorter";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Soreter_FormClosed);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -4243,12 +4292,6 @@ namespace C2S150_ML
         private System.Windows.Forms.GroupBox DeleteColumn;
         private System.Windows.Forms.Button button66;
         private System.Windows.Forms.DataGridView dataGridView2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.GroupBox groupBox23;
         private System.Windows.Forms.Label labelDectContur;
         private System.Windows.Forms.GroupBox groupBox25;
@@ -4269,5 +4312,19 @@ namespace C2S150_ML
         private System.Windows.Forms.GroupBox groupBox33;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown SampleWeight;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.CheckBox ShowImageInReport;
     }
 }

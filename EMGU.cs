@@ -697,8 +697,8 @@ namespace C2S150_ML
         public int ID;                 // індефікатор масива назва семпла по сторонам
         public String Name ;           // назва семпла по сторонам
         public float  Value;           // детальна значеня по усіх назвах сеплів для двох сторін
+        public double  SizeCNT;         // розмір забруднення в мікронах
 
-                                            
 
     };
 

@@ -861,9 +861,12 @@ namespace C2S150_ML
 
        static public void StopCAMERA(int ID_Cam) {
 
-            AbortDlg abortM = new AbortDlg(DLS.DalsaVal.m_Xfer[ID_Cam]);
-            if (DLS.DalsaVal.m_Xfer[ID_Cam].Freeze()) { DLS.DalsaVal.m_Xfer[ID_Cam].Abort(); }
-      
+          
+                if (DLS.DalsaVal.m_Xfer[ID_Cam] != null) { 
+                  AbortDlg abortM = new AbortDlg(DLS.DalsaVal.m_Xfer[ID_Cam]);
+                if ( DLS.DalsaVal.m_Xfer[ID_Cam].Freeze()) { DLS.DalsaVal.m_Xfer[ID_Cam].Abort(); }
+            }
+           
         }
 
 
@@ -1068,10 +1071,15 @@ namespace C2S150_ML
             }
             DarkImage(ID_Cam);
         }
+       
+        
+        
+        
+        
         //
         // Step 2: Snap a bright image to calculate the gain coefficients
         //
-        public void Acq_Bright_Click(int ID_Cam)
+        public void _Acq_Bright_Click(int ID_Cam)
         {
          
 
@@ -1197,7 +1205,7 @@ namespace C2S150_ML
         //
         // Step 3: SAVE image to calculate the gain coefficients
         //
-        private void DarkImage(int ID_Cam ){
+        private void _DarkImage(int ID_Cam ){
 
 
             String str;
@@ -1331,16 +1339,198 @@ namespace C2S150_ML
 
         int textBox_Frame_Avg = 20;                  // Визначається кількість зображень, які використовуються для розрахунку Flat Field 
         int textBox_Line_Avg = 64;                   // Кількість ліній для усереднення
-        int textBox_Max_Dev = 100;                   // Встановіть максимальне відхилення від середнього значення пікселя для темного зображення
+        int textBox_Max_Dev = 200;                   // Встановіть максимальне відхилення від середнього значення пікселя для темного зображення
         int textBox_Vert_Offset = 0;                 // вертикальний зсув
-        bool ClippedCoefsDefects_checkbox = false;   // вказує, чи слід вважати пікселі з обрізаними коефіцієнтами як дефектні.
+        bool ClippedCoefsDefects_checkbox = true;   // вказує, чи слід вважати пікселі з обрізаними коефіцієнтами як дефектні.
 
         //----------------------------  ACQ Simply  -----------------------------------------------------------------//
+
+        public Bitmap Acq_Dark_Simply (int ID_Cam, string PashSV)
+        {
+
+
+            if (ID_Cam == Master) { SetGain((double)SETS.Data.ACQGEIN1, Master); }
+            else { SetGain((double)SETS.Data.ACQGEIN2, Slave); }
+
+            System.Threading.Thread.Sleep(500);
+            LIGHT.OFF();
+            DLS.ImgSnapSet = true;
+            DLS.StartCAMERA(SETS.Data.ID_CAM);
+            System.Threading.Thread.Sleep(500);
+
+            DLS.ImgSnapSet = true;
+            System.Threading.Thread.Sleep(500);
+            DLS.StopCAMERA(SETS.Data.ID_CAM);
+            LIGHT.ON();
+
+            System.Threading.Thread.Sleep(200);
+
+
+            int nbImagesUsed = DalsaVal.m_FlatField[ID_Cam].CorrectionType == SapFlatField.ScanCorrectionType.Field ? textBox_Frame_Avg : 1;
+
+
+            // Встановіть максимальне відхилення від середнього значення пікселя для темного зображення
+            DalsaVal.m_FlatField[ID_Cam].DeviationMaxBlack = textBox_Max_Dev;
+
+            // Set number of lines to average and vertical offset
+            DalsaVal.m_FlatField[ID_Cam].NumLinesAverage = textBox_Line_Avg;
+            DalsaVal.m_FlatField[ID_Cam].VerticalOffset = textBox_Vert_Offset;
+
+            // Set wether to declare pixels with clipped coefficient as defective
+            DalsaVal.m_FlatField[ID_Cam].ClippedGainOffsetDefects = ClippedCoefsDefects_checkbox;
+
+
+
+            if (DalsaVal.m_Xfer[ID_Cam] != null && DalsaVal.m_Xfer[ID_Cam].Initialized)
+            {
+             
+                // Load an image
+                //Створити буфер для вирівнювання
+                DalsaVal.m_pLocalBuffer[ID_Cam] = new SapBuffer(nbImagesUsed, DalsaVal.m_Buffers[ID_Cam], SapBuffer.MemoryType.Default);   ///<- SapBuffer m_pBuffer;
+                DalsaVal.m_pLocalBuffer[ID_Cam].Create();
+
+                Image<Gray, byte> rotatedImage;
+                if (ID_Cam == Slave) { rotatedImage = ImgSnap.ToImage<Gray, byte>().Rotate(180, new Gray()).Clone(); }
+                else
+                { rotatedImage = ImgSnap.ToImage<Gray, byte>().Clone(); }
+
+                string Pash = Path.Combine(PashSV, "ImgAcq_Dark" + SETS.Data.ID_CAM.ToString() + ".bmp"); //створити шлях до IMG
+                rotatedImage.Save(Pash);
+
+
+                // Create a temporary buffer in order to know the selected file's native format and pixel depth
+
+                SapBuffer loadBuffer = new SapBuffer(Pash, SapBuffer.MemoryType.Default);
+                loadBuffer.Create();
+
+                if (loadBuffer.Format != DalsaVal.m_Buffers[ID_Cam].Format || loadBuffer.PixelDepth != DalsaVal.m_Buffers[ID_Cam].PixelDepth)
+                {
+                    LogMessage(LogTypes.Warning, "Image file has a different format than expected.  Pixel values may get shifted.");
+                }
+
+                if (loadBuffer.Width != DalsaVal.m_Buffers[ID_Cam].Width || loadBuffer.Height != DalsaVal.m_Buffers[ID_Cam].Height)
+                {
+                    LogMessage(LogTypes.Error, "Image file selected doesn't have same dimensions as buffer.");
+                    if (DalsaVal.m_pLocalBuffer[ID_Cam] != null)
+                    {
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Destroy();
+                        DalsaVal.m_pLocalBuffer[ID_Cam].Dispose();
+                        DalsaVal.m_pLocalBuffer[ID_Cam] = null;
+                    }
+                    return ImgSnap.ToImage<Gray, byte>().ToBitmap(); ;
+                }
+
+                loadBuffer.Load(Pash, 0);
+                DalsaVal.m_pLocalBuffer[ID_Cam].Copy(loadBuffer);
+
+               // String str="";
+               ///str = String.Format("Loaded dark image: {}", Pash.ToString());
+                //LogMessage(LogTypes.Info, str);
+
+                DarkImage(ID_Cam);
+            }
+            return ImgSnap.ToImage<Gray, byte>().ToBitmap(); ;
+        }
+
+
+        private void DarkImage(int ID_Cam)
+        {
+
+
+            String str;
+            SapFlatFieldStats stats = new SapFlatFieldStats();
+
+            str = String.Format("Correction type: {0}", DalsaVal.m_CorrectionType[ID_Cam]);
+            LogMessage(LogTypes.Info, str);
+
+            str = String.Format("Video type: {0}", DalsaVal.m_VideoType[ID_Cam]);
+            LogMessage(LogTypes.Info, str);
+
+            if (DalsaVal.m_Xfer[ID_Cam] != null)
+            {
+                str = String.Format("Number of frames to average: {0}", textBox_Frame_Avg.ToString());
+                LogMessage(LogTypes.Info, str);
+            }
+
+            if (DalsaVal.m_CorrectionType[ID_Cam] == SapFlatField.ScanCorrectionType.Line)
+            {
+                str = String.Format("Number of lines to average: {0}", textBox_Line_Avg.ToString());
+                LogMessage(LogTypes.Info, str);
+
+                str = String.Format("Vertical offset from top: {0}", textBox_Vert_Offset.ToString());
+                LogMessage(LogTypes.Info, str);
+            }
+
+            LogMessage(LogTypes.Info, "Dark image calibration");
+
+            if (!DalsaVal.m_FlatField[ID_Cam].GetStats(DalsaVal.m_pLocalBuffer[ID_Cam], stats))
+            {
+                LogMessage(LogTypes.Error, "   Unable to get image statistics");
+                return;
+            }
+
+            bool tooManyBadPixels = false;
+            int numComponents = stats.NumComponents;
+
+            for (int i = 0; i < numComponents; i++)                                      //7,10,5,1,7388,7,/90,18555/1
+            {
+                if (stats.get_Average(i) > m_RecommendedDark)
+                {
+                    tooManyBadPixels = true;
+                    break;
+                }
+            }
+
+            if (tooManyBadPixels && DalsaVal.m_FlatField[ID_Cam].ClippedGainOffsetDefects)
+            {
+                //false
+                str = "The following statistics have been computed on the dark image: \n";
+                str += String.Format("The average pixel value is {0}\n", stats.Average.ToString());
+                str += String.Format("\nThis yields too many bad pixels above the hardware limit of {0}\n", m_RecommendedDark);
+                str += String.Format("\nTo disable bad pixels, uncheck the \'Consider as defective ...\'\n");
+                str += String.Format("checkbox, then acquire the dark image again\n");
+
+                MessageBox.Show(str, "", MessageBoxButtons.OK);
+                return;
+            }
+            else
+            {
+                str = "The following statistics have been computed on the dark image: \n";
+                str += String.Format("The average pixel value is {0}\n", stats.Average.ToString());
+                str += String.Format("\nWe recommend an average pixel value of less than {0}\n", m_RecommendedDark);
+                str += String.Format("\nDo you want to use this image?");
+
+                if (MessageBox.Show(str, "", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    return;
+            }
+
+            // Log pixel statistics
+            str = String.Format("    Average pixel value: {0}", stats.Average.ToString());
+            LogMessage(LogTypes.Info, str);
+
+            str = String.Format("    Maximum deviation allowed from average pixel value: {0}", textBox_Max_Dev);
+            LogMessage(LogTypes.Info, str);
+
+            // Compute offset coefficients using last acquired image
+            DalsaVal.m_FlatField[ID_Cam].NumFramesAverage = DalsaVal.m_pLocalBuffer[ID_Cam].Count;
+            if (DalsaVal.m_FlatField[ID_Cam].ComputeOffset(DalsaVal.m_pLocalBuffer[ID_Cam]))
+            {
+
+
+                LogMessage(LogTypes.Info, "Calibration with a dark image has been done successfully");
+       
+
+            }
+        }
+
+
         static Emgu.CV.Mat ImgSnap;
+
         public Bitmap Acq_Bright_Simply(int ID_Cam, string PashSV)
         {           
             if (ID_Cam == Master) { SetGain((double)SETS.Data.ACQGEIN1, Master); }
             else  {SetGain((double)SETS.Data.ACQGEIN2, Slave);  }
+
             System.Threading.Thread.Sleep(500);
             LIGHT.ON();
             DLS.ImgSnapSet = true;
@@ -1420,6 +1610,7 @@ namespace C2S150_ML
 
             return ImgSnap.ToImage<Gray, byte>().ToBitmap();
         }
+
         private  void BrightImage(int ID_Cam )
         {
   

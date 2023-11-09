@@ -203,9 +203,10 @@ namespace C2S150_ML
                         IProducerConsumerCollection<CutImg> CollecTemp = FlowCamera.BuferImg;
 
                         for (int i = 0; i < CutCTR_SV.CUT.Length; i++) {
-                       
-                            if (CutCTR_SV.CUT[i]){
-                            
+
+                            if (CutCTR_SV.CUT[i])
+                            {
+
                                 //if (CutCTR_SV.ROI[i].Y > HeightAI)
                                 //{
 
@@ -217,12 +218,15 @@ namespace C2S150_ML
 
 
 
-                                if (BoxROI.Y == 0)
+
+                               
+
+                                    if (BoxROI.Y == 0)
                                 {
 
 
                                     int RoiX = 100;
-             
+
 
                                     ImagAI.ROI = Rectangle.Empty;
                                     //  if ((BoxROI.Y + (BoxROI.Height) >= ImagAI.Height)) {
@@ -235,12 +239,12 @@ namespace C2S150_ML
                                             BoxROIcaT.X = (CutCTR_Old.ROI[idx].X * ZiseCompres);
                                             int distance = Math.Abs(BoxROI.X - BoxROIcaT.X);
                                             //ВИЗНАЧИТИ ПОХИБКУ ВІДХИЛЕННЯ РОЗРІЗАНОГО СЕМПЛА
-                                            if ((distance < RoiX) )
+                                            if ((distance < RoiX))
                                             {
                                                 RoiX = distance;
                                                 closestIndex = idx;
                                             }
-                                    
+
                                         }
                                     }
 
@@ -254,62 +258,66 @@ namespace C2S150_ML
                                         CutImgClass.ROI = BoxROI;
                                         CutImgClass.ID = Master;
 
-                                        if (!FlowCamera.AnalisLock) { Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
+                                        if ((!FlowCamera.AnalisLock)&& (CutImgClass.ROI.Width != 0) && (CutImgClass.ROI.Height != 0))
+                                        { Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.DarkOrange).MCvScalar, 5); }
                                         //break;
-                                    }else{ 
-
-
-                                    BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * ZiseCompres);
-                                    BoxROIcaT.Y = (CutCTR_Old.ROI[closestIndex].Y * ZiseCompres);  //20
-                                    BoxROIcaT.Height = (CutCTR_Old.ROI[closestIndex].Height * ZiseCompres); //вниз 19
-                                    BoxROIcaT.Width = CutCTR_Old.ROI[closestIndex].Width * ZiseCompres; //в ліво 12
-
-                                    //ImagAI_Old.ROI = BoxROIcaT;
-                                    //ImagAI.    ROI = BoxROI;
-                                    if (BoxROIcaT.X >= BoxROI.X)
-                                    {
-
-                                        if (BoxROIcaT.Width > BoxROI.Width)
-                                        { BoxROIcaT.Width = BoxROI.Width = BoxROIcaT.Width + (BoxROIcaT.X - BoxROI.X); }
-                                        else { BoxROIcaT.Width = BoxROI.Width; }
-
-                                        BoxROIcaT.X = BoxROI.X;
-                                        ImagAI_Old.ROI = BoxROIcaT;
-                                        ImagAI.ROI = BoxROI;
                                     }
                                     else
                                     {
 
 
-                                        if (BoxROI.Width > BoxROIcaT.Width)
-                                        { BoxROIcaT.Width = BoxROI.Width = BoxROI.Width + (BoxROI.X - BoxROIcaT.X); }
-                                        else { BoxROI.Width = BoxROIcaT.Width; }
+                                        BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * ZiseCompres);
+                                        BoxROIcaT.Y = (CutCTR_Old.ROI[closestIndex].Y * ZiseCompres);  //20
+                                        BoxROIcaT.Height = (CutCTR_Old.ROI[closestIndex].Height * ZiseCompres); //вниз 19
+                                        BoxROIcaT.Width = CutCTR_Old.ROI[closestIndex].Width * ZiseCompres; //в ліво 12
 
-                                        BoxROI.X = BoxROIcaT.X;
-                                        ImagAI_Old.ROI = BoxROIcaT;
+                                        //ImagAI_Old.ROI = BoxROIcaT;
+                                        //ImagAI.    ROI = BoxROI;
+                                        if (BoxROIcaT.X >= BoxROI.X)
+                                        {
+
+                                            if (BoxROIcaT.Width > BoxROI.Width)
+                                            { BoxROIcaT.Width = BoxROI.Width = BoxROIcaT.Width + (BoxROIcaT.X - BoxROI.X); }
+                                            else { BoxROIcaT.Width = BoxROI.Width; }
+
+                                            BoxROIcaT.X = BoxROI.X;
+                                            ImagAI_Old.ROI = BoxROIcaT;
+                                            ImagAI.ROI = BoxROI;
+                                        }
+                                        else
+                                        {
+
+
+                                            if (BoxROI.Width > BoxROIcaT.Width)
+                                            { BoxROIcaT.Width = BoxROI.Width = BoxROI.Width + (BoxROI.X - BoxROIcaT.X); }
+                                            else { BoxROI.Width = BoxROIcaT.Width; }
+
+                                            BoxROI.X = BoxROIcaT.X;
+                                            ImagAI_Old.ROI = BoxROIcaT;
+                                            ImagAI.ROI = BoxROI;
+                                        }
+
+                                        //Stmpl дотикається до верху (Позначаєм Синій но не враховуємо) а додаєм в буфер
+                                        //Stmpl зєднуються з двох окремих картинок 
+
+                                        CvInvoke.VConcat(ImagAI_Old, ImagAI, NewMatAI);
+
                                         ImagAI.ROI = BoxROI;
+                                        CutImgClass.Img = NewMatAI.ToImage<Gray, byte>().Copy().Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
+                                        CutImgClass.ROI = BoxROI;
+                                        CutImgClass.ID = Master;
+
+                                        if ((!FlowCamera.AnalisLock)&& (CutImgClass.ROI.Width != 0) && (CutImgClass.ROI.Height != 0))
+                                        { Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
+                                        CutImgClass = new CutImg();
+                                        CutCTR_Old.NULL[closestIndex] = false;
+                                        if (!SETS.Data.LiveVideoOFF)
+                                        { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Blue).MCvScalar, 5); }
+
                                     }
-
-                                    //Stmpl дотикається до верху (Позначаєм Синій но не враховуємо) а додаєм в буфер
-                                    //Stmpl зєднуються з двох окремих картинок 
-
-                                    CvInvoke.VConcat(ImagAI_Old, ImagAI, NewMatAI);
-
-                                    ImagAI.ROI = BoxROI;
-                                    CutImgClass.Img = NewMatAI.ToImage<Gray, byte>().Copy().Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
-                                    CutImgClass.ROI = BoxROI;
-                                    CutImgClass.ID  = Master;
-
-                                    if (!FlowCamera.AnalisLock) {Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
-                                    CutImgClass = new CutImg();
-                                    CutCTR_Old.NULL[closestIndex] = false;
-                                    if (!SETS.Data.LiveVideoOFF)
-                                    { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Blue).MCvScalar, 5); }
-
-                                }
                                 }
                                 else
                                 {
@@ -322,18 +330,26 @@ namespace C2S150_ML
                                         CutImgClass.ROI = BoxROI;
                                         CutImgClass.ID = Master;
 
-                                        if (!FlowCamera.AnalisLock) {  Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
+                                        if ((!FlowCamera.AnalisLock)&& (CutImgClass.ROI.Width != 0) && (CutImgClass.ROI.Height != 0))
+                                        { Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Green).MCvScalar, 5); }
 
-                                    } else {
+                                    }
+                                    else
+                                    {
 
                                         CutCTR_SV.NULL[i] = true;
                                         if (!SETS.Data.LiveVideoOFF)
-                                        {CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Red).MCvScalar, 5);}
+                                        { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Red).MCvScalar, 5); }
                                     }
                                 }
+
+
+                  
+
+
                             }
                         }
 
@@ -357,7 +373,8 @@ namespace C2S150_ML
                                     CutImgClass.ROI = BoxROI;
                                     CutImgClass.ID = Master;
 
-                                    if (!FlowCamera.AnalisLock) {Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
+                                    if ((!FlowCamera.AnalisLock)&& (CutImgClass.ROI.Width != 0) && (CutImgClass.ROI.Height != 0)) 
+                                    { Calc.BlobsMaster++; CollecTemp.TryAdd(CutImgClass); }
                                     CutImgClass = new CutImg();
                                     ///if (!SETS.Data.LiveVideoOFF) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
                                 }
@@ -599,7 +616,7 @@ namespace C2S150_ML
 
                         for (int i = 0; i < CutCTR_SV.CUT.Length; i++)
                         {
-
+                               /// перевірка чи знайдений контур відповідаєт розміру
                             if (CutCTR_SV.CUT[i])
                             {
 
@@ -612,10 +629,11 @@ namespace C2S150_ML
                                 BoxROI.Height = (CutCTR_SV.ROI[i].Height * ZiseCompres); //вниз 19
                                 BoxROI.Width = CutCTR_SV.ROI[i].Width * ZiseCompres; //в ліво 12
 
+                                
 
-
-                                if (BoxROI.Y == 0)
-                                {
+                               
+                                    if (BoxROI.Y == 0){
+                                
 
                                     //CtrFind = false;
                                     //if (SelectDoubl == true)
@@ -638,7 +656,7 @@ namespace C2S150_ML
                                                 RoiX = distance;
                                                 closestIndex = idx;
                                             }
-                             
+
                                         }
                                     }
 
@@ -649,62 +667,68 @@ namespace C2S150_ML
                                         ImagAI.ROI = BoxROI;
                                         CutImgClass.Img = ImagAI.Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
                                         CutImgClass.ROI = BoxROI;
-                                        CutImgClass.ID =  Slave;
+                                        CutImgClass.ID = Slave;
 
-                                        if (!FlowCamera.AnalisLock) {Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
+                                        if ((!FlowCamera.AnalisLock)&&(CutImgClass.ROI.Width!=0) && (CutImgClass.ROI.Height != 0)) 
+                                        { CollecTemp.TryAdd(CutImgClass); Calc.BlobsSlave++; }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Red).MCvScalar, 5); }
 
-                                    }else { 
-
-
-                                    BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * ZiseCompres);
-                                    BoxROIcaT.Y = (CutCTR_Old.ROI[closestIndex].Y * ZiseCompres);  //20
-                                    BoxROIcaT.Height = (CutCTR_Old.ROI[closestIndex].Height * ZiseCompres); //вниз 19
-                                    BoxROIcaT.Width = CutCTR_Old.ROI[closestIndex].Width * ZiseCompres; //в ліво 12
-
-                                    //ImagAI_Old.ROI = BoxROIcaT;
-                                    //ImagAI.    ROI = BoxROI;
-                                    if (BoxROIcaT.X >= BoxROI.X)
-                                    {
-
-                                        if (BoxROIcaT.Width > BoxROI.Width)
-                                        { BoxROIcaT.Width = BoxROI.Width = BoxROIcaT.Width + (BoxROIcaT.X - BoxROI.X); }
-                                        else { BoxROIcaT.Width = BoxROI.Width; }
-
-                                        BoxROIcaT.X = BoxROI.X;
-                                        ImagAI_Old.ROI = BoxROIcaT;
-                                        ImagAI.ROI = BoxROI;
                                     }
                                     else
                                     {
 
 
-                                        if (BoxROI.Width > BoxROIcaT.Width)
-                                        { BoxROIcaT.Width = BoxROI.Width = BoxROI.Width + (BoxROI.X - BoxROIcaT.X); }
-                                        else { BoxROI.Width = BoxROIcaT.Width; }
+                                        BoxROIcaT.X = (CutCTR_Old.ROI[closestIndex].X * ZiseCompres);
+                                        BoxROIcaT.Y = (CutCTR_Old.ROI[closestIndex].Y * ZiseCompres);  //20
+                                        BoxROIcaT.Height = (CutCTR_Old.ROI[closestIndex].Height * ZiseCompres); //вниз 19
+                                        BoxROIcaT.Width = CutCTR_Old.ROI[closestIndex].Width * ZiseCompres; //в ліво 12
 
-                                        BoxROI.X = BoxROIcaT.X;
-                                        ImagAI_Old.ROI = BoxROIcaT;
+                                        //ImagAI_Old.ROI = BoxROIcaT;
+                                        //ImagAI.    ROI = BoxROI;
+                                        if (BoxROIcaT.X >= BoxROI.X)
+                                        {
+
+                                            if (BoxROIcaT.Width > BoxROI.Width)
+                                            { BoxROIcaT.Width = BoxROI.Width = BoxROIcaT.Width + (BoxROIcaT.X - BoxROI.X); }
+                                            else { BoxROIcaT.Width = BoxROI.Width; }
+
+                                            BoxROIcaT.X = BoxROI.X;
+                                            ImagAI_Old.ROI = BoxROIcaT;
+                                            ImagAI.ROI = BoxROI;
+                                        }
+                                        else
+                                        {
+
+
+                                            if (BoxROI.Width > BoxROIcaT.Width)
+                                            { BoxROIcaT.Width = BoxROI.Width = BoxROI.Width + (BoxROI.X - BoxROIcaT.X); }
+                                            else { BoxROI.Width = BoxROIcaT.Width; }
+
+                                            BoxROI.X = BoxROIcaT.X;
+                                            ImagAI_Old.ROI = BoxROIcaT;
+                                            ImagAI.ROI = BoxROI;
+                                        }
+
+                                        //Stmpl дотикається до верху (Позначаєм Червоним но не враховуємо)
+                                        CvInvoke.VConcat(ImagAI_Old, ImagAI, NewMatAI);
                                         ImagAI.ROI = BoxROI;
+                                        CutImgClass.Img = NewMatAI.ToImage<Gray, byte>().Copy().Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
+                                        CutImgClass.ROI = BoxROI;
+                                        CutImgClass.ID = Slave;
+
+                                        if ((!FlowCamera.AnalisLock)&& (CutImgClass.ROI.Width != 0) && (CutImgClass.ROI.Height != 0)) 
+                                        { CollecTemp.TryAdd(CutImgClass); Calc.BlobsSlave++; }
+                                        CutImgClass = new CutImg();
+                                        CutCTR_Old.NULL[closestIndex] = false;
+                                        if (!SETS.Data.LiveVideoOFF)
+                                        { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Blue).MCvScalar, 5); }
+
                                     }
-
-                                    //Stmpl дотикається до верху (Позначаєм Червоним но не враховуємо)
-                                    CvInvoke.VConcat(ImagAI_Old, ImagAI, NewMatAI);
-                                    ImagAI.ROI = BoxROI;
-                                    CutImgClass.Img = NewMatAI.ToImage<Gray, byte>().Copy().Resize(Dim_ImgMosaic.Height, Dim_ImgMosaic.Width, Inter.Linear).Mat;
-                                    CutImgClass.ROI = BoxROI;
-                                   CutImgClass.ID =  Slave;
-
-                                    if (!FlowCamera.AnalisLock) { Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
-                                    CutImgClass = new CutImg();
-                                    CutCTR_Old.NULL[closestIndex] = false;
-                                    if (!SETS.Data.LiveVideoOFF)
-                                    { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Blue).MCvScalar, 5); }
-
                                 }
-                                } else {
+                                else
+                                {
 
                                     // якщо семпл не дотикається до кінця то враховуємо
                                     //     ------  SEMPL DETEKT ----
@@ -716,7 +740,8 @@ namespace C2S150_ML
                                         CutImgClass.ROI = BoxROI;
                                         CutImgClass.ID = Slave;
 
-                                        if (!FlowCamera.AnalisLock) {Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
+                                        if ((!FlowCamera.AnalisLock)&& (CutImgClass.ROI.Width != 0) && (CutImgClass.ROI.Height != 0)) 
+                                        { CollecTemp.TryAdd(CutImgClass); Calc.BlobsSlave++; }
                                         CutImgClass = new CutImg();
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Green).MCvScalar, 5); }
@@ -729,6 +754,14 @@ namespace C2S150_ML
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Yellow).MCvScalar, 5); }
                                     }
                                 }
+
+                           
+                   
+
+
+
+
+
                             }
                         }
 
@@ -753,7 +786,8 @@ namespace C2S150_ML
                                     CutImgClass.ROI = BoxROI;
                                     CutImgClass.ID = Slave;
 
-                                    if (!FlowCamera.AnalisLock) {Calc.BlobsSlave++; CollecTemp.TryAdd(CutImgClass); }
+                                    if ((!FlowCamera.AnalisLock)&& (CutImgClass.ROI.Width != 0) && (CutImgClass.ROI.Height != 0)) 
+                                    { CollecTemp.TryAdd(CutImgClass); Calc.BlobsSlave++;}
                                     CutImgClass = new CutImg();
                                //     if ((!SETS.Data.LiveVideoOFF) && (SETS.Data.ID_CAM == DLS.Slave)) { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROIcaT, new Bgr(Color.Black).MCvScalar, 5); }
                                 } 
@@ -926,10 +960,11 @@ namespace C2S150_ML
         public static int GoodSamples { get; set; } = 0;
         public static int BadSamples { get; set; } = 0;
 
-  
         public static int BlobsMaster { get; set; } = 0;
         public static int BlobsSlave { get; set; } = 0;
-        
+
+        public static int StopSustem=0;
+
     }
 
 
@@ -992,7 +1027,7 @@ namespace C2S150_ML
 
 
         ML ml = new ML();
-        VIS ViS = new VIS();
+        VIS Vis = new VIS();
         public void Predict(){
 
             int[] Arie ;
@@ -1001,6 +1036,8 @@ namespace C2S150_ML
             //List<Mat> ImgsPredict = new List<Mat>();
             List<Mat>       ImgsMosaic    = new List<Mat>();
             List<Props> ImgsRectangle = new List<Props>();
+            VIS.DT DT_OUT = new VIS.DT();
+
             if (ml.model == null)
             {
                 //Model model = ml.ReadModel();
@@ -1008,6 +1045,7 @@ namespace C2S150_ML
             }
              int IdxBatch;
             while (PotocStartPredict) {
+
                 if ((FlowCamera.BuferImg.Count) != 0){
                     Arie = new int[101];
                  
@@ -1017,10 +1055,9 @@ namespace C2S150_ML
                        
                         //Buffer FUL
                         if ((ImagAI != null) && (ImagAI.Img != null)){
+                            DT_OUT = Vis._DetectBlobBlack(ImagAI.Img);
 
-
-
-                            if (ViS._DetectBlobBlack(ImagAI.Img) ||(FlapsTest)) {
+                            if ((DT_OUT.Detect) || (FlapsTest)) {
                            
                                  // детектування чорного
                                 if ((ImagAI.ROI.X != 0) && (ImagAI.ROI.Width != 0)){
@@ -1040,19 +1077,22 @@ namespace C2S150_ML
                                         DTLimg.Img = ImagAI.Img.ToImage<Gray, byte>();
                                         DTLimg.Name = "bad";
                                         DTLimg.ID = ImagAI.ID;
+                                        DTLimg.SizeCNT = DT_OUT.SizeCNT;
                                         MosaicaEvent(DTLimg);
-                                    }
-                                    else { 
                                     
-                                    }
+                                    }else {     }
+
+
 
 
 
                                 }
+                            
 
-                            }else{   
-                                    // адаптивний сірий
-                                if (ViS._DetectBlob(ImagAI.Img)){
+                            }else{
+                                DT_OUT = Vis._DetectBlob(ImagAI.Img);
+                                // адаптивний сірий
+                                if (DT_OUT.Detect) {
                                 
                                     ImgsMosaic.Add(ImagAI.Img); // IMG analis
                                     Props props = new Props();
@@ -1075,7 +1115,6 @@ namespace C2S150_ML
                         } else { break; }
 
 
-                      
 
                         if ( FlowCamera.BuferImg.Count == 0) { break; }
                     }
@@ -1086,9 +1125,10 @@ namespace C2S150_ML
 
 
                              //--------------------PREDICT------------------//
-                    if (ImgsMosaic.Count != 0){ 
+                    if (ImgsMosaic.Count != 0){
+                        Calc.StopSustem = 0;
 
-                            var Predict = ml.PredictImage(ImgsMosaic);
+                        var Predict = ml.PredictImage(ImgsMosaic);
                        
 
                             int idxRz = 0;
@@ -1096,8 +1136,7 @@ namespace C2S150_ML
 
 
 
-                            if ((ImgsRectangle[idxRz].ROI.X != 0) && (ImgsRectangle[idxRz].ROI.Width != 0))
-                            {
+                     
                                 //var numpyArray = value[0].numpy();
                                 var class_index = np.argmax(pred);
 
@@ -1121,6 +1160,7 @@ namespace C2S150_ML
                                         DTLimg.Name = "Bad";
                                         DTLimg.ID = ImgsRectangle[idxRz].ID;
                                         DTLimg.Img = ImgsMosaic[idxRz].ToImage<Gray, byte>();
+
                                         MosaicaEvent(DTLimg);
                                     };
 
@@ -1134,13 +1174,12 @@ namespace C2S150_ML
                                         DTLimg.Name = "Good";
                                         DTLimg.ID = ImgsRectangle[idxRz].ID;
                                         DTLimg.Img = ImgsMosaic[idxRz].ToImage<Gray, byte>();
+                                        DTLimg.SizeCNT = DT_OUT.SizeCNT;
                                         MosaicaEvent(DTLimg);
                                     }
                                 }
                                 idxRz++;
-                            }
-                            else {
-                            }
+                       
                         }
 
                
@@ -1166,11 +1205,14 @@ namespace C2S150_ML
 
          public int[] SeparationChenal(int Position, int Length, bool RES)
         {
-          //293- flaps
+            int AperturaWidth = 0;
+            //293- flaps
+            if (ANLImg_M.AperturaWidth == 0) { AperturaWidth = ANLImg_S.AperturaWidth; } else 
+                                           { AperturaWidth = ANLImg_M.AperturaWidth; }
 
-            double ShouldDobl = (double)((double)((double)(ANLImg_M.AperturaWidth / (double)Fleps))/100) * (double)SETS.Data.DoublingFlaps/* % від ширини лопатки*/;
+            double ShouldDobl = (double)((double)((double)(AperturaWidth / (double)Fleps))/100) * (double)SETS.Data.DoublingFlaps/* % від ширини лопатки*/;
             int[] Output = new int[3];
-            double Shoulder = ((double)(ANLImg_M.AperturaWidth) / (double)Fleps);
+            double Shoulder = ((double)(AperturaWidth) / (double)Fleps);
             double X = ShouldDobl;
             Output[0] =  (int)((((double)Position + ((double)(Length / 2))  + (ShouldDobl))) / (Shoulder));
             Output[1] =  (int) (((double)Position + ((double)(Length / 2))) / (Shoulder));

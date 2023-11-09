@@ -226,7 +226,22 @@ namespace C2S150_ML
             ModelaPach = @DataPash + "\\Model.h5";
             model.load_weights(ModelaPach);
 
-   
+
+            // Створити сіру картинку 64x64
+            Image<Gray, byte> grayImage = new Image<Gray, byte>((int) img_dim[0],(int) img_dim[1]);
+            // Заповнити картинку сірим кольором
+            grayImage.SetValue(new Gray(128));
+
+
+            Mat mat = grayImage.Mat;
+       
+
+            List<Mat> Img = new List<Mat>();
+            Img.Add(mat);
+            Img.Add(mat);
+            Img.Add(mat);
+
+            var test=  PredictImage(Img);
 
         }
 

@@ -43,15 +43,23 @@ namespace C2S150_ML
 
 
         static string TablNema = "USER";// назва таблиці 
-        static string DataTimes = "Date Time"; //виборка по даті. В таблиці має бути такий стовбець для сортування по даті
+        //static string DataTimes = "Date Time Star"; //виборка по даті. В таблиці має бути такий стовбець для сортування по даті
         public static string[] СolumnNames = {
-                 "Date Time",
+                 "Sample name",
+                 "Date Time Start",
+                 "Time Stop",
                  "Good %",
                  "Bad %",
                  "Speed Kg/h",
                  "Good Kg",
+                 "Bad Kg",
                  "Total Kg",
-                 "Stop/Start"  };
+                 "Size <100",
+                 "Size 100-500",
+                 "Size 500-1000"
+        };
+
+        static string DataTimes = СolumnNames[1]; //виборка по даті. В таблиці має бути такий стовбець для сортування по даті
 
         #endregion Includ 
 
@@ -63,7 +71,7 @@ namespace C2S150_ML
             dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.Red;
             dataGridView1.RowsDefaultCellStyle.ForeColor = Color.Blue;
             dataGridView1.ColumnHeadersDefaultCellStyle.Font = F;
-
+            dataGridView1.ReadOnly = true;
 
             if (!SelectData)
 
@@ -104,8 +112,11 @@ namespace C2S150_ML
                     }
                     dataGridView1.Columns[i].Width = 63;
                 }
-                dataGridView1.Columns[0].Width = 50;
-                dataGridView1.Columns[1].Width = 110;
+
+                dataGridView1.Columns[0].Width = 52;
+                dataGridView1.Columns[1].Width = 85;
+                dataGridView1.Columns[2].Width = 123;
+                dataGridView1.Columns[3].Width = 60;
             } catch { Help.Mesag("Database error! Check database."); }
 
 
@@ -119,7 +130,7 @@ namespace C2S150_ML
                 try
                 {
                     sqlConnection.Open();
-                    Help.WriteLine("Connected to SQL Server.");
+                    //Help.WriteLine("Connected to SQL Server.");
 
                 // Перевірка наявності таблиці value -"TablNema"
                 if (!TableExists(sqlConnection, TablNema)) {
@@ -127,18 +138,23 @@ namespace C2S150_ML
                         CreateUsersTable(sqlConnection);
                     }
 
-
+              if (!ColumnExists(sqlConnection, TablNema, СolumnNames[0]))
+                {
+                    // Якщо стовпця "DataTime" не існує, додаємо його
+                    AddColumn(sqlConnection, TablNema, СolumnNames[0], "NVARCHAR(MAX)");
+                }
 
                     // Перевірка наявності стовпців
-                    if (!ColumnExists(sqlConnection, TablNema, СolumnNames[0]))
+                    if (!ColumnExists(sqlConnection, TablNema, СolumnNames[1]))
                     {
                         // Якщо стовпця "DataTime" не існує, додаємо його
-                        AddColumn(sqlConnection, TablNema, СolumnNames[0], "DATETIME");
+                        AddColumn(sqlConnection, TablNema, СolumnNames[1], "DATETIME");
                     }
+       
 
 
-                    // Пройтися по списку імен стовців і додати їх до "TablNema"
-                    foreach (string columnName in СolumnNames.Skip(1))
+                // Пройтися по списку імен стовців і додати їх до "TablNema"
+                foreach (string columnName in СolumnNames.Skip(2))
                     {
                         if (!ColumnExists(sqlConnection, TablNema, columnName))
                         {
@@ -157,7 +173,7 @@ namespace C2S150_ML
                 }
                 catch (SqlException)
                 {
-                    Help.WriteLine("Error connecting to SQL Server.");
+                    Help.Mesag("Error connecting to SQL Server.");
                 }
             
             return false;
@@ -217,6 +233,9 @@ namespace C2S150_ML
 
         }
 
+
+
+
         static public void DeleteRow(DataGridView dataGridView1) {
 
         var result = MessageBox.Show("Do you want delete select 'Row' ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
@@ -240,7 +259,7 @@ namespace C2S150_ML
         {
             // Очистити всі існуючі стовці в dataGridView
             dataGridView.Columns.Clear();
-
+            dataGridView.ReadOnly = true;
             // Пройтися по списку імен стовців і додати їх до dataGridView
             foreach (string columnName in СolumnNames)
             {
@@ -253,9 +272,20 @@ namespace C2S150_ML
 
             // Встановити ширину першої колонки вдвічі більше
             if (dataGridView.Columns.Count > 0)
-            {
-                dataGridView.Columns[0].Width = dataGridView.Columns[0].Width * 2;
+            {   
+                dataGridView.Columns[0].Width = (int)((double)dataGridView.Columns[2].Width / 1.2);
+                dataGridView.Columns[1].Width =   (int)( (double) dataGridView.Columns[0].Width * 1.4 );
+                dataGridView.Columns[2].Width = (int)((double)dataGridView.Columns[1].Width / 1.7);
+
             }
+
+            // визначаєм заголовкі таблиці
+            for (int i = 3; i < dataGridView.Columns.Count; i++)
+            {
+                dataGridView.Columns[i].Width = (int)((double)dataGridView.Columns[i].Width / 1.7);
+            }
+
+
         }
 
         static  private bool TableExists(SqlConnection connection, string tableName)

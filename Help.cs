@@ -36,17 +36,17 @@ namespace C2S150_ML
         }
 
 
-        static public  void WriteLineInstal(ToolStripStatusLabel Consol)
-        {
-            ConsolMesg = Consol;
+  //      static public  void WriteLineInstal(ToolStripStatusLabel Consol)
+  //      {
+  //          ConsolMesg = Consol;
 
 
-        }
+  //      }
 
-          static public void WriteLine(string Consol){
+  //        static public void WriteLine(string Consol){
         
-            ConsolMesg.Text = Consol;
-        }
+  //          ConsolMesg.Text = Consol;
+  //}
 
 
 

@@ -105,9 +105,11 @@ namespace C2S150_ML
 
 
 
-        public bool _DetectBlob(Mat img_Dtc)
+        public DT _DetectBlob(Mat img_Dtc)
         {
-            Mat ouput = new Mat();
+            DT Dt = new DT();
+
+           Mat ouput = new Mat();
 
             ////Середня фільтрація Blur
             CvInvoke.Blur(img_Dtc, ouput, new Size(Data.blurA, Data.blurA), new Point(-1, -1));
@@ -144,15 +146,16 @@ namespace C2S150_ML
 
             // Фільтрування та відображення закритих контурів
             for (int i = 0; i < conturs.Size; i++){
-
                 double perimeter = CvInvoke.ArcLength(conturs[i], true);
-                if (conturs[i].Size >= 1)
-                { 
-                    return true;
+                if (conturs[i].Size >= 1){
+                    Dt.SizeCNT = SizeAriaDetect(conturs, i);
+                    Dt.Detect = true;
+                    return Dt;
                 }
             }
 
-            return false;
+            Dt.Detect = false;
+            return Dt;
         }
 
 
@@ -164,10 +167,10 @@ namespace C2S150_ML
 
 
 
-        public bool _DetectBlobBlack(Mat img_Dtc)
-        {
-            Mat ouput = new Mat();
+        public DT _DetectBlobBlack(Mat img_Dtc) {
 
+            DT dT = new DT();
+            Mat ouput = new Mat();
             ////Середня фільтрація Blur
             CvInvoke.Blur(img_Dtc, ouput, new Size(Data.blurB, Data.blurB), new Point(-1, -1));
 
@@ -187,24 +190,27 @@ namespace C2S150_ML
                 double perimeter = CvInvoke.ArcLength(conturs[i], true);
 
                 // Zise contur Check
-                if ((perimeter >= Data.ArcLengthB)&&(!ArcLengTestChecd))
-{
-                    return true;
+                if ((perimeter >= Data.ArcLengthB)&&(!ArcLengTestChecd)){
+                     dT.SizeCNT =   SizeAriaDetect(conturs, i);
+                     dT.Detect = true;
+                    return dT;
                 }
                 else {
 
                 // Zise contur Check Test
-                if ((perimeter >= Data.ArcLengthTest) && (ArcLengTestChecd))
-                {
-
-                    return true;
+                if ((perimeter >= Data.ArcLengthTest) && (ArcLengTestChecd)){
+                        dT.SizeCNT = SizeAriaDetect(conturs, i);
+                        dT.Detect = true;
+                        return dT;
                 } }
 
             }
 
-
-            return false;
+             dT.Detect = false;
+            return dT;
         }
+
+
 
         public Image<Bgr, byte> DetectBlobBlack(Mat img_Dtc, Label labelDectContur) {
 
@@ -383,6 +389,48 @@ namespace C2S150_ML
             _img[1] = ColorBlobimg;
             return _img;
         }
+
+
+
+
+
+
+          double SizeAriaDetect(VectorOfVectorOfPoint contours, int idx) {
+
+
+
+
+
+
+        double temp = CvInvoke.ContourArea(contours[idx]);
+
+            double CameraWidthVisibility = 293 ; // ширина видимості камери в міліметрах
+            double CameraWidthPixl = 8192;       // розширення камери в пікселях
+             double   SizePixl = CameraWidthVisibility / CameraWidthPixl;
+
+                      double SizeCt = 0;
+                                if (temp != 0) {
+                SizeCt = ((temp * SizePixl) * (double)1000.0);
+                                        } else { SizeCt = (SizePixl / 2) * (double)1000.0; }
+
+            return SizeCt;
+         }
+
+
+
+
+
+
+
+       public class DT {
+            public double SizeCNT;
+            public   bool Detect;
+        }
+
+
+
+
+
 
     }
 }

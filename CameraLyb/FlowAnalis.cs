@@ -100,7 +100,7 @@ namespace C2S150_ML
 
         static int[] OUTPUT_BIT1 = new int[3];
         static int[] OUTPUT_BIT2 = new int[3];   //зроблено для спрацювання трьох електоро тяг (коли боб падає між двома лопатками)
-        public static bool    StartAnais = false;
+        //public static bool    StartAnais = false;
 
 
 

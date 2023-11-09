@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+
 using System.Threading.Tasks;
 using System.Windows.Forms;
 //using HidLibrary;
@@ -61,6 +62,18 @@ namespace C2S150_ML
         const byte BIT5_SET = 0x20;
         const byte BIT6_SET = 0x40;
         const byte BIT7_SET = 0x80;
+
+        public struct BIT
+        {
+            public const byte I0 = 0x01;
+            public const byte I1 = 0x02;
+            public const byte I2 = 0x04;
+            public const byte I3 = 0x08;
+            public const byte I4 = 0x10;
+            public const byte I5 = 0x20;
+            public const byte I6 = 0x40;
+            public const byte I7 = 0x80;
+        }
 
         const Int16 REG_1 = 1;
         const Int16 REG_2 = 2;
@@ -163,74 +176,76 @@ namespace C2S150_ML
                 /// </summary>
                 public enum Typ { Fps1, Fps2, Fps3, Fps4, Fps5, Fps6, Fps7, Fps8, Fps9, Fps10, Fps11, Fps12, Fps13, Fps14, Fps15, Fps16, Fps17 }
 
-         static Button Flaps1 = new Button();
-         static Button Flaps2 = new Button();
-         static Button Flaps3 = new Button();
-         static Button Flaps4 = new Button();
-        static Button Flaps5 = new Button();
-         static Button Flaps6 = new Button();
-         static Button Flaps7 = new Button();
-        static Button Flaps8 = new Button();
-         static Button Flaps9 = new Button();
-         static Button Flaps10 = new Button();
-        static Button Flaps11 = new Button();
-         static Button Flaps12 = new Button();
-         static Button Flaps13 = new Button();
-         static Button Flaps14 = new Button();
-         static Button Flaps15 = new Button();
-         static Button Flaps16 = new Button();
-         static Button Flaps17 = new Button();
+                static Button Flaps1 = new Button();
+                static Button Flaps2 = new Button();
+                static Button Flaps3 = new Button();
+                static Button Flaps4 = new Button();
+                static Button Flaps5 = new Button();
+                static Button Flaps6 = new Button();
+                static Button Flaps7 = new Button();
+                static Button Flaps8 = new Button();
+                static Button Flaps9 = new Button();
+                static Button Flaps10 = new Button();
+                static Button Flaps11 = new Button();
+                static Button Flaps12 = new Button();
+                static Button Flaps13 = new Button();
+                static Button Flaps14 = new Button();
+                static Button Flaps15 = new Button();
+                static Button Flaps16 = new Button();
+                static Button Flaps17 = new Button();
 
-          static  Timer TimerFlepsColour = new Timer();
+                static Timer TimerFlepsColour = new Timer();
 
-                
+
                 static public void FlepsLightInstal(
             Button Flaps_1, Button Flaps_2, Button Flaps_3, Button Flaps_4,
             Button Flaps_5, Button Flaps_6, Button Flaps_7, Button Flaps_8,
             Button Flaps_9, Button Flaps_10, Button Flaps_11, Button Flaps_12,
             Button Flaps_13, Button Flaps_14, Button Flaps_15, Button Flaps_16, Button Flaps_17
-            ) {
-            Flaps1 = Flaps_1;
-            Flaps2 = Flaps_2;
-            Flaps3= Flaps_3;
-            Flaps4 = Flaps_4;
-            Flaps5 = Flaps_5;
-            Flaps6 = Flaps_6;
-            Flaps7 = Flaps_7;
-            Flaps8 = Flaps_8;
-            Flaps9 = Flaps_9;
-            Flaps10 = Flaps_10;
-            Flaps11 = Flaps_11;
-            Flaps12 = Flaps_12;
-            Flaps13 = Flaps_13;
-            Flaps14 = Flaps_14;
-            Flaps15 = Flaps_15;
-            Flaps16 = Flaps_16;
-            Flaps17 = Flaps_17;
+            )
+                {
+                    Flaps1 = Flaps_1;
+                    Flaps2 = Flaps_2;
+                    Flaps3 = Flaps_3;
+                    Flaps4 = Flaps_4;
+                    Flaps5 = Flaps_5;
+                    Flaps6 = Flaps_6;
+                    Flaps7 = Flaps_7;
+                    Flaps8 = Flaps_8;
+                    Flaps9 = Flaps_9;
+                    Flaps10 = Flaps_10;
+                    Flaps11 = Flaps_11;
+                    Flaps12 = Flaps_12;
+                    Flaps13 = Flaps_13;
+                    Flaps14 = Flaps_14;
+                    Flaps15 = Flaps_15;
+                    Flaps16 = Flaps_16;
+                    Flaps17 = Flaps_17;
 
                     // Встановлення інтервалу в мілісекундах (100 мілісекунд)
                     TimerFlepsColour.Interval = 100;
                     // Додавання обробника події Tick
                     TimerFlepsColour.Tick += TimerFlepsColourTick;
                     // Активація таймера
-                    TimerFlepsColour.Enabled=true;
+                    TimerFlepsColour.Enabled = true;
                     TimerFlepsColour.Start();
 
                 }
 
-  
+
 
                 // Обробник події, який буде викликатися при кожному таймауті
-              static  private  void TimerFlepsColourTick (object sender, EventArgs e)
+                static private void TimerFlepsColourTick(object sender, EventArgs e)
                 {
                     FlepsLightRES();
-          
+
                 }
 
 
                 static public void FlepsLightSET(Typ FlapsSet)
                 {
-                    switch (FlapsSet){
+                    switch (FlapsSet)
+                    {
                         case Typ.Fps1: Flaps1.BackColor = Color.Salmon; break;
                         case Typ.Fps2: Flaps2.BackColor = Color.Salmon; break;
                         case Typ.Fps3: Flaps3.BackColor = Color.Salmon; break;
@@ -252,10 +267,12 @@ namespace C2S150_ML
                     }
                 }
 
-                static public void FlepsLightRES() {
+                static public void FlepsLightRES()
+                {
 
-                    if ((SetFlapsColourDelay) && (SetFlapsColour)){
-                    
+                    if ((SetFlapsColourDelay) && (SetFlapsColour))
+                    {
+
                         Flaps1.BackColor = Color.ForestGreen;
                         Flaps2.BackColor = Color.ForestGreen;
                         Flaps3.BackColor = Color.ForestGreen;
@@ -275,7 +292,8 @@ namespace C2S150_ML
                         Flaps17.BackColor = Color.ForestGreen;
                         SetFlapsColourDelay = false;
                         SetFlapsColour = false;
-                     } else { if (SetFlapsColour) { SetFlapsColourDelay = true;  }   }
+                    }
+                    else { if (SetFlapsColour) { SetFlapsColourDelay = true; } }
 
                 }
 
@@ -291,8 +309,10 @@ namespace C2S150_ML
                 /// </summary>
                 /// <param name="Type"></param>
                 /// <param name="Data"></param>
-                static public void SET(Typ Type){
-                    switch (Type){
+                static public void SET(Typ Type)
+                {
+                    switch (Type)
+                    {
                         case Typ.Fps1: OUTPUT0_BIT |= BIT0_SET; break;
                         case Typ.Fps2: OUTPUT0_BIT |= BIT1_SET; break;
                         case Typ.Fps3: OUTPUT0_BIT |= BIT2_SET; break;
@@ -319,7 +339,7 @@ namespace C2S150_ML
 
                 static public void SET()
                 {
-                   
+
                     RUN();
                 }
 
@@ -346,7 +366,7 @@ namespace C2S150_ML
                         case Typ.Fps15: OUTPUT2_BIT |= BIT0_SET; break;
                         case Typ.Fps16: OUTPUT2_BIT |= BIT1_SET; break;
                         case Typ.Fps17: OUTPUT2_BIT |= BIT2_SET; break;
-                    } 
+                    }
                     FlepsLightSET(Type);
                     TimerFlepsColour.Start();
                     SetFlaps = true;
@@ -362,7 +382,8 @@ namespace C2S150_ML
                 {
 
 
-                    if (SetFlaps == true) {
+                    if (SetFlaps == true)
+                    {
 
                         SetFlaps = false;
                         Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
@@ -375,9 +396,9 @@ namespace C2S150_ML
                         OUTPUT2_BIT &= BIT0_RES;
                         OUTPUT2_BIT &= BIT1_RES;
                         OUTPUT2_BIT &= BIT2_RES;
-                        Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
-                        Buffer_USB_RX[REG_31] = OUTPUT1_BIT;
-                        Buffer_USB_RX[REG_32] = OUTPUT2_BIT; //32
+                        //Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
+                        //Buffer_USB_RX[REG_31] = OUTPUT1_BIT;
+                        //Buffer_USB_RX[REG_32] = OUTPUT2_BIT; //32
 
 
                     }
@@ -387,8 +408,10 @@ namespace C2S150_ML
                 /// Automatic turn-off time of the flaps
                 /// </summary>
                 /// <param name="Data"></param>
-                static public void Time_OFF(decimal Data){
-                    if (Data >= 1){
+                static public void Time_OFF(decimal Data)
+                {
+                    if (Data >= 1)
+                    {
                         USB_HID.Data.Fleps_Time_OFF = Data;
                         byte[] ConvArray = new byte[4];
                         ConvArray = BitConverter.GetBytes((int)Data);
@@ -402,14 +425,49 @@ namespace C2S150_ML
 
             }
 
-            public class LIGHT{
+            public class LIGHT
+            {
 
-                static public void IR(bool ON)     
+
+                // ON - OFF  RED
+                static public void RED_ERROR(bool ON_OFF)
+                {
+                    if (ON_OFF) { OUTPUT3_BIT |= BIT7_SET; } else { OUTPUT3_BIT &= BIT7_RES; }
+                    Buffer_USB_RX[REG_33] = OUTPUT3_BIT; 
+                    HID_Write();
+                }
+
+                // ON - OFF  YELLO
+                static public void YELLO_ERROR(bool ON_OFF)
+                {
+                    if (ON_OFF) { OUTPUT3_BIT |= BIT6_SET; } else { OUTPUT3_BIT &= BIT6_RES; }
+                    Buffer_USB_RX[REG_33] = OUTPUT3_BIT; 
+                    ///HID_Write();
+                }
+
+                // ON - OFF  GREEN
+                static public void GREEN_ERRO(bool ON_OFF)
+                {
+                    if (ON_OFF) { OUTPUT3_BIT |= BIT5_SET; } else { OUTPUT3_BIT &= BIT5_RES; }
+                    Buffer_USB_RX[REG_33] = OUTPUT3_BIT; 
+                    HID_Write();
+                }
+
+
+                // ON   SOUND на одну секунду
+                static public void SOUND_ERRO(bool ON ){
+                    if (ON) { OUTPUT3_BIT |= BIT4_SET; } else { OUTPUT3_BIT &= BIT4_RES; }
+                    Buffer_USB_RX[REG_33] = OUTPUT3_BIT; //25 OUT
+                    HID_Write();
+                }
+
+
+                static public void IR(bool ON)
                 {
                     if (ON) { OUTPUT3_BIT |= BIT3_SET; } else { OUTPUT3_BIT &= BIT3_RES; }
-                        Buffer_USB_RX[REG_33] = OUTPUT3_BIT; //25 OUT
+                    Buffer_USB_RX[REG_33] = OUTPUT3_BIT; //25 OUT
                     HID_Write();
-                
+
                 }
 
                 static public void Top(bool ON)
@@ -435,27 +493,41 @@ namespace C2S150_ML
 
 
 
-                static public void ON ()
+                static public void ON()
                 {
-                    if (!Data.Light_Back  ) { OUTPUT3_BIT |= BIT0_SET; } 
-                    if (!Data.Light_Top   ) { OUTPUT3_BIT |= BIT1_SET; } 
-                    if (!Data.Light_Bottom) { OUTPUT3_BIT |= BIT2_SET; } 
-                    if (!Data.Light_IR    ) { OUTPUT3_BIT |= BIT3_SET; } 
-                  
+                    if (!Data.Light_Back) { OUTPUT3_BIT |= BIT0_SET; }
+                    if (!Data.Light_Top) { OUTPUT3_BIT |= BIT1_SET; }
+                    if (!Data.Light_Bottom) { OUTPUT3_BIT |= BIT2_SET; }
+                    if (!Data.Light_IR) { OUTPUT3_BIT |= BIT3_SET; }
+
 
                     Buffer_USB_RX[REG_33] = OUTPUT3_BIT;   //28 OUT
+
+                    Buffer_USB_RX[30] = 0;
+                    Buffer_USB_RX[31] = 0;
+                    Buffer_USB_RX[32] &= BIT0_RES;
+                    Buffer_USB_RX[32] &= BIT1_RES;
+                    Buffer_USB_RX[32] &= BIT2_RES;
+
                     HID_Write();
                 }
 
 
 
 
-                static public void OFF(){
-                
-                   OUTPUT3_BIT &= BIT0_RES; 
-                   OUTPUT3_BIT &= BIT1_RES; 
-                   OUTPUT3_BIT &= BIT2_RES; 
-                   OUTPUT3_BIT &= BIT3_RES; 
+                static public void OFF()
+                {
+
+                    OUTPUT3_BIT &= BIT0_RES;
+                    OUTPUT3_BIT &= BIT1_RES;
+                    OUTPUT3_BIT &= BIT2_RES;
+                    OUTPUT3_BIT &= BIT3_RES;
+
+                    Buffer_USB_RX[REG_30] = 0;
+                    Buffer_USB_RX[REG_31] = 0;
+                    OUTPUT2_BIT &= BIT0_RES;
+                    OUTPUT2_BIT &= BIT1_RES;
+                    OUTPUT2_BIT &= BIT2_RES;
 
                     Buffer_USB_RX[REG_33] = OUTPUT3_BIT;   //28 OUT
                     HID_Write();
@@ -469,14 +541,16 @@ namespace C2S150_ML
             public class CAMERA
             {
                 //22 OUT
-                static public void OFF() {
+                static public void OFF()
+                {
                     OUTPUT2_BIT &= BIT5_RES;
                     Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
 
                 }
 
-                static public void ON() {
+                static public void ON()
+                {
                     OUTPUT2_BIT |= BIT5_SET;
                     Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
@@ -508,9 +582,9 @@ namespace C2S150_ML
             }
 
 
-            public class AUTOLOADER 
+            public class AUTOLOADER
             {  //out 23
-                
+
                 static public void OFF()
                 {
                     OUTPUT2_BIT &= BIT6_RES;
@@ -543,7 +617,7 @@ namespace C2S150_ML
                     OUTPUT2_BIT |= BIT4_SET;
                     Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
-                }       
+                }
 
             }
 
@@ -562,7 +636,8 @@ namespace C2S150_ML
                 /// </summary>
                 /// <param name=" VIBRATING"></param>
                 /// <returns></returns>
-                static public void SET(Typ Type, decimal Data){
+                static public void SET(Typ Type, decimal Data)
+                {
                     byte[] ConvArray = new byte[4];
                     ConvArray = BitConverter.GetBytes((Int32)Data);
                     switch (Type)
@@ -601,56 +676,133 @@ namespace C2S150_ML
 
 
 
-         void OutputHRD_Set(int OUTPUT_BIT){
-                switch (OUTPUT_BIT){
+            void OutputHRD_Set(int OUTPUT_BIT)
+            {
+                switch (OUTPUT_BIT)
+                {
                     //case 15: OUTPUT2_BIT |= BIT0_SET; break; // Flaps 15
-                    case 18: OUTPUT2_BIT |= BIT1_SET;  break; 
-                    case 19: OUTPUT2_BIT |= BIT2_SET;  break; // Ionizer
-                    case 20: OUTPUT2_BIT |= BIT3_SET;  break; // 
-                    case 21: OUTPUT2_BIT |= BIT4_SET;  break; // Cooling
-                    case 22: OUTPUT2_BIT |= BIT5_SET;  break; // Cameras
-                    case 23: OUTPUT2_BIT |= BIT6_SET;  break; // Autoloader
-                    case 24: OUTPUT2_BIT |= BIT7_SET;  break; // Metal separator
-                    case 25: OUTPUT3_BIT |= BIT0_SET;  break; // Lighte IR
-                    case 26: OUTPUT3_BIT |= BIT1_SET;  break; // Lighte White
-                    case 27: OUTPUT3_BIT |= BIT2_SET;  break; // Lighte White
-                    case 28: OUTPUT3_BIT |= BIT3_SET;  break; // Lighte White
-                    case 29: OUTPUT3_BIT |= BIT4_SET;  break; // Error sound
-                    case 30: OUTPUT3_BIT |= BIT5_SET;  break; // Light error green
-                    case 31: OUTPUT3_BIT |= BIT6_SET;  break; // Light error yellow
-                    case 32: OUTPUT3_BIT |= BIT7_SET;  break; // Light error red
+                    case 18: OUTPUT2_BIT |= BIT1_SET; break;
+                    case 19: OUTPUT2_BIT |= BIT2_SET; break; // Ionizer
+                    case 20: OUTPUT2_BIT |= BIT3_SET; break; // 
+                    case 21: OUTPUT2_BIT |= BIT4_SET; break; // Cooling
+                    case 22: OUTPUT2_BIT |= BIT5_SET; break; // Cameras
+                    case 23: OUTPUT2_BIT |= BIT6_SET; break; // Autoloader
+                    case 24: OUTPUT2_BIT |= BIT7_SET; break; // Metal separator
+                    case 25: OUTPUT3_BIT |= BIT0_SET; break; // Lighte IR
+                    case 26: OUTPUT3_BIT |= BIT1_SET; break; // Lighte White
+                    case 27: OUTPUT3_BIT |= BIT2_SET; break; // Lighte White
+                    case 28: OUTPUT3_BIT |= BIT3_SET; break; // Lighte White
+                    case 29: OUTPUT3_BIT |= BIT4_SET; break; // Error sound
+                    case 30: OUTPUT3_BIT |= BIT5_SET; break; // Light error green
+                    case 31: OUTPUT3_BIT |= BIT6_SET; break; // Light error yellow
+                    case 32: OUTPUT3_BIT |= BIT7_SET; break; // Light error red
 
                 }
             }
 
-          void OutputHRD_Res(int OUTPUT_BIT)
+            void OutputHRD_Res(int OUTPUT_BIT)
             {
 
-                switch (OUTPUT_BIT){
+                switch (OUTPUT_BIT)
+                {
                     //case 15: OUTPUT2_BIT &= BIT0_RES; break;
-                    case 18: OUTPUT2_BIT &= BIT1_RES;  break; // Lighte
-                    case 19: OUTPUT2_BIT &= BIT2_RES;  break; // Ionizer
-                    case 20: OUTPUT2_BIT &= BIT3_RES;  break; // 
-                    case 21: OUTPUT2_BIT &= BIT4_RES;  break; // Cooling
-                    case 22: OUTPUT2_BIT &= BIT5_RES;  break; // Cameras
-                    case 23: OUTPUT2_BIT &= BIT6_RES;  break; // Autoloader
-                    case 24: OUTPUT2_BIT &= BIT7_RES;  break; // Metal separator
-                    case 25: OUTPUT3_BIT &= BIT0_RES;  break;
-                    case 26: OUTPUT3_BIT &= BIT1_RES;  break;
-                    case 27: OUTPUT3_BIT &= BIT2_RES;  break;
-                    case 28: OUTPUT3_BIT &= BIT3_RES;  break;
-                    case 29: OUTPUT3_BIT &= BIT4_RES;  break; // Error sound
-                    case 30: OUTPUT3_BIT &= BIT5_RES;  break; // Light error green
-                    case 31: OUTPUT3_BIT &= BIT6_RES;  break; // Light error yellow
-                    case 32: OUTPUT3_BIT &= BIT7_RES;  break; // Light error red
+                    case 18: OUTPUT2_BIT &= BIT1_RES; break; // Lighte
+                    case 19: OUTPUT2_BIT &= BIT2_RES; break; // Ionizer
+                    case 20: OUTPUT2_BIT &= BIT3_RES; break; // 
+                    case 21: OUTPUT2_BIT &= BIT4_RES; break; // Cooling
+                    case 22: OUTPUT2_BIT &= BIT5_RES; break; // Cameras
+                    case 23: OUTPUT2_BIT &= BIT6_RES; break; // Autoloader
+                    case 24: OUTPUT2_BIT &= BIT7_RES; break; // Metal separator
+                    case 25: OUTPUT3_BIT &= BIT0_RES; break;
+                    case 26: OUTPUT3_BIT &= BIT1_RES; break;
+                    case 27: OUTPUT3_BIT &= BIT2_RES; break;
+                    case 28: OUTPUT3_BIT &= BIT3_RES; break;
+                    case 29: OUTPUT3_BIT &= BIT4_RES; break; // Error sound
+                    case 30: OUTPUT3_BIT &= BIT5_RES; break; // Light error green
+                    case 31: OUTPUT3_BIT &= BIT6_RES; break; // Light error yellow
+                    case 32: OUTPUT3_BIT &= BIT7_RES; break; // Light error red
 
                 }
             }
 
-                    //Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
-                    //Buffer_USB_RX[REG_31] = OUTPUT1_BIT;
-                    //Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
-                    //Buffer_USB_RX[REG_33] = OUTPUT3_BIT;
+            //Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
+            //Buffer_USB_RX[REG_31] = OUTPUT1_BIT;
+            //Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+            //Buffer_USB_RX[REG_33] = OUTPUT3_BIT;
+
+
+
+
+            public class STATUS
+            {
+
+
+
+                public bool SensorHigh { get; }
+                public bool SensorLow { get; }
+                public bool Stop { get; }
+
+                public string Door { get; }
+                public bool DoorStatus { get; }
+
+
+              public  STATUS()
+                {   
+                    SensorHigh = (((Buffer_USB_TX[30] & BIT.I1)) == 0); // Прочитати значення верхнього сенсора
+                    SensorLow = (((byte)(Buffer_USB_TX[30] & BIT.I0)) == 0); // Прочитати значення нижнього сенсора
+                    Stop = (((byte)(Buffer_USB_TX[31] & BIT.I4)) != 0); // Прочитати значення STOP
+
+                    DoorStatus = false;
+                    Door = "";
+                    if (((byte)(Buffer_USB_TX[30] & BIT.I2)) != 0) { DoorStatus = true; Door = Door + "- 1"; }
+            
+                        if (((byte)(Buffer_USB_TX[30] & BIT.I3)) != 0) { DoorStatus = true; Door = Door + "- 2"; }
+                     
+                            if (((byte)(Buffer_USB_TX[30] & BIT.I4)) != 0) { DoorStatus = true; Door = Door + "- 3"; }
+                      
+                                if (((byte)(Buffer_USB_TX[30] & BIT.I5)) != 0) { DoorStatus = true; Door = Door + "- 4"; }
+                          
+                                    if (((byte)(Buffer_USB_TX[30] & BIT.I6)) != 0) { DoorStatus = true; Door = Door + "- 5"; }
+                       
+                                        if (((byte)(Buffer_USB_TX[30] & BIT.I7)) != 0) { DoorStatus = true; Door = Door + "- 6"; }
+                                      
+                                            if (((byte)(Buffer_USB_TX[31] & BIT.I0)) != 0) { DoorStatus = true; Door = Door + "- 7"; }
+                                        
+                                                if (((byte)(Buffer_USB_TX[31] & BIT.I1)) != 0) { DoorStatus = true; Door = Door + "- 8"; }
+
+
+
+
+                    if (DoorStatus == true) { string DoorR = "DOOR IS OPEN  "; Door = DoorR + Door; } else { Door = ""; }
+
+                }
+
+
+
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         }
 
@@ -665,18 +817,13 @@ namespace C2S150_ML
 
 
 
+            //==================================================  USB =========================================================================================================
 
 
-
-
-
-        //==================================================  USB =========================================================================================================
-
-
-        /// <summary>
-        /// /******************************  NEtwork  *******************************//
-        /// </summary>
-        public static bool CONECT;
+            /// <summary>
+            /// /******************************  NEtwork  *******************************//
+            /// </summary>
+            public static bool CONECT;
         private static HidDevice device;
         private static HidDevice[] devices;
         private const int ReportLength = 64;
@@ -812,6 +959,7 @@ namespace C2S150_ML
         {
             RefreshConnection();
             DeviceList.Local.Changed += Local_Changed;
+        
         }
 
         void RefreshConnection()
@@ -878,9 +1026,9 @@ namespace C2S150_ML
                 }
             }
 
-            DeviceList.Local.Changed += Local_Changed;
-            Buffer_USB_RX = new byte[PAGE];
-            HID_Write();
+            //DeviceList.Local.Changed += Local_Changed;
+            //Buffer_USB_RX = new byte[PAGE];
+            //HID_Write();
 
             return StringDevice;
 
@@ -897,24 +1045,48 @@ namespace C2S150_ML
 
 
             Buffer_USB_RX[0] = (byte)2;
-            // try
-            //{
-
-            if (HidStatus == true)
+            try
             {
-                await HIDstream.WriteAsync(Buffer_USB_RX, 0, 64);
+
+                if (HidStatus == true)
+                {
+                    await HIDstream.WriteAsync(Buffer_USB_RX, 0, 64);
+                }
+                else { Help.Mesag("device is disconnected"); }
             }
-            else { Help.Mesag("device is disconnected"); }
-            //}catch { Help.ErrorMesag("USB sending problems");  }
+            catch {// Help.Mesag("USB sending problems");
+            }
 
-
-            Buffer_USB_RX[30] = 0;
-            Buffer_USB_RX[31] = 0;
-            Buffer_USB_RX[32] &= BIT0_RES;
-            Buffer_USB_RX[32] &= BIT1_RES;
-            Buffer_USB_RX[32] &= BIT2_RES;
 
         }
+
+
+
+
+
+
+        public void HID_Read()
+        {
+            while (Flow.PotocStartUSB)
+            {
+
+                Buffer_USB_RX[0] = (byte)1;
+                // try
+                //{
+
+                if (HidStatus == true)
+                {
+
+                   
+
+                    HIDstream.Read(Buffer_USB_TX, 0, 64);
+             
+                }
+                else { Help.Mesag("device is disconnected"); }
+
+            }
+        }
+
 
 
     }

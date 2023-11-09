@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Emgu.CV;
 using Emgu.CV.Structure;
 
+using VIBR_TABLE = C2S150_ML.USB_HID.PLC_C2S150.VIBRATING;
 
 using AUTOLOADER = C2S150_ML.USB_HID.PLC_C2S150.AUTOLOADER;
 using SEPARATOR = C2S150_ML.USB_HID.PLC_C2S150.SEPARATOR;
@@ -57,31 +58,21 @@ namespace C2S150_ML
 
         const int Master = 0;
         const int Slave = 1;
-        static bool   PotocStartHID;
- public static bool   PotocStartSorting;
+
+       // public static bool   PotocStartSorting;
+        public static bool   PotocStartUSB;
 
         static Thread PotocCameraM;
         static Thread PotocCameraS;
         static Thread PotocPredict;
         static Thread PotocHID;
         static Thread PotocSorting;
-
-        
-
+        static Thread PotocUSB;
 
 
 
-        static public void StartPotocHID() {
-        // if( (PotocHID==null) ||  (PotocHID.ThreadState==System.Threading.ThreadState.Stopped   )) {
-        //          // PotocHID = new Thread(PotocHIDFunction,1000000000);
-        //          PotocHID = new Thread(PotocHIDFunction);
-        //          PotocHID.Priority = ThreadPriority.Highest;
-        //          PotocHID.Name = "HID";
-        //        PotocStartHID = true;
-        //        // запускаем поток
-        //        PotocHID.Start();
-        //}
-        }
+
+
 
 
 
@@ -123,7 +114,6 @@ namespace C2S150_ML
             // запускаем поток
             PotocCameraM.Start();
             PotocCameraS.Start();
-            StartPotocHID();
            // CountProcesingCamera++;
         }
 
@@ -137,7 +127,6 @@ namespace C2S150_ML
             AnalisPredict.PotocStartPredict = true;
             // запускаем поток
             PotocPredict.Start();
-            StartPotocHID();
             CountProcesingCamera++;
         }
 
@@ -145,21 +134,49 @@ namespace C2S150_ML
 
 
 
-        static public void StartSorting(){
+        static public void StartSorting(bool start_stop){
+    
+                 START_Flow = start_stop;
+                STARTsorting = start_stop;
             PotocSorting = new Thread(Potoc_Sorting);
             PotocSorting.Priority = ThreadPriority.Lowest;
             PotocSorting.Name = "ShowSorting";
-            PotocStartSorting = true;
             // запускаем поток
             PotocSorting.Start();
+           
+        }
+
+
+        //HID_USB READ
+        USB_HID USB = new USB_HID();
+         public void USB_Hid()
+        {
+
+            if ((PotocUSB == null) || (PotocHID.ThreadState == System.Threading.ThreadState.Stopped))
+            {
+                PotocUSB = new Thread(USB. HID_Read);
+                PotocUSB.Priority = ThreadPriority.Lowest;
+                PotocUSB.Name = "USB";
+                // запускаем поток
+                PotocUSB.Start();
+                PotocStartUSB = true;
+            }
         }
 
 
 
-        static public void StopPotocAnalisBlobs()  { ANLImg_M.PotocStartAnalisBlobs = false; ANLImg_S.PotocStartAnalisBlobs = false; }
-        static public void StopPotocBlobsPredict() { AnalisPredict.PotocStartPredict = false; }
 
-        static public void StopPotocHID() { PotocStartHID = false; }
+
+
+
+        static public void StopPotoc()
+        {
+            ANLImg_M.PotocStartAnalisBlobs = false;
+            ANLImg_S.PotocStartAnalisBlobs = false;
+            AnalisPredict.PotocStartPredict = false;
+            PotocStartUSB = false;
+        }
+
 
 
    
@@ -172,27 +189,45 @@ namespace C2S150_ML
         static FlowAnalis FlowShowImage = new FlowAnalis();
         static FlowAnalis FlowSorting = new FlowAnalis();
 
-        static void PotocHIDFunction(){
-            while (PotocStartHID)
-            {
-                //HID.HID_Set();
-            }
-        }
 
 
+        static bool LivW=false;
 
-
-
-
-
-      public static bool STARTsorting;
-        static void Potoc_Sorting()
+      public  static void LiweVive(bool Liv)
         {
-            while (PotocStartSorting)
-            {
+             LivW = Liv;
+
+                if (LivW)
+                {
+
+                    if (!SETS.Data.CameraAnalis_1) { DLS.StartCAMERA(Master); }
+                    if (!SETS.Data.CameraAnalis_2) { DLS.StartCAMERA(Slave); }
+
+                }
+                else
+                {
+
+                    DLS.StopCAMERA(Master);
+                    DLS.StopCAMERA(Slave);
+
+                }
+            
+
+            }
+        
+
+
+
+
+        public static bool STARTsorting;
+              static bool START_Flow =false;
+        static void Potoc_Sorting() {
+ 
+       
 
                 if (STARTsorting)
                 {
+                   
                     //HID.OutputHRD_Res(30);
                     //HID.OutputHRD_Res(32);
                     //HID.OutputHRD_Set(29);  // "Звуковий сигна ЗПУСКУ";
@@ -209,9 +244,13 @@ namespace C2S150_ML
                     ///Thread.Sleep(200);
                     //Start Cameras
 
+
+                    USB_HID.PLC_C2S150.LIGHT.YELLO_ERROR(true);
+                    USB_HID.PLC_C2S150.LIGHT.RED_ERROR(false);
+
                     if (!SETS.Data.CameraAnalis_1) {  DLS.StartCAMERA(Master); }
                     if (!SETS.Data.CameraAnalis_2) {  DLS.StartCAMERA(Slave); }
-
+                    USB_HID.PLC_C2S150.LIGHT.SOUND_ERRO(true);
                     //if (SV.DT.AnalCamer2) { DLS.DalsaVal.m_Xfer[Slave].Grab(); }
                     Thread.Sleep(100);
                     //HID.OutputHRD_Set(21); // "ON Conveyor";
@@ -224,8 +263,14 @@ namespace C2S150_ML
                     //HID.OutputHRD_Res(31);  
                     //HID.OutputHRD_Set(30);  // "Зелений ПРАЦЮЄ ";
 
-
-                    PotocStartSorting = false;
+                    Thread.Sleep(2000);
+                    VIBR_TABLE.SET(VIBR_TABLE.Typ.ON);
+                    USB_HID.PLC_C2S150.LIGHT.SOUND_ERRO(false);
+                    USB_HID.PLC_C2S150.LIGHT.YELLO_ERROR(false);
+                    USB_HID.PLC_C2S150.LIGHT.GREEN_ERRO(true);
+                    if (!STARTsorting) { USB_HID.PLC_C2S150.LIGHT.GREEN_ERRO(false); VIBR_TABLE.SET(VIBR_TABLE.Typ.OFF); }
+              
+      
                 }
                 else
                 {
@@ -234,20 +279,25 @@ namespace C2S150_ML
                     //HID.OutputHRD_Set(31);             // "ЖОВТИЙ ПОПЕРЕДЖУВАЛЬНИЙ ДО СТАРТУ ЗУПИНКИ";
                     //HID.OutputHRD_Res(12);             // OFF Sensor Level
 
+                    USB_HID.PLC_C2S150.LIGHT.YELLO_ERROR(true);
                     SEPARATOR.OFF();  // Metal separator
                     AUTOLOADER.OFF();  // Autoloder
 
                     //HID.HID_Send_Comand(HID.REG_5, 0); //Start Table
                     //HID.OutputHRD_Res(24);  // Metal separator
-                    //Thread.Sleep(7000);
 
 
+                    VIBR_TABLE.SET(VIBR_TABLE.Typ.OFF);
                     DLS.StopCAMERA(Master);
                     DLS.StopCAMERA(Slave);
+                    Thread.Sleep(2000);
+                    VIBR_TABLE.SET(VIBR_TABLE.Typ.OFF);
+                    USB_HID.PLC_C2S150.LIGHT.YELLO_ERROR(false);
+                    USB_HID.PLC_C2S150.LIGHT.GREEN_ERRO(false);
+                    USB_HID.PLC_C2S150.LIGHT.RED_ERROR(true);
+
 
                     //}
-
-
                     //    //Thread.Sleep(500);
                     //    //HID.OutputHRD_Res(21);  // "OFF Conveyor";
                     //    //Thread.Sleep(200);
@@ -257,10 +307,9 @@ namespace C2S150_ML
                     //    //HID.OutputHRD_Res(18);  // "OFF LIGHT";
                     //    //HID.OutputHRD_Res(31);
                     //    //HID.OutputHRD_Set(32);  // "Червоний зупинено або аварія ";
-                    PotocStartSorting = false;
                     //}
 
-                }
+                
             }
         }
 

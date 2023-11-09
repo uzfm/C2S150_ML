@@ -16,6 +16,7 @@ using CAMERA = C2S150_ML.USB_HID.PLC_C2S150.CAMERA;
 using AUTOLOADER = C2S150_ML.USB_HID.PLC_C2S150.AUTOLOADER;
 using SEPARATOR = C2S150_ML.USB_HID.PLC_C2S150.SEPARATOR;
 using COOLING = C2S150_ML.USB_HID.PLC_C2S150.COOLING;
+using STATUS = C2S150_ML.USB_HID.PLC_C2S150.STATUS;
 
 using Emgu.CV.CvEnum;
 using System.Threading.Tasks;
@@ -62,14 +63,14 @@ namespace C2S150_ML
         private ChartValues<ObservablePoint> chartValues;
         private DateTime startTime;
         STGS STGS = new STGS();
-     
+        Flow Flow = new Flow();
 
         public Sorter()
         {
 
 
             InitializeComponent();
-            Help.WriteLineInstal(ConsolMesg);
+            //Help.WriteLineInstal(ConsolMesg);
 
 
 
@@ -90,11 +91,11 @@ namespace C2S150_ML
 
 
             _SETS.Read();
-           
+
             RefreshSetings();
 
 
-           
+
             timer1.Enabled = true;
             //*************  initialization of cameras  *********************
 
@@ -103,11 +104,11 @@ namespace C2S150_ML
 
 
 
-           // DLS.InstCOM_Setings(DLS.Master);
+            // DLS.InstCOM_Setings(DLS.Master);
             //DLS.InstCOM_Setings(DLS.Slave);
             //***************************************************************
 
-            //************************    запустити поток      ********************************/
+            //************************    запустити 1-6-1 поток      ********************************/
             Flow.AnalisBlobs();
             Flow.BlobsPredict();
             Flow.BlobsPredict();
@@ -115,6 +116,7 @@ namespace C2S150_ML
             Flow.BlobsPredict();
             Flow.BlobsPredict();
             Flow.BlobsPredict();
+            Flow.USB_Hid();
 
             //запустити поток на аналіз Img
             //********************************************************************************/
@@ -133,7 +135,7 @@ namespace C2S150_ML
 
             //////////////////////////Налаштування вісей графіка
             cartesianChart1.AxisX.Add(new Axis { Title = "TIME" });
-            cartesianChart1.AxisY.Add(new Axis { Title = "DATA"  });
+            cartesianChart1.AxisY.Add(new Axis { Title = "DATA" });
 
             // Додавання осі X з часовою міткою
             //cartesianChart1.AxisX.Add(new Axis { LabelFormatter = value => new DateTime((long)value).ToString("HH:mm:ss") });
@@ -147,18 +149,18 @@ namespace C2S150_ML
             LineSeries series = new LineSeries {
 
                 Title = "The number of bad samples per set time interval",
-                Values  =     chartValues,
+                Values = chartValues,
                 DataLabels = true, // Відображення міток даних
 
-                LabelPoint = point =>{
+                LabelPoint = point => {
                     double percentage = RatioBed;
-               return $"{percentage:F0} PCS";
+                    return $"{percentage:F0} PCS";
 
-           },
-                
-                DataLabelsTemplate = new System.Windows.DataTemplate(    ),
-                
-                };
+                },
+
+                DataLabelsTemplate = new System.Windows.DataTemplate(),
+
+            };
 
             /////----------  SQL  ----------------------------------------------------------//
             SQL.DataGridNames(dataGridView1);
@@ -179,9 +181,8 @@ namespace C2S150_ML
             LoadSempelsName();
             FlowCamera.LiveViewTV(LiveView);
             USB_HID.PLC_C2S150.FLAPS.FlepsLightInstal(
-              Fleps1, Fleps2, Fleps3, Fleps4, Fleps5, Fleps6, Fleps7, Fleps8, Fleps9, 
-              Fleps10, Fleps11, Fleps12, Fleps13, Fleps14, Fleps15, Fleps16, Fleps17 );
-               
+              Fleps1, Fleps2, Fleps3, Fleps4, Fleps5, Fleps6, Fleps7, Fleps8, Fleps9,
+              Fleps10, Fleps11, Fleps12, Fleps13, Fleps14, Fleps15, Fleps16, Fleps17);
 
         }
 
@@ -203,95 +204,182 @@ namespace C2S150_ML
         private void button54_Click(object sender, EventArgs e) {
             Calc.GoodSamples = 0;
             Calc.BadSamples = 0;
-            SpidIdxEv = 0;
+
             Calc.BlobsMaster = 0;
             Calc.BlobsSlave = 0;
+            dataGridView1.Rows.Clear();
+            rowIndex = 0;
+            //dataGridView1.Columns.Clear();
             /////////////// Діаграма швиткості ////////////////
             solidGauge1.Value = 0.00;
             SpidKgH.Text = "0.00";
+            RatioSamplsOll = 0;
+            RatioSampls = 0;
+            SamplsOLL = 0;
+            TimOutRefresh = 0;
+            RatioBed = 0;
+            RatioTimeInSeconds = 0;
+
+            SizeCNT.Size100 = 0;
+            SizeCNT.Size500 = 0;
+            SizeCNT.Size1000 = 0;
         }
 
 
-        short TimOutRefresh;
-        int RatioSampls;
-        double RatioSamplsOll;
-        int SpidIdxEv = 0;
-
-        double SamplsOLL;
-
+        static short TimOutRefresh = 0;
+        int RatioSampls = 0;
+        double RatioSamplsOll = 0;
+        double SamplsOLL = 0;
         private int rowIndex = 0;
-        //const int sampleCount = 25000; // Кількість семплів на кілограм
-        double timeInSeconds = 3600; // Інтервал часу в секундах
+        double SecInH = 3600; //1h=sec
 
         static int RatioBed = 0;
+        int RatioTimeInSeconds = 0;
         static bool StartStopGrid = false;
 
-        private void TimerRefreshChart()
-        {
-             double PisBed = 0;
+
+        // Створюємо об'єкт Stopwatch
+        Stopwatch stopwatch = new Stopwatch();
+
+        static DateTime DataTime;
+        private void TimerRefreshChart() {
+
+
+
+
+
+
+
+            // Отримуємо час у секундах
+            int TimeInSeconds = (int)stopwatch.Elapsed.TotalSeconds;
+
+
+
+            double PcsGood = 0;
             double PcsBed = 0;
 
-            if ((buttonStartAnalic.Text == "Stop Analysis")||(StartStopGrid)) {
+            if ((buttonStartAnalic.Text == "Stop Analysis") || (StartStopGrid)) {
 
                 TimOutRefresh++;
 
                 if (SETS.Data.ID_CAM == DLS.Slave)
-                {        SamplsOLL = Calc.BlobsSlave;
+                { SamplsOLL = Calc.BlobsSlave;
                 } else { SamplsOLL = Calc.BlobsMaster; }
 
-                double ratio3 = 0;
+                double SpeedKgh = 0;
+                // formula -Kg/H ------  (((oll_Pcs_Kg/cof_Weight)=Wwight)/(Tims_Sec_Work/Sec_In_H))= Kg/H
                 // Діаграма швиткості середння Kg/h
-                if (SpidIdxEv != 0) { ratio3 = (((SamplsOLL) / (double)SampleWeight.Value)) / ((double)(SpidIdxEv / 2) / (double)timeInSeconds); }   // Діаграма швиткості середння
-                SpidIdxEv++;
-                if (TimOutRefresh >= 10) { TimOutRefresh = 0;
+                if (TimeInSeconds != 0) { SpeedKgh = (((SamplsOLL) / (double)SampleWeight.Value) / (double)TimeInSeconds) * (double)SecInH; }   // Діаграма швиткості середння
+                                                                                                                                                //4244 
+
+                if (TimOutRefresh >= 10) {
+                    TimOutRefresh = 0;
+                    Warning.Text = "";
+
+
 
                     // Отримання поточного часу та значення для додавання до даних
                     DateTime currentTime = DateTime.Now;
-                    double ratio2 = 0;
-                    if ((SpidIdxEv != 0)) { ratio2 = ((SamplsOLL - (double)RatioSamplsOll) / (double)SampleWeight.Value) * (double)timeInSeconds / 5; }   // Діаграма швиткості
-                    if (ratio2 < 0) { ratio2 = 0; };
+                 
+                    var Time = DateTime.Now.ToString("hh:mm:ss");
+
+                    double Speed = 0;
+                    if ((TimeInSeconds != 0)) { Speed = (((SamplsOLL - (double)RatioSamplsOll) / (double)SampleWeight.Value)) * (double)SecInH / (TimeInSeconds - RatioTimeInSeconds); }   // Діаграма швиткості// 5sec оновлення 
+                    RatioTimeInSeconds = TimeInSeconds;
+                    if (Speed < 0) { Speed = 0; };
 
 
 
                     // Обчислення відношення хороших/поганих зразків за хвилину
-                    PisBed = ((SamplsOLL - (double)Calc.BadSamples) / (double)((SamplsOLL - (double)Calc.BadSamples) + Calc.BadSamples)) * 100;
+                    PcsGood = ((SamplsOLL - (double)Calc.BadSamples) / (double)((SamplsOLL - (double)Calc.BadSamples) + Calc.BadSamples)) * 100;
                     PcsBed = ((double)Calc.BadSamples / SamplsOLL) * 100;
 
                     double GoodKg = 0.0;
+                    double BadKg = 0.0;
                     double TotalKg = 0.0;
-                    if (Calc.GoodSamples != 0) { GoodKg = ((SamplsOLL - (double)Calc.BadSamples) / (double)SampleWeight.Value); }                             // Кількість Good Kg
+                    if (Calc.BadSamples != 0) { GoodKg = ((SamplsOLL - (double)Calc.BadSamples) / (double)SampleWeight.Value); }  // Кількість Good Kg    
                     if (Calc.BadSamples != 0) { TotalKg = (SamplsOLL / (double)SampleWeight.Value); }  // Кількість Total Kg
+                    if (Calc.GoodSamples != 0) { BadKg = (TotalKg - GoodKg); }  // Кількість Bad Kg
                     RatioSamplsOll = SamplsOLL;
-              
-                    if (Double.IsNaN ( PisBed) ) { PisBed = 0.0;  } else { PisBed = Math.Round(PisBed, 2); }
-                    if (Double.IsNaN(PisBed)   ) { PcsBed = 0.0;  } else { PcsBed = Math.Round(PcsBed, 2); }
+
+                    if (Double.IsNaN(PcsGood)) { PcsGood = 0.0; } else { PcsGood = Math.Round(PcsGood, 2); }
+                    if (Double.IsNaN(PcsBed)) { PcsBed = 0.0; } else { PcsBed = Math.Round(PcsBed, 2); }
+                    if (Double.IsNaN(Speed))  {Speed = 0; }
+                    if (Double.IsNaN(SpeedKgh)) { SpeedKgh = 0; }
 
 
-                    ratio2 = Math.Round(ratio2, 2);
-                    ratio3 = Math.Round(ratio3, 2);
+                    Speed = Math.Round(Speed, 2);
+                    SpeedKgh = Math.Round(SpeedKgh, 2);
 
                     GoodKg = Math.Round(GoodKg, 2);
                     TotalKg = Math.Round(TotalKg, 2);
-
+                    BadKg = Math.Round(BadKg, 3);
 
 
                     ///////////// Додавання даних до таблиці ////////////
-                    if ( (buttonStartAnalic.Text == "Stop Analysis") && (StartStopGrid) ) {
-                       dataGridView1.Rows.Add(currentTime, PisBed, PcsBed, ratio2, GoodKg, TotalKg, "Start");    } else { 
-                    if (buttonStartAnalic.Text == "Stop Analysis") {
-                        dataGridView1.Rows.Add(currentTime, PisBed, PcsBed, ratio2, GoodKg, TotalKg, "Analyzing"); }else{
-                        dataGridView1.Rows.Add(currentTime, PisBed, PcsBed, ratio2, GoodKg, TotalKg, "Stop");
+                    if ((buttonStartAnalic.Text == "Stop Analysis") && (!StartStopGrid)) {
+                        // Починаємо вимірювання часу
+                        stopwatch.Start();
+                        DataTime = DateTime.Now;
+                        
+                        StartStopGrid = true; }
+
+                    dataGridView1.Rows.Add(STGS.DT.SampleType, DataTime.ToString("MM/dd/yyyy hh:mm:ss tt"), Time,  PcsGood, PcsBed, SpeedKgh, GoodKg, BadKg, TotalKg, SizeCNT.Size100, SizeCNT.Size500, SizeCNT.Size1000);
+
+
+                        if (buttonStartAnalic.Text == "Start Analysis")
+                        {
+                            // Починаємо вимірювання часу
+                            stopwatch.Restart();
+                            stopwatch.Stop();
+                            StartStopGrid = false;
+                            SQL.SaveRow(dataGridView1);
+
+                            //chart table filling
+
+                            //int LengTypSempl = 0;
+
+                            PDF_DT = new PDF_DT(SQL.СolumnNames.Length);
+                            int lastRowIndex = dataGridView1.Rows.Count - 1; // Отримуємо індекс останнього рядка
+
+                            for (int i = 0; i < SQL.СolumnNames.Length; i++)
+                            {
+
+                                PDF_DT.Name[i] = " ";
+                                PDF_DT.Data[i] = "";
+            
+                                PDF_DT.IMG = new List<Bitmap>();
+
+                            }
+
+                            try
+                            {
+
+                                /********************************************************************/
+                                ///////  ВИЗНАЧИТИ ВИД І НАЗВУ ВИДУ СЕМПЛА    /////
+                                ///******************************************************************/
+                                for (int Q = 0; Q < SQL.СolumnNames.Length; Q++)
+                                {
+                                    PDF_DT.Name[Q] = SQL.СolumnNames[Q];
+                                    // Отримуємо значення з відповідної комірки останнього рядка dataGridView1
+                                    PDF_DT.Data[Q] = dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[Q].Value.ToString();
+                                    // reportDT.DataQunty[Q] = FlowAnalis.ContaminationSize[Q];
+
+                                }
+                            }
+                            catch { }
+
                         }
-                      }
+
                     
-                  
-
-                      if(StartStopGrid) { SQL.SaveRow(dataGridView1); StartStopGrid = false; }
 
 
-                        /////////////// Діаграма швиткості ////////////////
-                        solidGauge1.Value = ratio2;        // Митєва швиткість раз в 5 секунд   
-                    SpidKgH.Text = ratio3.ToString();  // Швиткість Kg\H
+
+
+
+                    /////////////// Діаграма швиткості ////////////////
+                    solidGauge1.Value = Speed;        // Митєва швиткість раз в 5 секунд   
+                    SpidKgH.Text = SpeedKgh.ToString();  // Швиткість Kg\H
 
                     // Прокрутка таблиці до останнього рядка
                     dataGridView1.FirstDisplayedScrollingRowIndex = rowIndex;
@@ -306,7 +394,7 @@ namespace C2S150_ML
                     // Додавання даних до серії
                     chartValues.Add(new ObservablePoint(currentTime.Ticks, RatioBed));
 
-      
+
 
 
 
@@ -326,8 +414,8 @@ namespace C2S150_ML
                     if (chartValues.Count > (double)numericUpDown6.Value)
                         chartValues.RemoveAt(0);
 
-                    // Оновлення міток осі X з часом у форматі "HH:mm:ss"
-                    cartesianChart1.AxisX[0].LabelFormatter = value => new DateTime((long)value).ToString("HH:mm:ss");
+                    // Оновлення міток осі X з часом у форматі "hh:mm:ss"
+                    cartesianChart1.AxisX[0].LabelFormatter = value => new DateTime((long)value).ToString("hh:mm:ss");
                 } }
 
         }
@@ -336,43 +424,42 @@ namespace C2S150_ML
         ///////////////////////////////////    MOSAIC        /////////////////////////////////////////////////////
         static int ImgListCout = 0;
 
-
-
-        private async void RefreshMosaics()
+        static class SizeCNT
         {
+            public static int Size100;
+            public static int Size500;
+            public static int Size1000;
+        }
 
+
+        private async void RefreshMosaics() {
 
             if ((MosaicDTlist.Count != 0)// && (ImgListCout <= (Convert.ToInt32(PageCauntMosaic.Text)))
-                ){
+                ) {
 
                 //візуалізація мозаїки
                 for (; ImgListCout < MosaicDTlist.Count; ImgListCout++)
                 {
-                    if ( ImgListCout >= SETS.Data.MaxImagesMmosaic ) { ClearMosaic();  break; }
-            
+                    if ((MosaicDTlist[ImgListCout].SizeCNT >= 0) && (MosaicDTlist[ImgListCout].SizeCNT < 100)) { SizeCNT.Size100++; } else {
+                        if ((MosaicDTlist[ImgListCout].SizeCNT >= 100) && (MosaicDTlist[ImgListCout].SizeCNT < 500)) { SizeCNT.Size500++; } else {
+                            if ((MosaicDTlist[ImgListCout].SizeCNT >= 500) /* && (MosaicDTlist[ImgListCout].SizeCNT < 1000)*/) { SizeCNT.Size1000++; } } }
 
-                        if (MosaicDTlist[ImgListCout].Img != null)
-                        {
-                            if (MouseAddImage.Checked) { }
-                        ImageData dt = new ImageData();
 
-                        Mosaics.Images.Add(MosaicDTlist[ImgListCout].Img[0].AsBitmap());
+                    if (ImgListCout >= SETS.Data.MaxImagesMmosaic) { ClearMosaic(); break; }
+                    if (MosaicDTlist[ImgListCout].Img != null) {
+                        Mosaics.Images.Add(MosaicDTlist[ImgListCout].Img.AsBitmap());
                         listView1.LargeImageList = Mosaics;
-                        listView1.VirtualListSize = ImgListCout;// Задайте загальну кількість елементів
+                        listView1.VirtualListSize = Mosaics.Images.Count;// Задайте загальну кількість елементів
 
-                 
-                      
-                         
-
-                        }    
-                        
-
-                    if (SETS.Data.MosaicRealTime) {
-                    if ((visibleItemsPerPage == 0)||(ImgListCout == 0)) { listView1_Resize(null, null); } else {
-                    int startIndex = Math.Max(0, ImgListCout - visibleItemsPerPage); // Отримайте індекс першого елемента для відображення
-                    listView1.EnsureVisible(startIndex); /// Переконайтесь, що перший елемент видимий
-                        
                     }
+
+                    //  List VIWE
+                    if (SETS.Data.MosaicRealTime) {
+                        if ((visibleItemsPerPage == 0) || (ImgListCout == 0)) { listView1_Resize(null, null); } else {
+                            int startIndex = Math.Max(0, ImgListCout - visibleItemsPerPage); // Отримайте індекс першого елемента для відображення
+                            listView1.EnsureVisible(startIndex); /// Переконайтесь, що перший елемент видимий
+
+                        }
                     }
 
                 }
@@ -380,7 +467,7 @@ namespace C2S150_ML
         }
 
 
-        public class ImageData{
+        public class ImageData {
 
             public string Group { get; set; }
             public Image<Gray, byte> Image { get; set; }
@@ -402,29 +489,45 @@ namespace C2S150_ML
         {
             try
             {
-            
+
                 if (e.ItemIndex >= 0 && e.ItemIndex < ImgListCout)
                 {
                     // Отримайте дані для відображення (зображення, текст і т. д.) для пункта з індексом e.ItemIndex
-                    var item = Mosaics.Images[e.ItemIndex];
+                    //var item = Mosaics.Images[e.ItemIndex];
 
                     // Створіть об'єкт для відображення
                     ListViewItem listViewItem = new ListViewItem();
-                                 listViewItem.ImageIndex = e.ItemIndex; // Індекс зображення (залежить від ваших даних)
+                    listViewItem.ImageIndex = e.ItemIndex; // Індекс зображення (залежить від ваших даних)
 
-                     listViewItem.Text = MosaicDTlist[e.ItemIndex].ID.ToString()+"_"+ MosaicDTlist[e.ItemIndex].Name + e.ItemIndex.ToString();
-                              // Встановіть колір тексту
-                    if (MosaicDTlist[e.ItemIndex].Name == "good") { listViewItem.ForeColor = Color.Black; } else {
-                    if (MosaicDTlist[e.ItemIndex].Name==  "bad")  { listViewItem.ForeColor = Color.Blue; } else { 
-                    if (MosaicDTlist[e.ItemIndex].Name == "Bad")  { listViewItem.ForeColor = Color.Red; } else { 
-                    if (MosaicDTlist[e.ItemIndex].Name == "Good") { listViewItem.ForeColor = Color.Gray; } } }  }
+                    listViewItem.Text = MosaicDTlist[e.ItemIndex].ID.ToString() + "_" + MosaicDTlist[e.ItemIndex].Name + (1 + e.ItemIndex).ToString();
+                    // Встановіть колір тексту
+                    if (MosaicDTlist[e.ItemIndex].Name == "good") { listViewItem.ForeColor = Color.Black; }
+                    else
+                    {
+                        if (MosaicDTlist[e.ItemIndex].Name == "bad") { listViewItem.ForeColor = Color.Blue; }
+                        else
+                        {
+                            if (MosaicDTlist[e.ItemIndex].Name == "Bad") { listViewItem.ForeColor = Color.Red; }
+                            else
+                            {
+                                if (MosaicDTlist[e.ItemIndex].Name == "Good") { listViewItem.ForeColor = Color.Gray; }
+                            }
+                        }
+                    }
 
                     // Передайте об'єкт для відображення у подію
                     e.Item = listViewItem;
+
+
+
+                }
+                else
+                {  // Якщо індекс поза межами, можливо, встановіть e.Item в null або використайте інші значення за замовчуванням.
+                    e.Item = new ListViewItem("Out of Range");
                 }
 
 
-            }catch { }
+            } catch { }
         }
 
 
@@ -442,11 +545,11 @@ namespace C2S150_ML
 
             listView1.Clear();
             MosaicDTlist = new List<DTLimg>();
- 
+
             MosaicsTeachGrey.Clear();
             ImgListCout = 0;
 
-       
+
 
         }
 
@@ -462,28 +565,28 @@ namespace C2S150_ML
 
 
 
-        private void InstMosaics(){   
-            
-            
-    
+        private void InstMosaics() {
+
+
+
             listView1.View = View.LargeIcon;                //відображати назву картинкі
             Mosaics.ImageSize = new Size(64, 64);      //розмір виводу картинкі
             Mosaics.ColorDepth = ColorDepth.Depth16Bit;
             // Allow the user to edit item text.
-           // listView1.LabelEdit = true;
+            // listView1.LabelEdit = true;
             //// Allow the user to rearrange columns.
             // listView1.AllowColumnReorder = true;
             //// Select the item and subitems when selection is made.
-           // listView1.FullRowSelect = true;
+            // listView1.FullRowSelect = true;
             //// Display grid lines.
             //listView1.GridLines = true;
-            
+
             listView1.Dock = DockStyle.Fill;
             listView1.VirtualMode = true;
-            listView1.TileSize= new Size(64,64);
+            listView1.TileSize = new Size(64, 64);
 
 
-           // listView1.Groups.Add(new ListViewGroup("TEST", HorizontalAlignment.Left));
+            // listView1.Groups.Add(new ListViewGroup("TEST", HorizontalAlignment.Left));
             listView1.Groups.Add(new ListViewGroup("Group B", HorizontalAlignment.Left));
             //Створіть групу "TEST", якщо вона не існує
             if (!listView1.Groups.Contains(new ListViewGroup("TEST")))
@@ -493,7 +596,7 @@ namespace C2S150_ML
 
 
             // listView1.View = View.LargeIcon;                //відображати назву картинкі
-            MosaicsTeach.ImageSize = new Size(100,100);      //розмір виводу картинкі
+            MosaicsTeach.ImageSize = new Size(100, 100);      //розмір виводу картинкі
             MosaicsTeach.ColorDepth = ColorDepth.Depth16Bit;
             listView2.LabelEdit = true;
             // Allow the user to rearrange columns.
@@ -525,11 +628,11 @@ namespace C2S150_ML
         private void button13_Click(object sender, EventArgs e)
         {
 
-              StartStopGrid = true;
-            // buttonStartAnalic.Enabled = false;
-            FlowAnalis.StartAnais = true;//включення живого відео
 
-            if (buttonStartAnalic.Text == "Start Analysis"){
+            // buttonStartAnalic.Enabled = false;
+            // FlowAnalis.StartAnais = true;//включення живого відео
+
+            if (buttonStartAnalic.Text == "Start Analysis") {
                 SEPARATOR.ON();  // Metal separator
                 AUTOLOADER.ON();  // Autoloder
                 buttonStartAnalic.BackColor = Color.Salmon;
@@ -539,21 +642,23 @@ namespace C2S150_ML
 
                 buttonStartAnalic.Text = "Stop Analysis";
                 StartTable.Text = "Stop Table";
-                OnLight.Text =  "OFF Light";
+                OnLight.Text = "OFF Light";
                 button40.Text = "OFF Cooling";
                 button43.Text = "OFF Autoloader";
                 button44.Text = "OFF Metal separator";
                 Thread.Sleep(500);
-                Flow.STARTsorting = true;
-                Flow.StartSorting();
-                VIBR_TABLE.SET(VIBR_TABLE.Typ.ON);
-            }else {
-                StartStopGrid = true;
+                Flow.StartSorting(true);
+
+
+
+            }
+            else {
+
 
                 buttonStartAnalic.BackColor = Color.GreenYellow;
                 VIBR_TABLE.SET(VIBR_TABLE.Typ.OFF);
-                Flow.StartSorting();
-                Flow.STARTsorting = false;
+
+                Flow.StartSorting(false);
                 Thread.Sleep(100);
 
                 LIGHT.OFF();
@@ -561,15 +666,17 @@ namespace C2S150_ML
 
                 buttonStartAnalic.Text = "Start Analysis";
                 StartTable.Text = "Start Table";
-                OnLight.Text  = "ON Light";
+                OnLight.Text = "ON Light";
                 button40.Text = "ON Cooling";
                 button43.Text = "ON Autoloader";
                 button44.Text = "ON Metal separator";
+
+                TimOutRefresh = 100; // для митевого запису в Grit Таблицю
             }
         }
 
 
-   
+
 
         /// <summary>
         /// -----------------------    SAVE VALUE   ----------------------------------------+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -579,101 +686,111 @@ namespace C2S150_ML
 
         private void Save_Click(object sender, EventArgs e) {
 
-              STGS.DT.SampleType = TextBoxSemplTyp.Text;
+            STGS.DT.SampleType = TextBoxSemplTyp.Text;
             // Запис у файл
-              STGS.Save();
+            STGS.Save();
 
-             SaveSetValue();
-             _SETS.Save();
-  
+            SaveSetValue();
+            _SETS.Save();
+
         }
 
 
         void SaveSetValue()
         {
-              //CAMERA
-            SETS. Data.GEIN1    = GAIN1.Value;
-            SETS.Data.GEIN2    = GAIN2.Value;
+            //CAMERA
+            SETS.Data.GEIN1 = GAIN1.Value;
+            SETS.Data.GEIN2 = GAIN2.Value;
 
 
-            if (SETS.Data.ID_CAM == DLS.Master) { 
-                SETS.Data.ACQGEIN1 = numericACQ_Gain.Value;} else {
-                SETS.Data.ACQGEIN2 = numericACQ_Gain.Value;}
+            if (SETS.Data.ID_CAM == DLS.Master) {
+                SETS.Data.ACQGEIN1 = numericACQ_Gain.Value; } else {
+                SETS.Data.ACQGEIN2 = numericACQ_Gain.Value; }
 
 
             //-----------------------------------
             SETS.Data.SetingsCameraStart = SetingsCameraStart.Checked;
-            SETS.Data.CameraAnalis_1     = Camera1Lock.Checked;
-            SETS.Data.CameraAnalis_2     = Camera2Lock.Checked;
-            SETS.Data.PashTestIMG        = textBoxTestImg.Text;
-            SETS.Data.SampleWeight       =  SampleWeight.Value;
+            SETS.Data.CameraAnalis_1 = Camera1Lock.Checked;
+            SETS.Data.CameraAnalis_2 = Camera2Lock.Checked;
+            SETS.Data.PashTestIMG = textBoxTestImg.Text;
+            SETS.Data.SampleWeight = SampleWeight.Value;
+            SETS.Data.SignalLamp = numericUpDown4.Value;
+            SETS.Data.SystemOFF = TimHoperOff.Value;
+
 
             if (SETS.Data.ID_CAM == DLS.Master)
             {
-                 SETS.Data.ACQ_SET1 = checkBoxAcqSet.Checked;
+                SETS.Data.ACQ_SET1 = checkBoxAcqSet.Checked;
                 radioButtonCam1.Checked = true;
             }
             else
             {
-                  SETS.Data.ACQ_SET2 = checkBoxAcqSet.Checked;
+                SETS.Data.ACQ_SET2 = checkBoxAcqSet.Checked;
                 radioButtonCam2.Checked = true;
             }
 
             if (radioButtonCam1.Checked) {
-              checkBoxAcqSet.Checked = SETS.Data.ACQ_SET1;
-              SETS.Data.ID_CAM = DLS.Master;
+                checkBoxAcqSet.Checked = SETS.Data.ACQ_SET1;
+                SETS.Data.ID_CAM = DLS.Master;
             } else {
                 checkBoxAcqSet.Checked = SETS.Data.ACQ_SET2;
-                SETS.Data.ID_CAM = DLS.Slave;  
+                SETS.Data.ID_CAM = DLS.Slave;
             }
-           
+
 
             SETS.Data.MaxImagesMmosaic = (int)MaxImagesMmosaic.Value;
             SETS.Data.MosaicRealTime = MosaicRealTime.Checked;
 
 
             SETS.Data.BlobsInvert = InvertBlobs.Checked;
-            SETS.Data.PachXLSX    = richTextBox3.Text;
-            SETS.Data.PachDB      = richTextBox4.Text;
-            SETS.Data.PathAnalysisTest= textBox4.Text;
+            SETS.Data.PachXLSX = richTextBox3.Text;
+            SETS.Data.PachDB = richTextBox4.Text;
+            SETS.Data.PathAnalysisTest = textBox4.Text;
             SETS.Data.LiveVideoDelay = LiveViewDelay.Value;
-            
 
-            USB_HID.Data.Light_IR     = LockIR.Checked;
-            USB_HID.Data.Light_Top    = LockTop.Checked;
-            USB_HID.Data.Light_Back   = LockBack.Checked;
+
+            USB_HID.Data.Light_IR = LockIR.Checked;
+            USB_HID.Data.Light_Top = LockTop.Checked;
+            USB_HID.Data.Light_Back = LockBack.Checked;
             USB_HID.Data.Light_Bottom = LockBottom.Checked;
 
 
-            VIS.Data.blurA      = (byte)numericUpDown10.Value;
+            VIS.Data.blurA = (byte)numericUpDown10.Value;
             VIS.Data.ThresholdA = (byte)numericUpDown11.Value;
-
-
             VIS.Data.blurB = (byte)numericUpDown12.Value;
             VIS.Data.ThresholdB = (byte)numericUpDown13.Value;
-            VIS.Data.ArcLengthB = (int) numericUpDown5.Value;
-            VIS.Data.ArcLengthTest = (int) numericUpDown9.Value;
+            VIS.Data.ArcLengthB = (int)numericUpDown5.Value;
+            VIS.Data.ArcLengthTest = (int)numericUpDown9.Value;
 
+            PDF.Data.Comments = Comments.Text;
+            PDF.Data.CreatedBy = CreatedBy.Text;
+            PDF.Data.NameReport = NameReport.Text;
+            PDF.Data.SampleType = SempleTyp.Text;
+            PDF.Data.PathFileSave = PathFileSave.Text;
+            PDF.Data.ShowImageInReport = ShowImageInReport.Checked;
         }
 
         void RefreshSetings()
         {
             try
             {
-                 MosaicRealTime.Checked = SETS.Data.MosaicRealTime;
+                MosaicRealTime.Checked = SETS.Data.MosaicRealTime;
                 MaxImagesMmosaic.Value = SETS.Data.MaxImagesMmosaic;
                 SetingsCameraStart.Checked = SETS.Data.SetingsCameraStart;
                 Camera1Lock.Checked = SETS.Data.CameraAnalis_1;
                 Camera2Lock.Checked = SETS.Data.CameraAnalis_2;
                 textBoxTestImg.Text = SETS.Data.PashTestIMG;
                 LiveViewDelay.Value = SETS.Data.LiveVideoDelay;
-                checkBoxAcqSet.Checked = SETS.Data.ACQ_SET1 ;
+                checkBoxAcqSet.Checked = SETS.Data.ACQ_SET1;
                 SampleWeight.Value = SETS.Data.SampleWeight;
+
+                numericUpDown4.Value = SETS.Data.SignalLamp;
+                TimHoperOff.Value = SETS.Data.SystemOFF;
 
                 if (SETS.Data.ID_CAM == DLS.Master) {
                     checkBoxAcqSet.Checked = SETS.Data.ACQ_SET1;
                     radioButtonCam1.Checked = true; }
-                 else{
+                else {
                     checkBoxAcqSet.Checked = SETS.Data.ACQ_SET2;
                     radioButtonCam2.Checked = true; }
 
@@ -690,22 +807,22 @@ namespace C2S150_ML
                 OutputDelay.Value = USB_HID.Data.Fleps_Time_OFF;
                 FLAPS.Time_OFF(OutputDelay.Value);
 
-                checkBox13.Checked = SETS.Data.LiveVideoOFF; 
-        
+                checkBox13.Checked = SETS.Data.LiveVideoOFF;
+
 
                 numericUpDown1.Value = SETS.Data.DoublingFlaps; //
                 numericUpDown6.Value = SETS.Data.LimitinGraphPoints;
                 numericUpDown7.Value = SETS.Data.UpdateVisibleArea;
                 numericUpDown8.Value = SETS.Data.AxisYMaxValue;
-                richTextBox3.Text    = SETS.Data.PachXLSX;
-                richTextBox4.Text    = SETS.Data.PachDB;
-                textBox4.Text        = SETS.Data.PathAnalysisTest;
+                richTextBox3.Text = SETS.Data.PachXLSX;
+                richTextBox4.Text = SETS.Data.PachDB;
+                textBox4.Text = SETS.Data.PathAnalysisTest;
 
-                GAIN1.Value        = SETS.Data.GEIN1;
-                GAIN2.Value        = SETS.Data.GEIN2;
+                GAIN1.Value = SETS.Data.GEIN1;
+                GAIN2.Value = SETS.Data.GEIN2;
 
-                if (SETS.Data.ID_CAM==DLS.Master) { numericACQ_Gain.Value = SETS.Data.ACQGEIN1; }
-                                             else { numericACQ_Gain.Value = SETS.Data.ACQGEIN2; }
+                if (SETS.Data.ID_CAM == DLS.Master) { numericACQ_Gain.Value = SETS.Data.ACQGEIN1; }
+                else { numericACQ_Gain.Value = SETS.Data.ACQGEIN2; }
 
 
 
@@ -719,17 +836,25 @@ namespace C2S150_ML
 
 
 
-                numericUpDown10.Value =  VIS.Data.blurA;
+                numericUpDown10.Value = VIS.Data.blurA;
                 numericUpDown11.Value = VIS.Data.ThresholdA;
-
                 numericUpDown12.Value = VIS.Data.blurB;
                 numericUpDown13.Value = VIS.Data.ThresholdB;
                 numericUpDown5.Value = VIS.Data.ArcLengthB;
                 numericUpDown9.Value = VIS.Data.ArcLengthTest;
+
+                Comments.Text = PDF.Data.Comments;
+                CreatedBy.Text = PDF.Data.CreatedBy;
+                NameReport.Text = PDF.Data.NameReport;
+                SempleTyp.Text = PDF.Data.SampleType;
+                PathFileSave.Text = PDF.Data.PathFileSave;
+                ShowImageInReport.Checked = PDF.Data.ShowImageInReport;
+
+
             }
             catch
             {
-                
+
                 Help.Mesag("saved data not correct !");
             }
         }
@@ -737,9 +862,9 @@ namespace C2S150_ML
 
 
 
-   
 
-        private void MastConturMax_ValueChanged(object sender, EventArgs e){
+
+        private void MastConturMax_ValueChanged(object sender, EventArgs e) {
 
             EMGU.Data.GreySizeMax[ID] = (double)GreyMax_.Value;
         }
@@ -756,7 +881,7 @@ namespace C2S150_ML
 
         private void MastMinR_ValueChanged(object sender, EventArgs e)
         {
-           
+
             EMGU.Data.GreyScaleMax[ID] = (int)GreyScaleMax_.Value;
 
         }
@@ -765,22 +890,63 @@ namespace C2S150_ML
 
         private void GreyScaleMin__ValueChanged(object sender, EventArgs e)
         {
-           
-            EMGU.Data.GreyScaleMin[ID] =(int)GreyScaleMin_.Value;
+
+            EMGU.Data.GreyScaleMin[ID] = (int)GreyScaleMin_.Value;
         }
 
 
         /************************/
+        STATUS StatusDvise = new STATUS();
+   
+       static int SignalLamp;
+      static  bool SignalLampRepit = false;
 
         private void timer1_Tick(object sender, EventArgs e)
         {
 
 
+
             if (USB_HID.HidStatus == true)
             {
                 HidConect.Text = "connected"; HidConect.ForeColor = Color.Green;
-            }else { HidConect.Text = "not connected"; HidConect.ForeColor = Color.Red; }
+            } else { HidConect.Text = "not connected"; HidConect.ForeColor = Color.Red; }
 
+            StatusDvise = new STATUS();
+            Warning.Text = StatusDvise.Door; 
+
+            // STOP ERROR
+            if (StatusDvise.Stop) {
+                Warning.Text = "STOP";
+                // FlowAnalis.StartAnais = true;//включення живого відео
+                if (buttonStartAnalic.Text == "Stop Analysis") { button13_Click(null, null); } }  // STOP ERROR
+
+            // HOPER LEVEL HIGH
+            if (StatusDvise.SensorHigh) { ProgresBar.Value = 100; SignalLamp = 0; } else {
+                // HOPER LEVEL LOW
+                if (StatusDvise.SensorLow) { ProgresBar.Value = 50; SignalLamp = 0; } else {
+                    ProgresBar.Value = 0;
+
+                    if (buttonStartAnalic.Text == "Stop Analysis")
+                    {
+                        SignalLamp++;
+                        //SIGNAL LAMP
+                        if ((SignalLamp > (SETS.Data.SignalLamp * 2))) {
+                            if (SignalLampRepit) { LIGHT.YELLO_ERROR(false); SignalLampRepit = false; } else {
+                                Warning.Text = "HOPPER IS EMPTY";
+                                LIGHT.YELLO_ERROR(true); SignalLampRepit = true; }
+                        } } else { SignalLamp = 0; } } }
+
+
+            //STOP
+            if (buttonStartAnalic.Text == "Stop Analysis") {
+                Calc.StopSustem++;
+
+            if ((Calc.StopSustem > (SETS.Data.SystemOFF * 2)) && (buttonStartAnalic.Text == "Stop Analysis")) {
+                Warning.Text = "AUTOMATIC STOP";
+                 Calc.StopSustem = 0;
+                button13_Click(null, null); }
+    
+                } else { Calc.StopSustem = 0; }
 
 
 
@@ -790,14 +956,14 @@ namespace C2S150_ML
             BuferImgCaun.Text = FlowCamera.BoxImgM.Count.ToString();
             CauntListImages.Text = FlowCamera.ImgSave.Count.ToString();
 
-            if (SETS.Data.ID_CAM== DLS.Slave) {
-                    CauntSamls.Text = Calc.BlobsSlave.ToString();
-            }else { CauntSamls.Text = Calc.BlobsMaster.ToString(); }
+            if (SETS.Data.ID_CAM == DLS.Slave) {
+                CauntSamls.Text = Calc.BlobsSlave.ToString();
+            } else { CauntSamls.Text = Calc.BlobsMaster.ToString(); }
 
             toolStripStatusLabel5.Text = DLS.elapsedMs.ToString();
             toolStripStatusLabel6.Text = FlowCamera.BatchSizePreict.ToString();
 
-      
+
             TimerRefreshChart();
 
             RefreshMosaics();
@@ -812,10 +978,14 @@ namespace C2S150_ML
 
         private void Soreter_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Flow.StopPotocBlobsPredict();
-            Flow.StopPotocAnalisBlobs();
-            Flow.StopPotocHID();
+            Flow.StopPotoc();
+            COOLING.OFF();
+            AUTOLOADER.OFF();
+            SEPARATOR.OFF();
+            VIBR_TABLE.SET(Type: VIBR_TABLE.Typ.OFF);
+            LIGHT.OFF();
             CAMERA.OFF();
+            FLAPS.RUN();
 
         }
 
@@ -852,7 +1022,7 @@ namespace C2S150_ML
 
             if (MouseAddImage.Checked == true)
             {
-         
+
 
                 MosaicsTeach.Images.Add(MosaicDTlist[SelectITMs].Img[0].ToBitmap());
                 MosaicsTeachGrey.Add(MosaicDTlist[SelectITMs].Img[0]);
@@ -871,7 +1041,7 @@ namespace C2S150_ML
         {
 
 
-      
+
         }
 
         private void button60_Click(object sender, EventArgs e)
@@ -926,20 +1096,20 @@ namespace C2S150_ML
 
 
 
-          
+
 
             DialogResult result = DialogResult.Yes;
             if (AskMsg == true) { result = MessageBox.Show("Do you want Add Images to " + comboBoxBedGood.Text + " ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information); }
 
 
             string PshSampleType = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text); //створити шлях до каталога "Data"
-            string PshData       = Path.Combine(PshSampleType, "Data"); //створити шлях до каталога "Data"
-            string PshSempls     = Path.Combine(PshData, "SAMPLES"); //створити шлях до каталога "SAMPLES"
-            string PashImg       = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bad Good"
+            string PshData = Path.Combine(PshSampleType, "Data"); //створити шлях до каталога "Data"
+            string PshSempls = Path.Combine(PshData, "SAMPLES"); //створити шлях до каталога "SAMPLES"
+            string PashImg = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bad Good"
 
-            if (false == Directory.Exists(PshData))   { Directory.CreateDirectory(PshData); }// якщо нема пакі то створюєм
+            if (false == Directory.Exists(PshData)) { Directory.CreateDirectory(PshData); }// якщо нема пакі то створюєм
             if (false == Directory.Exists(PshSempls)) { Directory.CreateDirectory(PshSempls); }// якщо нема пакі то створюєм
-            if (false == Directory.Exists(PashImg))   { Directory.CreateDirectory(PashImg); }// якщо нема пакі то створюєм
+            if (false == Directory.Exists(PashImg)) { Directory.CreateDirectory(PashImg); }// якщо нема пакі то створюєм
 
             if (result == DialogResult.Yes) {
                 for (int i = 0; i < MosaicsTeach.Images.Count; i++) {
@@ -967,11 +1137,11 @@ namespace C2S150_ML
             string PshSampleType = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text); //створити шлях до каталога "Data"
             string PshData = Path.Combine(PshSampleType, "Data"); //створити шлях до каталога "Data"
             string PshSempls = Path.Combine(PshData, "SAMPLES"); //створити шлях до каталога "SAMPLES"
-           // string PashImg = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bed Good"
+                                                                 // string PashImg = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bed Good"
 
-            if (false == Directory.Exists(PshData))   { Directory.CreateDirectory(PshData); }// якщо нема пакі то створюєм
+            if (false == Directory.Exists(PshData)) { Directory.CreateDirectory(PshData); }// якщо нема пакі то створюєм
             if (false == Directory.Exists(PshSempls)) { Directory.CreateDirectory(PshSempls); }// якщо нема пакі то створюєм
-           // if (false == Directory.Exists(PashImg))   { Directory.CreateDirectory(PashImg); }// якщо нема пакі то створюєм
+                                                                                               // if (false == Directory.Exists(PashImg))   { Directory.CreateDirectory(PashImg); }// якщо нема пакі то створюєм
 
 
 
@@ -981,7 +1151,7 @@ namespace C2S150_ML
             // Об'єднати відносний шлях з поточним каталогом для отримання повного шляху
             string fullPath = Path.Combine(currentDirectory, PshSempls);
 
-            string absolutePath = Path.GetFullPath(fullPath );
+            string absolutePath = Path.GetFullPath(fullPath);
 
             if (System.IO.Directory.Exists(absolutePath))
             {
@@ -995,13 +1165,13 @@ namespace C2S150_ML
 
         private void button62_Click(object sender, EventArgs e)
         {
-  
-                            
+
+
             // Отримати поточний каталог (куди вказує відносний шлях)
             string currentDirectory = Directory.GetCurrentDirectory();
 
             // Об'єднати відносний шлях з поточним каталогом для отримання повного шляху
-            string fullPath = Path.Combine(currentDirectory, STGS.Data.URL_SampleType);                                       
+            string fullPath = Path.Combine(currentDirectory, STGS.Data.URL_SampleType);
 
             if (false == Directory.Exists(fullPath)) { Directory.CreateDirectory(fullPath); }// якщо нема пакі то створюєм
 
@@ -1026,7 +1196,7 @@ namespace C2S150_ML
 
             if (result == DialogResult.Yes) {
 
-                string DataPath = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text,"Data");
+                string DataPath = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text, "Data");
                 // Отримати поточний каталог (куди вказує відносний шлях)
                 string currentDirectory = Directory.GetCurrentDirectory();
                 // Об'єднати відносний шлях з поточним каталогом для отримання повного шляху
@@ -1087,24 +1257,43 @@ namespace C2S150_ML
 
         private void buttonLiveVideo_Click(object sender, EventArgs e)
         {
-            if (buttonLiveVideo.Text == "LIVE VIDEO ON") {
-                Flow.STARTsorting = true;
-                Flow.StartSorting();
-                buttonLiveVideo.Text = "LIVE VIDEO OFF";
-                LIGHT.ON();
-                OnLight.Text = "OFF Light";
-                buttonLiveVideo.BackColor = Color.Salmon;
 
-            }
-            else {
+            if (buttonLiveVideo.Text == "SNEP IMG ACQ")
+            { 
+                buttonStartAnalic.Enabled = true;
                 DLS.ImgSnapSet = false;
-                Flow.StartSorting();
-                Flow.STARTsorting = false;
+                Flow.StartSorting(false);
                 buttonLiveVideo.Text = "LIVE VIDEO ON";
                 LIGHT.OFF();
                 OnLight.Text = "ON Light";
                 buttonLiveVideo.BackColor = Color.LightGreen;
+                button19_Click(null, null);
+                return;
+            }
+                
+            if (buttonStartAnalic.Text == "Start Analysis")
+            {
+                if (buttonLiveVideo.Text == "LIVE VIDEO ON")
+                {
+                    buttonStartAnalic.Enabled = false;
+                    Flow.LiweVive(true);
+                    buttonLiveVideo.Text = "LIVE VIDEO OFF";
+                    LIGHT.ON();
+                    OnLight.Text = "OFF Light";
+                    buttonLiveVideo.BackColor = Color.Salmon;
 
+                }
+                else
+                {
+                    buttonStartAnalic.Enabled = true;
+                    DLS.ImgSnapSet = false;
+                    Flow.StartSorting(false);
+                    buttonLiveVideo.Text = "LIVE VIDEO ON";
+                    LIGHT.OFF();
+                    OnLight.Text = "ON Light";
+                    buttonLiveVideo.BackColor = Color.LightGreen;
+
+                }
             }
 
 
@@ -1520,8 +1709,8 @@ namespace C2S150_ML
 
 
                 // Завантаження Вирівнювання Фону
-                SetACQ_File(DLS.Master);
-                SetACQ_File(DLS.Slave);
+                if (!SETS.Data.CameraAnalis_1) { SetACQ_File(DLS.Master); }
+                if (!SETS.Data.CameraAnalis_2) { SetACQ_File(DLS.Slave);  }
 
                 Enabled = true;
             }
@@ -1546,7 +1735,8 @@ namespace C2S150_ML
 
         private void button57_Click(object sender, EventArgs e)
         {
-
+            FlowCamera.AnalisLock = true;
+            buttonStartAnalic.Enabled = false;
             string PathType = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text);
             string PshACQ = Path.Combine(PathType, "ACQ"); //створити шлях до IMG
 
@@ -1557,9 +1747,9 @@ namespace C2S150_ML
             DLS.checkBox_FaltField_Click(SETS.Data.ID_CAM, checkBoxAcqSet.Checked);
 
             OnLight.Text = "OFF Light";
-            buttonLiveVideo.Text = "SNEP IMG";
+            buttonLiveVideo.Text = "SNEP IMG ACQ";
             buttonLiveVideo.BackColor = Color.Salmon;
-
+            
             LiveView.Image = DLS.Acq_Bright_Simply(SETS.Data.ID_CAM, PshACQ);
 
             OnLight.Text = "ON Light";
@@ -1577,11 +1767,43 @@ namespace C2S150_ML
         }
 
 
+        //Black
+        private void button14_Click(object sender, EventArgs e)
+        {
+            FlowCamera.AnalisLock = true;
+            buttonStartAnalic.Enabled = false;
+            string PathType = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text);
+            string PshACQ = Path.Combine(PathType, "ACQ"); //створити шлях до IMG
+
+            Bitmap BlekImg = new Bitmap(2000, 100);
+            LiveView.Image = BlekImg;
+
+            checkBoxAcqSet.Checked = false;
+            DLS.checkBox_FaltField_Click(SETS.Data.ID_CAM, checkBoxAcqSet.Checked);
+
+            OnLight.Text = "ON Light";
+            buttonLiveVideo.Text = "LIVE VIDEO ON";
+            buttonLiveVideo.BackColor = Color.Salmon;
+
+            LiveView.Image = DLS.Acq_Dark_Simply(SETS.Data.ID_CAM, PshACQ);
+
+
+            //DLS.Save_FF_File(SETS.Data.ID_CAM, PshACQ);
+
+            checkBoxAcqSet.Checked = true;
+            //DLS.checkBox_FaltField_Click(SETS.Data.ID_CAM, checkBoxAcqSet.Checked);
+            //SetACQ_File(SETS.Data.ID_CAM);
+
+            DLS.StartCAMERA(SETS.Data.ID_CAM);
+            LIGHT.ON();
+            OnLight.Text = "OFF Light";
+            buttonLiveVideo.Text = "SNEP IMG ACQ";
+            buttonStartAnalic.Enabled = false;
+        }
 
 
 
 
-     
 
 
 
@@ -1730,11 +1952,7 @@ namespace C2S150_ML
         { LoadSempelsName();}
 
         private void comboBoxSetingsName_Click(object sender, EventArgs e)
-        { LoadSempelsName();
-
-
-        
-        }
+        { LoadSempelsName(); }
 
         private void comboBoxSetingsName_TextChanged(object sender, EventArgs e)
         {
@@ -1787,7 +2005,14 @@ namespace C2S150_ML
 
 
         private void button63_Click(object sender, EventArgs e)
-        {SQL.Updat(true, dataGridView2, dateTimePicker1.Text, dateTimePicker2.Text);  }
+        {
+            DateTime selectedDate1 = dateTimePicker1.Value;
+            string formattedDate1 = selectedDate1.ToString("MM/dd/yyyy");
+
+            DateTime selectedDate2 = dateTimePicker2.Value;
+            string formattedDate2 = selectedDate2.ToString("MM/dd/yyyy");
+
+            SQL.Updat(true, dataGridView2, formattedDate1, formattedDate2);  }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -1899,20 +2124,43 @@ namespace C2S150_ML
 
 
 
+        PDF ReportPDF = new PDF();
+        PDF_DT PDF_DT ;
+
+        //  [Obsolete]
+        private void MakeReportButton_Click(object sender, EventArgs e)
+        {
+
+            if (PDF.Data.ShowImageInReport) { 
+            foreach (var DT in MosaicDTlist)
+            {
+                PDF_DT.IMG.Add( DT.Img.ToBitmap());
+            }}
+           
 
 
+            ReportPDF.ReportSet(PDF_DT);
+            PDF_DT.IMG.Clear();
 
+            //}
+            //else { Help.ErrorMesag("You cannot select image or generate a report when the images are not sorted! "); }
+        }
 
+        private void button51_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FolderBrowserDialog FBD = new FolderBrowserDialog();
+                if (FBD.ShowDialog() == DialogResult.OK)
+                {
 
+                    PathFileSave.Text = FBD.SelectedPath;
 
-
-
-
-
-
-
-
-
+                }
+                else { MessageBox.Show("Choose directory please", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
     }
 
 }
