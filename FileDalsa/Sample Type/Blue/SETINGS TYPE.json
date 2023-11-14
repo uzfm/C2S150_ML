@@ -1,0 +1,61 @@
+{
+  "USB": {
+    "PWM_Table": 80.0,
+    "Hz_Table": 3200.0,
+    "Fleps_Time_OFF": 150.0,
+    "Light_Top": true,
+    "Light_Bottom": true,
+    "Light_Back": true,
+    "Light_IR": false
+  },
+  "EMGUDT": {
+    "GreyScaleMax": [
+      255,
+      0
+    ],
+    "GreyScaleMin": [
+      254,
+      0
+    ],
+    "GreySizeMax": [
+      3000.0,
+      0.0
+    ],
+    "GreySizeMin": [
+      3.0,
+      0.0
+    ]
+  },
+  "Vis": {
+    "blurA": 2,
+    "ThresholdA": 15,
+    "blurB": 2,
+    "ThresholdB": 95,
+    "ArcLengthB": 10,
+    "ArcLengthTest": 150
+  },
+  "BlobsInvert": false,
+  "MosaicRealTime": true,
+  "MaxImagesMmosaic": 100000,
+  "LiveVideoOFF": false,
+  "LiveVideoDelay": 6.0,
+  "DoublingFlaps": 29,
+  "PachXLSX": "E:\\Sample Type",
+  "PachDB": "E:\\DB",
+  "PathAnalysisTest": "E:\\Sample Type\\Red\\Data\\SAMPLES\\Good",
+  "SampleWeight": 35750.0,
+  "LimitinGraphPoints": 10000,
+  "UpdateVisibleArea": 300,
+  "AxisYMaxValue": 270,
+  "CameraAnalis_1": false,
+  "CameraAnalis_2": false,
+  "GEIN1": 7.30,
+  "GEIN2": 2.20,
+  "ACQGEIN1": 2.20,
+  "ACQGEIN2": 1.00,
+  "ACQ_SET1": true,
+  "ACQ_SET2": true,
+  "SetingsCameraStart": false,
+  "PashTestIMG": "E:\\TestPhoto BlekCat",
+  "ID_CAM": 0
+}

@@ -27,6 +27,7 @@ using LiveCharts.Wpf;
 
 using LiveCharts.Defaults;
 using LiveCharts.WinForms;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// SORTER 30 000 = 1kg
@@ -41,7 +42,9 @@ namespace C2S150_ML
     public partial class Sorter : Form
     {
 
-
+        ///////////////      ====== PROCES REAL_TIME ===     ///////////////////////////////////////////////////////////////
+        [DllImport("Kernel32.dll")]
+        static extern bool SetPriorityClass(IntPtr hProcess, int dwPriorityClass);
 
         DLS DLS;
         static int ID;
@@ -71,7 +74,7 @@ namespace C2S150_ML
 
             InitializeComponent();
             //Help.WriteLineInstal(ConsolMesg);
-
+            Flow.ProcessLoadImagesFunction(true);
 
 
 
@@ -184,6 +187,13 @@ namespace C2S150_ML
               Fleps1, Fleps2, Fleps3, Fleps4, Fleps5, Fleps6, Fleps7, Fleps8, Fleps9,
               Fleps10, Fleps11, Fleps12, Fleps13, Fleps14, Fleps15, Fleps16, Fleps17);
 
+            //LOCK FORM
+            LockFunk(true);
+            PaaswortString.UseSystemPasswordChar = true;
+           
+            ///////////////      ====== PROCES REAL_TIME ===     ///////////////////////////////////////////////////////////////
+            SetPriorityClass(Process.GetCurrentProcess().Handle, 0x00000100); /////////////////////////////////////////////////
+            ///////////////      ====== PROCES REAL_TIME ===     ///////////////////////////////////////////////////////////////
         }
 
 
@@ -262,9 +272,10 @@ namespace C2S150_ML
 
                 TimOutRefresh++;
 
-                if (SETS.Data.ID_CAM == DLS.Slave)
-                { SamplsOLL = Calc.BlobsSlave;
-                } else { SamplsOLL = Calc.BlobsMaster; }
+                //if (SETS.Data.ID_CAM == DLS.Slave) { 
+               SamplsOLL = Calc.BlobsSlave;
+                //} else { SamplsOLL = Calc.BlobsMaster; }
+               
 
                 double SpeedKgh = 0;
                 // formula -Kg/H ------  (((oll_Pcs_Kg/cof_Weight)=Wwight)/(Tims_Sec_Work/Sec_In_H))= Kg/H
@@ -950,8 +961,6 @@ namespace C2S150_ML
 
 
 
-
-            ProcesingAnalis.Text = Flow.CountProcesingCamera.ToString();
             BuferImgIdx.Text = FlowCamera.BuferImg.Count.ToString();
             BuferImgCaun.Text = FlowCamera.BoxImgM.Count.ToString();
             CauntListImages.Text = FlowCamera.ImgSave.Count.ToString();
@@ -1682,8 +1691,16 @@ namespace C2S150_ML
 
         private void timer3_Tick(object sender, EventArgs e)
         {
-
-            if (coutTim == 5) { try { DLS = new DLS(); }  catch { Help.Mesag("Cameras are not connected"); } }
+            if (coutTim == 1)
+            {
+                Flow.ProcessLoadImagesFunction();
+            }
+            if (coutTim == 5) { try {  DLS = new DLS(); }  catch {
+                    coutTim = 0;
+                    Help.Mesag("Cameras are not connected"); Enabled = true; timer3.Stop(); 
+                    Flow.ProcessLoadImagesFunction(false);
+             
+                } }
               
                 Enabled = false;
             if (coutTim > 10){ 
@@ -1711,7 +1728,8 @@ namespace C2S150_ML
                 // Завантаження Вирівнювання Фону
                 if (!SETS.Data.CameraAnalis_1) { SetACQ_File(DLS.Master); }
                 if (!SETS.Data.CameraAnalis_2) { SetACQ_File(DLS.Slave);  }
-
+                Flow.ProcessLoadImagesFunction(false);
+         
                 Enabled = true;
             }
 
@@ -1790,9 +1808,9 @@ namespace C2S150_ML
 
             //DLS.Save_FF_File(SETS.Data.ID_CAM, PshACQ);
 
-            checkBoxAcqSet.Checked = true;
+            //checkBoxAcqSet.Checked = true;
             //DLS.checkBox_FaltField_Click(SETS.Data.ID_CAM, checkBoxAcqSet.Checked);
-            //SetACQ_File(SETS.Data.ID_CAM);
+            SetACQ_File(SETS.Data.ID_CAM);
 
             DLS.StartCAMERA(SETS.Data.ID_CAM);
             LIGHT.ON();
@@ -1904,7 +1922,7 @@ namespace C2S150_ML
                 { pathSmpl[idx] += Path.GetFileName(SamlCatalogPath[idx]); }
 
                 comboBoxSetingsName.Items.Clear();
-                comboBox1.Items.Clear();
+                textBoxСreateSample.Items.Clear();
 
                 int x = 0;
                 string[] NemSmpls = new string[pathSmpl.Length];
@@ -1913,7 +1931,7 @@ namespace C2S150_ML
                 {
     
                     comboBoxSetingsName.Items.Add(i);
-                    comboBox1.Items.Add(i);
+                    textBoxСreateSample.Items.Add(i);
                     NemSmpls[x++] = i;
                 }
 
@@ -1926,20 +1944,20 @@ namespace C2S150_ML
         private void buttonDeleteTypeSempl_Click(object sender, EventArgs e)
         {
             DialogResult result = DialogResult.Yes;
-            result = MessageBox.Show("Do you want delete sample type '" + comboBox1.Text + "' ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            result = MessageBox.Show("Do you want delete sample type '" + textBoxСreateSample.Text + "' ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
 
 
             if (result == DialogResult.Yes)
             {
-                if ((TextBoxSemplTyp.Text != comboBox1.Text)&&(comboBox1.Text != STGS.DT.SampleType))
+                if ((TextBoxSemplTyp.Text != textBoxСreateSample.Text)&&(textBoxСreateSample.Text != STGS.DT.SampleType))
                 {
                     
                     //видалити деректрію
                     try
                     {
-                        DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(STGS.Data.URL_SampleType, comboBox1.Text));
+                        DirectoryInfo dirInfo = new DirectoryInfo(Path.Combine(STGS.Data.URL_SampleType, textBoxСreateSample.Text));
                         dirInfo.Delete(true);
-                        comboBox1.Text = "";
+                        textBoxСreateSample.Text = "";
                     }
                     catch { MessageBox.Show("The directory cannot be deleted 'directory is not found' "); }
                 }
@@ -1977,7 +1995,9 @@ namespace C2S150_ML
                         if (_SETS.Read(comboBoxSetingsName.Text))
                         {
                            RefreshSetings();
-                        }else {   MessageBox.Show("Unable to apply new settings!!! Maybe the file doesn't exist yet, you need to make the first save. If you press save, the current settings will be saved in the" + "sample type" + "file");}; 
+                           button19_Click(null, null);
+                        }
+                    else {   MessageBox.Show("Unable to apply new settings!!! Maybe the file doesn't exist yet, you need to make the first save. If you press save, the current settings will be saved in the" + "sample type" + "file");}; 
                    // }
 
                     }
@@ -2086,8 +2106,33 @@ namespace C2S150_ML
             {
                 FlowCamera.AnalisLock = false;
                 AnalisLock.Checked = false;
-                DLS.SetGain((double)GAIN1.Value, DLS.Master);
-                DLS.SetGain((double)GAIN2.Value, DLS.Slave);
+               // DLS.SetGain((double)GAIN1.Value, DLS.Master);
+                //DLS.SetGain((double)GAIN2.Value, DLS.Slave);
+
+                GAIN1.Enabled = DLS.Devis.Status[DLS.Master];
+                GAIN2.Enabled = DLS.Devis.Status[DLS.Slave];
+
+                if ((GAIN1.Value <= 10) && (GAIN1.Value >= 1))
+                {
+                    if (GAIN1.Value != (decimal)DLS.Devis.Gain[DLS.Master]) { GAIN1_Click(null, null); }
+
+                }  else { GAIN1.Value = (decimal)DLS.Devis.Gain[DLS.Master]; }
+              
+
+
+                if ((GAIN2.Value <= 10) && (GAIN2.Value >= 1))
+                {
+                    if (GAIN2.Value != (decimal)DLS.Devis.Gain[DLS.Slave]) { GAIN2_Click(null, null); }
+
+                }else { GAIN2.Value = (decimal)DLS.Devis.Gain[DLS.Slave]; }
+
+
+                // Завантаження Вирівнювання Фону
+                if (!SETS.Data.CameraAnalis_1) { SetACQ_File(DLS.Master); }
+                if (!SETS.Data.CameraAnalis_2) { SetACQ_File(DLS.Slave); }
+
+
+
             }
             catch { Help.Mesag("Reset Program"); }
             
@@ -2161,6 +2206,164 @@ namespace C2S150_ML
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
+
+        private void checkBox6_Click(object sender, EventArgs e)
+        {
+            if (checkBox6.Checked) { PaaswortString.UseSystemPasswordChar = false; } else
+            { PaaswortString.UseSystemPasswordChar = true;   }
+        }
+
+
+        void LockFunk(bool LockSoft)
+        {
+
+            if (LockSoft) {
+                
+                WorkTable.Enabled = false;
+                groupBox34.Enabled = false;
+                VisionSettings.Enabled = false;
+                PathDatabases.Enabled = false;
+
+
+                button51.Enabled = false;
+                PathFileSave.Enabled = false;
+                FillingHopperError.Enabled = false;
+                FlapsSettings.Enabled = false;
+                SampleWeightgroup.Enabled = false;
+                LightLock.Enabled = false;
+                SettingsTypeBox.Enabled = false;
+                CamerasSettings.Enabled = false;
+                Hz_Table.Enabled = false;
+                richTextBox3.Enabled = false;
+                button26.Enabled = false;
+            
+
+            } else {
+
+                WorkTable.Enabled = true;
+                groupBox34.Enabled = true;
+                VisionSettings.Enabled = true;
+                PathDatabases.Enabled = true;
+
+                button51.Enabled = true;
+                PathFileSave.Enabled = true;
+                FillingHopperError.Enabled = true;
+                FlapsSettings.Enabled = true;
+                SampleWeightgroup.Enabled = true;
+                LightLock.Enabled = true;
+                SettingsTypeBox.Enabled = true;
+                CamerasSettings.Enabled = true;
+                Hz_Table.Enabled = true;
+                richTextBox3.Enabled = true;
+                button26.Enabled = true;
+            
+            }
+
+
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            if (PaaswortString.Text != "")
+            {
+                if ((PaaswortString.Text == "1304")|| (PaaswortString.Text == STGS.DT.Password))
+                {
+                   
+                    LockFunk(false);
+                    PaaswortString.Text = "";
+                    PasworLable.Text = "OK";
+                    IDtex.Text = "Admin mode"; // Label visual Mode
+                }
+                else { PaaswortString.Text = ""; Help.Mesag("Password is incorrect"); }
+            }
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+           
+            LockFunk(true);
+            IDtex.Text = "User mode"; // Label visual Mode
+            PasworLable.Text = "-";
+        }
+
+
+
+
+        /// <summary>
+        /// change your password
+        /// </summary>
+        int PaswortStepChange = 0;
+        string PaaswortStringRepeet;
+        private void button5_Click(object sender, EventArgs e)
+        {
+            PasworLable.Text = "";
+
+            if (IDtex.Text == "Admin mode") // Label visual Mode
+            {  
+                
+                
+                if ((PaaswortString.Text == "")&&(PaswortStepChange==0)){
+                DialogResult result = DialogResult.Yes;
+                result = MessageBox.Show("Do you want to change your password ?'"  , "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+                if (result == DialogResult.Yes){
+                        PaswortStepChange = 1;
+                        PaaswortString.Text = "";
+                        PasworLable.Text = "Set new Password";
+                        return;
+                    }  }
+
+
+
+                if ((PaaswortString.Text.Length > 3) && (PaswortStepChange == 1))
+                {
+                    PaaswortStringRepeet = PaaswortString.Text;
+                    PaaswortString.Text = "";
+                    PasworLable.Text = "Repeat";
+                    PaswortStepChange = 2;
+                    return;
+                }
+                else
+                {
+                   
+                    
+                    if (PaswortStepChange == 1) {PaaswortString.Text = ""; Help.Mesag("Password is incorrect"); return; }
+                }
+
+
+
+                if ((PaaswortString.Text == PaaswortStringRepeet) && (PaswortStepChange == 2)) {
+                    PaswortStepChange = 0;
+                    STGS.DT.Password = PaaswortString.Text;
+                    STGS.Save();
+                    PaaswortString.Text = "";
+                    PasworLable.Text = "Change OK";
+                    LockFunk(true);
+                    IDtex.Text = "User mode"; // Label visual Mode
+                 
+                }
+                else
+                {
+                    PaaswortString.Text = "";
+                    if (PaswortStepChange == 2) { Help.Mesag("Password is incorrect"); }
+                    PaswortStepChange = 0;
+                   
+                }
+
+            }else { PaswortStepChange = 1; Help.Mesag("Password changing possible only in admin mode"); };
+        }
+
+
+
+        private void PaaswortString_Enter(object sender, KeyEventArgs e)
+        {
+         if (e.KeyCode == Keys.Enter)
+            {
+                button11_Click(null, null);
+            }
+        }
+
+      
     }
 
 }

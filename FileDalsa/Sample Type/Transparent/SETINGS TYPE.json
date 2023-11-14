@@ -1,0 +1,71 @@
+{
+  "SignalLamp": 5.0,
+  "SystemOFF": 42.0,
+  "USB": {
+    "PWM_Table": 60.0,
+    "Hz_Table": 3200.0,
+    "Fleps_Time_OFF": 150.0,
+    "Light_Top": false,
+    "Light_Bottom": false,
+    "Light_Back": true,
+    "Light_IR": true
+  },
+  "EMGUDT": {
+    "GreyScaleMax": [
+      255,
+      0
+    ],
+    "GreyScaleMin": [
+      160,
+      0
+    ],
+    "GreySizeMax": [
+      3000.0,
+      0.0
+    ],
+    "GreySizeMin": [
+      6.5,
+      0.0
+    ]
+  },
+  "Vis": {
+    "blurA": 2,
+    "ThresholdA": 15,
+    "blurB": 1,
+    "ThresholdB": 110,
+    "ArcLengthB": 10,
+    "ArcLengthTest": 150
+  },
+  "Pdf": {
+    "PathFileSave": "E:\\Report Pdf",
+    "NameReport": "ReportPDF",
+    "SampleType": "Red Type",
+    "CreatedBy": "Yurii",
+    "Comments": "Test created",
+    "ShowImageInReport": true
+  },
+  "BlobsInvert": true,
+  "MosaicRealTime": true,
+  "MaxImagesMmosaic": 90000,
+  "LiveVideoOFF": false,
+  "LiveVideoDelay": 0.0,
+  "DoublingFlaps": 29,
+  "PachXLSX": "E:\\Sample Type",
+  "PachDB": "E:\\DB",
+  "PathAnalysisTest": "E:\\C2S150_ML\\bin\\Debug\\Data\\SAMPLES\\Bed",
+  "SampleWeight": 34817.0,
+  "LimitinGraphPoints": 10000,
+  "UpdateVisibleArea": 300,
+  "AxisYMaxValue": 100,
+  "CameraAnalis_1": true,
+  "CameraAnalis_2": false,
+  "GEIN1": 1.64,
+  "GEIN2": 3.00,
+  "ACQGEIN1": 3.00,
+  "ACQGEIN2": 4.00,
+  "ACQ_SET1": true,
+  "ACQ_SET2": true,
+  "SetingsCameraStart": false,
+  "PashTestIMG": "E:\\TestPhoto BlekCat",
+  "ID_CAM": 1
+}

@@ -12,6 +12,7 @@ using VIBR_TABLE = C2S150_ML.USB_HID.PLC_C2S150.VIBRATING;
 
 using AUTOLOADER = C2S150_ML.USB_HID.PLC_C2S150.AUTOLOADER;
 using SEPARATOR = C2S150_ML.USB_HID.PLC_C2S150.SEPARATOR;
+using System.Runtime.InteropServices;
 
 namespace C2S150_ML
 {
@@ -369,14 +370,31 @@ namespace C2S150_ML
         }
 
 
-        static public void ProcessLoadImagesFunction(bool Run){
-  
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+   
+        static public void ProcessLoadImagesFunction(bool Run)
+        {
+
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(
-                @"../../LoadImage\WindowsFormsApp1\bin\Debug\LoadImage.exe");
-            if (Run) { _process = System.Diagnostics.Process.Start(startInfo); } else{
+                @"../../../../LoadImage\WindowsFormsApp1\bin\Debug\LoadImage.exe");
+            if (Run) { _process = System.Diagnostics.Process.Start(startInfo); }
+            else
+            {
                 _process.Kill();
                 _process.Close();
             }
+
+
+        }
+
+        static public void ProcessLoadImagesFunction()
+        {   // Зачекайте, щоб впевнитися, що вікно вже створене
+            _process.WaitForInputIdle();
+
+            // Зробіть вікно попереду усіх інших вікон
+            SetForegroundWindow(_process.MainWindowHandle);
         }
 
 
@@ -385,8 +403,5 @@ namespace C2S150_ML
 
 
 
-
-
-
-    }
+        }
 }

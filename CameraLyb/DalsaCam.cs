@@ -1349,22 +1349,22 @@ namespace C2S150_ML
         {
 
 
-            if (ID_Cam == Master) { SetGain((double)SETS.Data.ACQGEIN1, Master); }
-            else { SetGain((double)SETS.Data.ACQGEIN2, Slave); }
+            if (ID_Cam == Master) { SetGain((double)1, Master); }
+            else { SetGain((double)1, Slave); }
 
             System.Threading.Thread.Sleep(500);
-            LIGHT.OFF();
+            LIGHT.ON();
             DLS.ImgSnapSet = true;
             DLS.StartCAMERA(SETS.Data.ID_CAM);
             System.Threading.Thread.Sleep(500);
 
-            DLS.ImgSnapSet = true;
-            System.Threading.Thread.Sleep(500);
+
+        
             DLS.StopCAMERA(SETS.Data.ID_CAM);
-            LIGHT.ON();
+      
 
-            System.Threading.Thread.Sleep(200);
-
+            System.Threading.Thread.Sleep(500);
+            LIGHT.OFF();
 
             int nbImagesUsed = DalsaVal.m_FlatField[ID_Cam].CorrectionType == SapFlatField.ScanCorrectionType.Field ? textBox_Frame_Avg : 1;
 
@@ -1536,7 +1536,7 @@ namespace C2S150_ML
             DLS.ImgSnapSet = true;
             DLS.StartCAMERA(SETS.Data.ID_CAM);
             System.Threading.Thread.Sleep(500);
-            DLS.ImgSnapSet = true;
+
             System.Threading.Thread.Sleep(500);
             DLS.StopCAMERA(SETS.Data.ID_CAM);
             LIGHT.OFF();
