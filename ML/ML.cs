@@ -223,10 +223,10 @@ namespace C2S150_ML
 
             ResFast32();
             //BuildModel();
-            ModelaPach = @DataPash + "\\Model.h5";
+            ModelaPach = @DataPash + "\\"+STGS.Data.ML_NAME+".h5";
             model.load_weights(ModelaPach);
 
-
+          
             // Створити сіру картинку 64x64
             Image<Gray, byte> grayImage = new Image<Gray, byte>((int) img_dim[0],(int) img_dim[1]);
             // Заповнити картинку сірим кольором
@@ -257,7 +257,7 @@ namespace C2S150_ML
             //keras.models.load_model (@"D:\C2_MLNET\TenserflowKeras  test CUDA11.2_NDN8.1_Grey\bin\Debug\net5.0-windows\Model.h6");
             //model. load_weights(@"D:\C2_MLNET\TenserflowKeras  test CUDA11.2_NDN8.1_Grey\bin\Debug\net5.0-windows\Model.h6\saved_model");
 
-             ModelaPach = @DataPash + "\\Model.h5";
+             ModelaPach = @DataPash + "\\"+STGS.Data.ML_NAME+".h5";
             model.load_weights(ModelaPach);
             //keras.models.load_model (@"D:\C2_MLNET\TenserflowKeras  test CUDA11.2_NDN8.1_Grey\bin\Debug\net5.0-windows\Model.h6\saved_model");
             //Console.WriteLine("Load Model: -- " + watch.ElapsedMilliseconds + " ms");

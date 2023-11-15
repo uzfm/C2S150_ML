@@ -100,6 +100,8 @@ namespace C2S150_ML
 
 
             timer1.Enabled = true;
+
+
             //*************  initialization of cameras  *********************
 
 
@@ -187,6 +189,22 @@ namespace C2S150_ML
               Fleps1, Fleps2, Fleps3, Fleps4, Fleps5, Fleps6, Fleps7, Fleps8, Fleps9,
               Fleps10, Fleps11, Fleps12, Fleps13, Fleps14, Fleps15, Fleps16, Fleps17);
 
+
+            if (SetingsCameraStart.Checked)
+            {
+                timer3.Enabled = false;
+                try { DLS = new DLS(); }
+                catch
+                {
+                    coutTim = 0;
+                    Help.Mesag("Cameras are not connected"); Enabled = true; timer3.Stop();
+                    Flow.ProcessLoadImagesFunction(false);
+
+                }
+
+            }
+
+
             //LOCK FORM
             LockFunk(true);
             PaaswortString.UseSystemPasswordChar = true;
@@ -211,10 +229,9 @@ namespace C2S150_ML
 
 
 
-        private void button54_Click(object sender, EventArgs e) {
+        private void ClearAnalisData() {
             Calc.GoodSamples = 0;
             Calc.BadSamples = 0;
-
             Calc.BlobsMaster = 0;
             Calc.BlobsSlave = 0;
             dataGridView1.Rows.Clear();
@@ -233,6 +250,7 @@ namespace C2S150_ML
             SizeCNT.Size100 = 0;
             SizeCNT.Size500 = 0;
             SizeCNT.Size1000 = 0;
+            WatchSpeed.Restart();
         }
 
 
@@ -250,6 +268,8 @@ namespace C2S150_ML
 
         // Створюємо об'єкт Stopwatch
         Stopwatch stopwatch = new Stopwatch();
+        // Створюємо об'єкт Stopwatch
+        Stopwatch WatchSpeed = new Stopwatch();
 
         static DateTime DataTime;
         private void TimerRefreshChart() {
@@ -261,7 +281,7 @@ namespace C2S150_ML
 
 
             // Отримуємо час у секундах
-            int TimeInSeconds = (int)stopwatch.Elapsed.TotalSeconds;
+            int TimeInSeconds = (int)WatchSpeed.Elapsed.TotalSeconds;
 
 
 
@@ -331,6 +351,7 @@ namespace C2S150_ML
                     if ((buttonStartAnalic.Text == "Stop Analysis") && (!StartStopGrid)) {
                         // Починаємо вимірювання часу
                         stopwatch.Start();
+                        WatchSpeed.Start();
                         DataTime = DateTime.Now;
                         
                         StartStopGrid = true; }
@@ -343,6 +364,7 @@ namespace C2S150_ML
                             // Починаємо вимірювання часу
                             stopwatch.Restart();
                             stopwatch.Stop();
+                            WatchSpeed.Stop();
                             StartStopGrid = false;
                             SQL.SaveRow(dataGridView1);
 
@@ -709,14 +731,21 @@ namespace C2S150_ML
 
         void SaveSetValue()
         {
+            //ML
+            STGS.DT.URL_ML = PachML.Text;
+
             //CAMERA
             SETS.Data.GEIN1 = GAIN1.Value;
             SETS.Data.GEIN2 = GAIN2.Value;
 
 
             if (SETS.Data.ID_CAM == DLS.Master) {
-                SETS.Data.ACQGEIN1 = numericACQ_Gain.Value; } else {
-                SETS.Data.ACQGEIN2 = numericACQ_Gain.Value; }
+                SETS.Data.ACQGEIN1 = numericACQ_GainBright.Value;
+                SETS.Data.ACQGEIN1_Black = numericACQ_GainBlack.Value;
+            } else {
+                SETS.Data.ACQGEIN2 = numericACQ_GainBright.Value;
+                SETS.Data.ACQGEIN2_Black = numericACQ_GainBlack.Value;
+            }
 
 
             //-----------------------------------
@@ -756,7 +785,7 @@ namespace C2S150_ML
             SETS.Data.BlobsInvert = InvertBlobs.Checked;
             SETS.Data.PachXLSX = richTextBox3.Text;
             SETS.Data.PachDB = richTextBox4.Text;
-            SETS.Data.PathAnalysisTest = textBox4.Text;
+    
             SETS.Data.LiveVideoDelay = LiveViewDelay.Value;
 
 
@@ -783,6 +812,10 @@ namespace C2S150_ML
 
         void RefreshSetings()
         {
+
+            //ML
+              PachML.Text = STGS.DT.URL_ML;
+
             try
             {
                 MosaicRealTime.Checked = SETS.Data.MosaicRealTime;
@@ -827,13 +860,19 @@ namespace C2S150_ML
                 numericUpDown8.Value = SETS.Data.AxisYMaxValue;
                 richTextBox3.Text = SETS.Data.PachXLSX;
                 richTextBox4.Text = SETS.Data.PachDB;
-                textBox4.Text = SETS.Data.PathAnalysisTest;
+
 
                 GAIN1.Value = SETS.Data.GEIN1;
                 GAIN2.Value = SETS.Data.GEIN2;
 
-                if (SETS.Data.ID_CAM == DLS.Master) { numericACQ_Gain.Value = SETS.Data.ACQGEIN1; }
-                else { numericACQ_Gain.Value = SETS.Data.ACQGEIN2; }
+                if (SETS.Data.ID_CAM == DLS.Master) { 
+                    numericACQ_GainBright.Value = SETS.Data.ACQGEIN1;
+                    numericACQ_GainBlack.Value = SETS.Data.ACQGEIN1_Black;
+                }
+                else { 
+                    numericACQ_GainBright.Value = SETS.Data.ACQGEIN2;
+                    numericACQ_GainBlack.Value = SETS.Data.ACQGEIN2_Black;
+                }
 
 
 
@@ -1005,6 +1044,8 @@ namespace C2S150_ML
         {
             ClearMosaic();
 
+            ClearAnalisData();
+
         }
 
 
@@ -1111,9 +1152,9 @@ namespace C2S150_ML
             if (AskMsg == true) { result = MessageBox.Show("Do you want Add Images to " + comboBoxBedGood.Text + " ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information); }
 
 
-            string PshSampleType = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text); //створити шлях до каталога "Data"
-            string PshData = Path.Combine(PshSampleType, "Data"); //створити шлях до каталога "Data"
-            string PshSempls = Path.Combine(PshData, "SAMPLES"); //створити шлях до каталога "SAMPLES"
+
+            string PshData = Path.Combine(PachML.Text, "Data"); //створити шлях до каталога "Data"
+            string PshSempls = Path.Combine(PshData, STGS.Data.ML_NAME); //створити шлях до каталога "SAMPLES"
             string PashImg = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bad Good"
 
             if (false == Directory.Exists(PshData)) { Directory.CreateDirectory(PshData); }// якщо нема пакі то створюєм
@@ -1141,18 +1182,37 @@ namespace C2S150_ML
         }
 
 
-        private void button61_Click(object sender, EventArgs e)
-        {
-            string PshSampleType = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text); //створити шлях до каталога "Data"
-            string PshData = Path.Combine(PshSampleType, "Data"); //створити шлях до каталога "Data"
-            string PshSempls = Path.Combine(PshData, "SAMPLES"); //створити шлях до каталога "SAMPLES"
+        private void button61_Click(object sender, EventArgs e) {
+            try
+            {
+                FolderBrowserDialog FBD = new FolderBrowserDialog();
+                if (FBD.ShowDialog() == DialogResult.OK)
+                {
+
+                    PachML.Text = FBD.SelectedPath;
+
+            
+            string PshData = Path.Combine(PachML.Text, "Data"); //створити шлях до каталога "Data"
+            string PshSempls = Path.Combine(PshData, STGS.Data.ML_NAME); //створити шлях до каталога "SAMPLES"
                                                                  // string PashImg = Path.Combine(PshSempls, comboBoxBedGood.Text); ///створити шлях до каталога "Bed Good"
 
             if (false == Directory.Exists(PshData)) { Directory.CreateDirectory(PshData); }// якщо нема пакі то створюєм
             if (false == Directory.Exists(PshSempls)) { Directory.CreateDirectory(PshSempls); }// якщо нема пакі то створюєм
-                                                                                               // if (false == Directory.Exists(PashImg))   { Directory.CreateDirectory(PashImg); }// якщо нема пакі то створюєм
+            // if (false == Directory.Exists(PashImg))   { Directory.CreateDirectory(PashImg); }// якщо нема пакі то створюєм
+
+                }
+                else { MessageBox.Show("Choose directory please", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+
+        }
 
 
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            string PshData = Path.Combine(PachML.Text, "Data"); //створити шлях до каталога "Data"
+            string PshSempls = Path.Combine(PshData, STGS.Data.ML_NAME); //створити шлях до каталога "SAMPLES"
 
             // Отримати поточний каталог (куди вказує відносний шлях)
             string currentDirectory = Directory.GetCurrentDirectory();
@@ -1171,6 +1231,9 @@ namespace C2S150_ML
                 Console.WriteLine("Папка не існує.");
             }
         }
+
+
+
 
         private void button62_Click(object sender, EventArgs e)
         {
@@ -1205,13 +1268,13 @@ namespace C2S150_ML
 
             if (result == DialogResult.Yes) {
 
-                string DataPath = Path.Combine(STGS.Data.URL_SampleType, TextBoxSemplTyp.Text, "Data");
-                // Отримати поточний каталог (куди вказує відносний шлях)
-                string currentDirectory = Directory.GetCurrentDirectory();
+                string DataPath = Path.Combine(STGS.DT.URL_ML, "Data");
+
                 // Об'єднати відносний шлях з поточним каталогом для отримання повного шляху
-                string fullPath = Path.Combine(currentDirectory, DataPath);
-                string absolutePath = Path.GetFullPath(fullPath);
-                Flow.ProcessLerningFunction(absolutePath, "C2_150");
+
+                //string fullPath = Path.Combine(currentDirectory, DataPath);
+                //string absolutePath = Path.GetFullPath(fullPath);
+                Flow.ProcessLerningFunction(DataPath, "C2S_150");
                 Close();
 
             }
@@ -1366,7 +1429,8 @@ namespace C2S150_ML
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-
+ try
+                {
             string urlMaster = textBoxTestImg.Text + "\\" + "Image" + IdxShou++ + ".jpg";
             FlowAnalis.Setings = true;
             string[] files = Directory.GetFiles(textBoxTestImg.Text, "*.jpg");
@@ -1376,8 +1440,7 @@ namespace C2S150_ML
 
             if (IdxShou <= files.Length)
             {
-                try
-                {
+               
 
                     if (SETS.Data.ID_CAM == 0) { 
                     Bitmap imM = new Bitmap(urlMaster);
@@ -1396,10 +1459,13 @@ namespace C2S150_ML
 
 
 
-                }
-                catch { }
             }
             else { }
+
+
+                }
+                catch { }
+
         }
 
         private void button24_Click(object sender, EventArgs e)
@@ -1525,12 +1591,14 @@ namespace C2S150_ML
 
         void TestImgBlb()
         {
+            string PshData = Path.Combine(PachML.Text, "Data"); //створити шлях до каталога "Data"
+            string PshSempls = Path.Combine(PshData, STGS.Data.ML_NAME, comboBoxImgTypTest.Text); //створити шлях до каталога "SAMPLES"
 
-                try
+
+            try
                 {
-            string urlMaster = textBox4.Text + "\\" + "Image" + IdxShouTest++ + ".jpg";
-
-            files = Directory.GetFiles(@textBox4.Text, "*.jpg");
+            string urlMaster = PshSempls + "\\" + "Image" + IdxShouTest++ + ".jpg";
+            files = Directory.GetFiles(@PshSempls, "*.jpg");
 
             int count = files.Length;
 
@@ -1626,20 +1694,7 @@ namespace C2S150_ML
 
 
 
-        private void button41_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                FolderBrowserDialog FBD = new FolderBrowserDialog();
-                if (FBD.ShowDialog() == DialogResult.OK)
-                {
-
-                    textBox4.Text = FBD.SelectedPath;
-                }
-                else { MessageBox.Show("Choose directory please", "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-            }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-        }
+ 
 
         private void button8_Click(object sender, EventArgs e)
         {
@@ -1691,20 +1746,27 @@ namespace C2S150_ML
 
         private void timer3_Tick(object sender, EventArgs e)
         {
+    
+
+
             if (coutTim == 1)
             {
                 Flow.ProcessLoadImagesFunction();
             }
-            if (coutTim == 5) { try {  DLS = new DLS(); }  catch {
+            if (coutTim == 5)
+            {
+                Enabled = true;
+                try {  DLS = new DLS(); }  catch {
+                    timer3.Enabled = false;
                     coutTim = 0;
-                    Help.Mesag("Cameras are not connected"); Enabled = true; timer3.Stop(); 
+                    Help.Mesag("Cameras are not connected"); Enabled = true; timer3.Enabled = false;
                     Flow.ProcessLoadImagesFunction(false);
              
                 } }
               
                 Enabled = false;
-            if (coutTim > 10){ 
-                timer3.Stop();
+            if (coutTim > 10){
+                timer3.Enabled = false;
                 coutTim = 0;
 
 
@@ -1881,7 +1943,7 @@ namespace C2S150_ML
                     string PathType = Path.Combine(STGS.Data.URL_SampleType, textBoxСreateSample.Text);
                     string PshACQ = Path.Combine(PathType, "ACQ"); //створити шлях до каталога "Data"
                     string PshData = Path.Combine(PathType, "Data"); //створити шлях до каталога "Data"
-                    string PshSempls = Path.Combine(PshData, "SAMPLES"); //створити шлях до каталога "SAMPLES"
+                    string PshSempls = Path.Combine(PshData, STGS.Data.ML_NAME); //створити шлях до каталога "SAMPLES"
 
                     if (false == Directory.Exists(STGS.Data.URL_SampleType)) { Directory.CreateDirectory(STGS.Data.URL_SampleType); }
                     if (false == Directory.Exists(PathType)) { Directory.CreateDirectory(PathType); }
@@ -2087,7 +2149,7 @@ namespace C2S150_ML
             {
                 FlowCamera.AnalisLock = true;
                 AnalisLock.Checked = true;
-                DLS.SetGain((double)numericACQ_Gain.Value, SETS.Data.ID_CAM);
+                DLS.SetGain((double)numericACQ_GainBright.Value, SETS.Data.ID_CAM);
             }
             catch { Help.Mesag("Reset Program"); }
         }
@@ -2097,8 +2159,30 @@ namespace C2S150_ML
             try{
                 FlowCamera.AnalisLock = true;
                 AnalisLock.Checked=true;
-                DLS.SetGain((double)numericACQ_Gain.Value, SETS.Data.ID_CAM);
+                DLS.SetGain((double)numericACQ_GainBright.Value, SETS.Data.ID_CAM);
             }catch { Help.Mesag("Reset Program"); }
+        }
+
+        private void button27_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                FlowCamera.AnalisLock = true;
+                AnalisLock.Checked = true;
+                DLS.SetGain((double)numericACQ_GainBlack.Value, SETS.Data.ID_CAM);
+            }
+            catch { Help.Mesag("Reset Program"); }
+        }
+
+        private void numericACQ_GainBlack_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FlowCamera.AnalisLock = true;
+                AnalisLock.Checked = true;
+                DLS.SetGain((double)numericACQ_GainBlack.Value, SETS.Data.ID_CAM);
+            }
+            catch { Help.Mesag("Reset Program"); }
         }
 
         private void button19_Click(object sender, EventArgs e){
@@ -2363,7 +2447,7 @@ namespace C2S150_ML
             }
         }
 
-      
+
     }
 
 }

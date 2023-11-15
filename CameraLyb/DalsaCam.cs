@@ -360,7 +360,7 @@ namespace C2S150_ML
                     GrabberIndex++;
 
                 }
-                //}
+               // }
 
             }
 
@@ -397,7 +397,7 @@ namespace C2S150_ML
             }
 
 
-            SetGain(0,  ID_Cam);
+            SetGain(1,  ID_Cam);
 
 
             return true;
@@ -1349,8 +1349,8 @@ namespace C2S150_ML
         {
 
 
-            if (ID_Cam == Master) { SetGain((double)1, Master); }
-            else { SetGain((double)1, Slave); }
+            if (ID_Cam == Master) { SetGain((double)SETS.Data.ACQGEIN1_Black, Master); }
+                             else { SetGain((double)SETS.Data.ACQGEIN2_Black, Slave); }
 
             System.Threading.Thread.Sleep(500);
             LIGHT.ON();
@@ -1795,7 +1795,7 @@ namespace C2S150_ML
 
 
         int m_RecommendedDark=64;
-        int m_RecommendedBright;
+        int m_RecommendedBright=180;
         enum LogTypes
         {
             Error,

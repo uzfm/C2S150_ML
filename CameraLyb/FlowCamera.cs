@@ -1041,7 +1041,7 @@ namespace C2S150_ML
             if (ml.model == null)
             {
                 //Model model = ml.ReadModel();
-                ml.InstModel(Path.Combine(Application.StartupPath, "Data"));
+                ml.InstModel(Path.Combine(STGS.DT.URL_ML, "Data"));
             }
              int IdxBatch;
             while (PotocStartPredict) {

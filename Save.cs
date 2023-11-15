@@ -35,7 +35,6 @@ namespace C2S150_ML
             public int  DoublingFlaps      { get; set; }
             public string PachXLSX         { get; set; }
             public string PachDB           { get; set; }
-            public string PathAnalysisTest { get; set; }
             public decimal SampleWeight    { get; set; }
 
             //Filling Hopper Error
@@ -57,6 +56,8 @@ namespace C2S150_ML
             //ACQ
             public decimal ACQGEIN1 { get; set; }
             public decimal ACQGEIN2 { get; set; }
+            public decimal ACQGEIN1_Black { get; set; }
+            public decimal ACQGEIN2_Black { get; set; }
             public bool    ACQ_SET1 { get; set; }
             public bool    ACQ_SET2 { get; set; }
 
@@ -195,9 +196,11 @@ namespace C2S150_ML
     public class Data
     {
       static  public string  URL_SampleType = Path.Combine(@"../../../../", "Sample Type");
+            static public string ML_NAME = "SAMPLES";
               public string  SampleType { get; set; } // шлях для Моделі
               public string  Password { get; set; }
-    }
+              public string  URL_ML   { get; set; }
+        }
 
         static public Data DT = new Data();
 
