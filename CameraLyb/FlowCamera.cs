@@ -188,9 +188,34 @@ namespace C2S150_ML
                         AperturaHeight = ImagAI.Height;
 
                         /////////зжимаємо фото
+                        if (SETS.Data.BIN_Analysis)
+                        {
+                            ZiseCompres = 2;
+                            WidthAI = ImagAI.Width / ZiseCompres;
+                            HeightAI = ImagAI.Height / ZiseCompres;
+                            AperturaWidth = ImagAI.Width;
+                            AperturaHeight = ImagAI.Height;
+                        } else
+                        {
+                            ZiseCompres = 5;
+                            WidthAI = ImagAI.Width / ZiseCompres;
+                            HeightAI = ImagAI.Height / ZiseCompres;
+                            AperturaWidth = ImagAI.Width;
+                            AperturaHeight = ImagAI.Height;
+                        }
+
+
+
+
                         imgAI = ImagAI.Resize(WidthAI, HeightAI, Inter.Linear);
 
+                        //////////////////////////////////////////////////
                         var CutCTR_SV = FindBlobMini(imgAI.Copy());
+
+
+
+                        //////////////////////////////////////////////////
+                        
 
                         Rectangle BoxROI    = new Rectangle();
                         Rectangle BoxROIcaT = new Rectangle();
@@ -339,16 +364,11 @@ namespace C2S150_ML
                                     }
                                     else
                                     {
-
                                         CutCTR_SV.NULL[i] = true;
                                         if (!SETS.Data.LiveVideoOFF)
                                         { CvInvoke.Rectangle(ImagContactVI.Mat, BoxROI, new Bgr(Color.Red).MCvScalar, 5); }
                                     }
                                 }
-
-
-                  
-
 
                             }
                         }
@@ -447,13 +467,14 @@ namespace C2S150_ML
 
         /********************   пошук контурів   **************************************/
         public CutCTR FindBlobMini(Image<Gray, byte> ImagAI){
+            Size FildOfWive = new Size(ImagAI.Width, ImagAI.Height);
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
             var _img = ImagAI.Convert<Gray, byte>().ThresholdBinary(new Gray( EMGU.Data.GreyScaleMin[0]), new Gray(EMGU.Data.GreyScaleMax[0]));
 
             Mat hierarchy = new Mat();
 
             //var cont =CvInvoke.FindContourTree(~_img.Mat, contours, ChainApproxMethod.ChainApproxSimple);/* визначаються контури які не торкраються краю картинки*/
-            if (SETS.Data.BlobsInvert) { CvInvoke.FindContours(_img, contours, hierarchy, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.ChainApproxSimple); } else
+            if (SETS.Data.BlobsInvert[Master]) { CvInvoke.FindContours(_img, contours, hierarchy, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.ChainApproxSimple); } else
             {
                 CvInvoke.FindContours(~_img, contours, hierarchy, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.ChainApproxSimple);
             }
@@ -468,8 +489,8 @@ namespace C2S150_ML
             for (int i = 0; i < contours.Size; i++) {
                 double CnturSize = CvInvoke.ContourArea(contours[i]);
                 //    ВИЗНАЧИТИ ЧИ ПРОХОДИТЬ ЗНАЙДЕНИЙ КОНТУР ПО РОЗМІРУ
-                if (((CnturSize >= EMGU.Data.GreySizeMin[0]) && 
-                     (CnturSize < EMGU.Data.GreySizeMax[0])) )
+                if (((CnturSize >= EMGU.Data.GreySizeMin[Master]) && 
+                     (CnturSize < EMGU.Data.GreySizeMax[Master])) )
                 { CnSize++; }}
             
                 CutCTR  cutCTR = new CutCTR();
@@ -483,7 +504,7 @@ namespace C2S150_ML
                 double CnturSize = CvInvoke.ContourArea(contours[CountCNT]);
 
                 //    ВИЗНАЧИТИ ЧИ ПРОХОДИТЬ ЗНАЙДЕНИЙ КОНТУР ПО РОЗМІРУ
-                if (((CnturSize >= EMGU.Data.GreySizeMin[0]) && (CnturSize < EMGU.Data.GreySizeMax[0])) )
+                if (((CnturSize >= EMGU.Data.GreySizeMin[Master]) && (CnturSize < EMGU.Data.GreySizeMax[Master])) )
                 {
                     boxROI = CvInvoke.BoundingRectangle(contours[CountCNT]);
                     CtrFind = true;
@@ -491,12 +512,42 @@ namespace C2S150_ML
 
                     ///-----------ДОБАВИТИ ЗНАЙДЕНИЙ КОНТУР ДЛЯ АНАЛІЗУ---------------//
                     if (CtrFind == true){
-                        CvInvoke.DrawContours(ImageAN, contours, CountCNT, new MCvScalar(50, 255, 50), 1, LineType.FourConnected);
-                        if (!(Treker.Contains(boxROI.X))) { TrekerRW.Add(boxROI.X); }
-                        ImagAI.ROI = boxROI;
-                        cutCTR.ROI [CnSize] = boxROI;
-                        cutCTR.NULL[CnSize] = false;
-                        cutCTR.CUT [CnSize++] = true;
+
+                        if (SETS.Data.BIN_Analysis) {
+
+                            CvInvoke.DrawContours(ImageAN, contours, CountCNT, new MCvScalar(50, 255, 50), 1, LineType.FourConnected);
+                            if (!(Treker.Contains(boxROI.X))) { TrekerRW.Add(boxROI.X); }
+
+                            // Поточні розміри ROI
+                            int currentWidth = boxROI.Width;
+                            int currentHeight = boxROI.Height;
+
+                            // Нові розміри ROI (64x64)
+                            int newWidth = 64;
+                            int newHeight = 64;
+
+                            // Розрахунок нових координат для ROI так, щоб зберегти центр
+                            boxROI.X = Math.Max(0, boxROI.X + (currentWidth - newWidth) / 2);
+                            boxROI.Y = Math.Max(0, boxROI.Y + (currentHeight - newHeight) / 2);
+                            boxROI.Width = Math.Min(FildOfWive.Width - boxROI.X, newWidth); // Гарантуємо, що границі не виходять за межі
+                            boxROI.Height = Math.Min(FildOfWive.Height - boxROI.Y, newHeight);
+
+                            ImagAI.ROI = boxROI;
+
+                            cutCTR.ROI[CnSize] = boxROI;
+                            cutCTR.NULL[CnSize] = false;
+                            cutCTR.CUT[CnSize++] = true;
+                        }
+                        else {
+
+                            CvInvoke.DrawContours(ImageAN, contours, CountCNT, new MCvScalar(50, 255, 50), 1, LineType.FourConnected);
+                            if (!(Treker.Contains(boxROI.X))) { TrekerRW.Add(boxROI.X); }
+                            ImagAI.ROI = boxROI;
+                            cutCTR.ROI[CnSize] = boxROI;
+                            cutCTR.NULL[CnSize] = false;
+                            cutCTR.CUT[CnSize++] = true;
+
+                        }
 
                     }
                 }
@@ -518,7 +569,7 @@ namespace C2S150_ML
         };
     }
 
-
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     class ANLImg_S
     {
@@ -867,12 +918,12 @@ namespace C2S150_ML
         public CutCTR FindBlobMini(Image<Gray, byte> ImagAI)
         {
             VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
-            var _img = ImagAI.Convert<Gray, byte>().ThresholdBinary(new Gray(EMGU.Data.GreyScaleMin[0]), new Gray(EMGU.Data.GreyScaleMax[0]));
+            var _img = ImagAI.Convert<Gray, byte>().ThresholdBinary(new Gray(EMGU.Data.GreyScaleMin[Slave]), new Gray(EMGU.Data.GreyScaleMax[Slave]));
 
             Mat hierarchy = new Mat();
 
             //var cont =CvInvoke.FindContourTree(~_img.Mat, contours, ChainApproxMethod.ChainApproxSimple);/* визначаються контури які не торкраються краю картинки*/
-            if (SETS.Data.BlobsInvert) { CvInvoke.FindContours(_img, contours, hierarchy, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.ChainApproxSimple); }
+            if (SETS.Data.BlobsInvert[Slave]) { CvInvoke.FindContours(_img, contours, hierarchy, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.ChainApproxSimple); }
             else
             {
                 CvInvoke.FindContours(~_img, contours, hierarchy, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.ChainApproxSimple);
@@ -892,8 +943,8 @@ namespace C2S150_ML
             {
                 double CnturSize = CvInvoke.ContourArea(contours[i]);
                 //    ВИЗНАЧИТИ ЧИ ПРОХОДИТЬ ЗНАЙДЕНИЙ КОНТУР ПО РОЗМІРУ
-                if (((CnturSize >= EMGU.Data.GreySizeMin[0]) &&
-                     (CnturSize < EMGU.Data.GreySizeMax[0])))
+                if (((CnturSize >= EMGU.Data.GreySizeMin[Slave]) &&
+                     (CnturSize < EMGU.Data.GreySizeMax[Slave])))
                 { CnSize++; }
             }
 
@@ -909,7 +960,7 @@ namespace C2S150_ML
                 double CnturSize = CvInvoke.ContourArea(contours[CountCNT]);
 
                 //ВИЗНАЧИТИ ЧИ ПРОХОДИТЬ ЗНАЙДЕНИЙ КОНТУР ПО РОЗМІРУ
-                if (((CnturSize >= EMGU.Data.GreySizeMin[0]) && (CnturSize < EMGU.Data.GreySizeMax[0])))
+                if (((CnturSize >= EMGU.Data.GreySizeMin[Slave]) && (CnturSize < EMGU.Data.GreySizeMax[Slave])))
                 {
                     boxROI = CvInvoke.BoundingRectangle(contours[CountCNT]);
                     CtrFind = true;
@@ -1052,9 +1103,10 @@ namespace C2S150_ML
                     for ( IdxBatch = 0; IdxBatch < MaxBatchSizeML; IdxBatch++){    
                                   ImagAI = new CutImg();
                         FlowCamera.BuferImg.TryDequeue(out ImagAI);
-                       
+                        Calc.StopSustem = 0;
                         //Buffer FUL
                         if ((ImagAI != null) && (ImagAI.Img != null)){
+
                             DT_OUT = Vis._DetectBlobBlack(ImagAI.Img);
 
                             if ((DT_OUT.Detect) || (FlapsTest)) {
@@ -1126,7 +1178,7 @@ namespace C2S150_ML
 
                              //--------------------PREDICT------------------//
                     if (ImgsMosaic.Count != 0){
-                        Calc.StopSustem = 0;
+                      
 
                         var Predict = ml.PredictImage(ImgsMosaic);
                        

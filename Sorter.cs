@@ -46,6 +46,10 @@ namespace C2S150_ML
         [DllImport("Kernel32.dll")]
         static extern bool SetPriorityClass(IntPtr hProcess, int dwPriorityClass);
 
+        bool CAMERA_INSTAL = true;
+
+
+
         DLS DLS;
         static int ID;
         SETS _SETS = new SETS();
@@ -193,7 +197,11 @@ namespace C2S150_ML
             if (SetingsCameraStart.Checked)
             {
                 timer3.Enabled = false;
-                try { DLS = new DLS(); }
+                try {
+
+                    if (CAMERA_INSTAL) { DLS = new DLS(); }
+                
+                }
                 catch
                 {
                     coutTim = 0;
@@ -729,20 +737,25 @@ namespace C2S150_ML
         }
 
 
-        void SaveSetValue()
-        {
+        void SaveSetValue() {
+
+            ID = SETS.Data.ID_CAM;
+
+
+            SETS.Data.SetMid[ID]  = Convert.ToDecimal(SetMid.Text);
+            SETS.Data.SetGain[ID] = Convert.ToDecimal(SetGain.Text);
+
             //ML
             STGS.DT.URL_ML = PachML.Text;
 
             //CAMERA
-            SETS.Data.GEIN1 = GAIN1.Value;
-            SETS.Data.GEIN2 = GAIN2.Value;
-
 
             if (SETS.Data.ID_CAM == DLS.Master) {
+                SETS.Data.GEIN1 = GAIN.Value;
                 SETS.Data.ACQGEIN1 = numericACQ_GainBright.Value;
                 SETS.Data.ACQGEIN1_Black = numericACQ_GainBlack.Value;
             } else {
+                SETS.Data.GEIN2 = GAIN.Value;
                 SETS.Data.ACQGEIN2 = numericACQ_GainBright.Value;
                 SETS.Data.ACQGEIN2_Black = numericACQ_GainBlack.Value;
             }
@@ -769,20 +782,17 @@ namespace C2S150_ML
                 radioButtonCam2.Checked = true;
             }
 
-            if (radioButtonCam1.Checked) {
-                checkBoxAcqSet.Checked = SETS.Data.ACQ_SET1;
-                SETS.Data.ID_CAM = DLS.Master;
-            } else {
-                checkBoxAcqSet.Checked = SETS.Data.ACQ_SET2;
-                SETS.Data.ID_CAM = DLS.Slave;
-            }
+
 
 
             SETS.Data.MaxImagesMmosaic = (int)MaxImagesMmosaic.Value;
             SETS.Data.MosaicRealTime = MosaicRealTime.Checked;
 
 
-            SETS.Data.BlobsInvert = InvertBlobs.Checked;
+            SETS.Data.BlobsInvert[ID] = InvertBlobs.Checked;
+             SETS.Data.BIN_Analysis  = BIN_Analysis.Checked;
+
+
             SETS.Data.PachXLSX = richTextBox3.Text;
             SETS.Data.PachDB = richTextBox4.Text;
     
@@ -814,10 +824,14 @@ namespace C2S150_ML
         {
 
             //ML
+            ID = SETS.Data.ID_CAM;
               PachML.Text = STGS.DT.URL_ML;
 
             try
             {
+                 SetMid.Text =SETS.Data.SetMid[ID].ToString();
+                SetGain.Text = SETS.Data.SetGain[ID].ToString();
+
                 MosaicRealTime.Checked = SETS.Data.MosaicRealTime;
                 MaxImagesMmosaic.Value = SETS.Data.MaxImagesMmosaic;
                 SetingsCameraStart.Checked = SETS.Data.SetingsCameraStart;
@@ -862,21 +876,24 @@ namespace C2S150_ML
                 richTextBox4.Text = SETS.Data.PachDB;
 
 
-                GAIN1.Value = SETS.Data.GEIN1;
-                GAIN2.Value = SETS.Data.GEIN2;
+                //GAIN.Value = SETS.Data.GEIN1;
+                //GAIN2.Value = SETS.Data.GEIN2;
 
-                if (SETS.Data.ID_CAM == DLS.Master) { 
+                if (SETS.Data.ID_CAM == DLS.Master) {
+                    GAIN.Value = SETS.Data.GEIN1;
                     numericACQ_GainBright.Value = SETS.Data.ACQGEIN1;
                     numericACQ_GainBlack.Value = SETS.Data.ACQGEIN1_Black;
                 }
-                else { 
+                else {
+                    GAIN.Value = SETS.Data.GEIN2;
                     numericACQ_GainBright.Value = SETS.Data.ACQGEIN2;
                     numericACQ_GainBlack.Value = SETS.Data.ACQGEIN2_Black;
+                   
                 }
 
+               InvertBlobs.Checked = SETS.Data.BlobsInvert[ID];
+                BIN_Analysis.Checked = SETS.Data.BIN_Analysis;
 
-
-                InvertBlobs.Checked = SETS.Data.BlobsInvert;
 
                 LockIR.Checked = USB_HID.Data.Light_IR;
                 LockTop.Checked = USB_HID.Data.Light_Top;
@@ -949,7 +966,7 @@ namespace C2S150_ML
         STATUS StatusDvise = new STATUS();
    
        static int SignalLamp;
-      static  bool SignalLampRepit = false;
+      static  bool SignalLampRepit ;
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -971,20 +988,31 @@ namespace C2S150_ML
                 if (buttonStartAnalic.Text == "Stop Analysis") { button13_Click(null, null); } }  // STOP ERROR
 
             // HOPER LEVEL HIGH
-            if (StatusDvise.SensorHigh) { ProgresBar.Value = 100; SignalLamp = 0; } else {
+            if (StatusDvise.SensorHigh) { ProgresBar.Value = 100; SignalLamp = 0; if (SignalLampRepit) { LIGHT.YELLO_ERROR(false); SignalLampRepit = false; } }
+            else {
                 // HOPER LEVEL LOW
-                if (StatusDvise.SensorLow) { ProgresBar.Value = 50; SignalLamp = 0; } else {
+                if (StatusDvise.SensorLow) { ProgresBar.Value = 50; SignalLamp = 0; if (SignalLampRepit) { LIGHT.YELLO_ERROR(false); SignalLampRepit = false; } } else {
                     ProgresBar.Value = 0;
 
-                    if (buttonStartAnalic.Text == "Stop Analysis")
-                    {
+                    if (buttonStartAnalic.Text == "Stop Analysis")  {
+                  
                         SignalLamp++;
                         //SIGNAL LAMP
                         if ((SignalLamp > (SETS.Data.SignalLamp * 2))) {
-                            if (SignalLampRepit) { LIGHT.YELLO_ERROR(false); SignalLampRepit = false; } else {
-                                Warning.Text = "HOPPER IS EMPTY";
-                                LIGHT.YELLO_ERROR(true); SignalLampRepit = true; }
-                        } } else { SignalLamp = 0; } } }
+
+                            if (!SignalLampRepit) { 
+                                LIGHT.YELLO_ERROR(true); 
+                                SignalLampRepit = true; 
+
+                            }
+                               Warning.Text = "HOPPER IS EMPTY";
+
+
+                        } } else { SignalLamp = 0;            
+                        if (SignalLampRepit) { LIGHT.YELLO_ERROR(false); SignalLampRepit = false; }    } } 
+                        
+                  
+            }
 
 
             //STOP
@@ -1015,9 +1043,44 @@ namespace C2S150_ML
             TimerRefreshChart();
 
             RefreshMosaics();
-
-
+            if (AnalisLock.Checked) { EvergApertura();}
+            
         }
+
+        void EvergApertura()
+        {
+      
+                System.Drawing.Image Img = LiveView.Image;
+
+                if (Img != null) {  
+                // Конвертуємо System.Drawing.Image у Bitmap
+                Bitmap bitmap = new Bitmap(Img);
+
+                Mat mat = new Mat();
+                mat = bitmap.ToMat();
+
+
+
+
+                var scal = CvInvoke.Mean(mat);
+                MidPixel.Text = Math.Round(scal.V0, 3).ToString();
+
+
+                //SetMid.Text = MidPixel.Text;
+         
+
+  
+
+                    GainMidl.Text = (GAIN.Value - numericACQ_GainBright.Value).ToString();
+               
+           
+
+
+            }
+  
+        }
+
+
 
         private void USER_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1052,28 +1115,24 @@ namespace C2S150_ML
         int ImagCouAnn;
         Bitmap LearnImg = new Bitmap(100, 100);
         int SelectITMs;
-        private void button15_Click(object sender, EventArgs e)
-        {
 
-            MosaicsTeach.Images.Add(MosaicDTlist[SelectITMs].Img[0].ToBitmap());
-            MosaicsTeachGrey.Add(MosaicDTlist[SelectITMs].Img[0]);
-
-            listView2.LargeImageList = MosaicsTeach;
-            listView2.Items.Add(new ListViewItem { ImageIndex = ImagCouAnn, Text = "Images",  /*nema imag*/ });
-            ImagCouAnn++;
-            // label21.Text = MY_ML.ImagCouAnn.ToString();
-            // label21.Text += " PCS ";
-
-        }
 
         private void listView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
 
 
+  
+         
+
+        }
+
+        private void listView1_MouseUp(object sender, MouseEventArgs e)
+        {
+
             if (MouseAddImage.Checked == true)
             {
-
-
+                var test = listView1.SelectedIndices[0];
+                SelectITMs = test;
                 MosaicsTeach.Images.Add(MosaicDTlist[SelectITMs].Img[0].ToBitmap());
                 MosaicsTeachGrey.Add(MosaicDTlist[SelectITMs].Img[0]);
                 listView2.LargeImageList = MosaicsTeach;
@@ -1083,34 +1142,42 @@ namespace C2S150_ML
 
 
             }
-            else { Help.Mesag("You cannot select image or generate a report when the images are not sorted! "); }
 
         }
-
-        private void listView1_MouseUp(object sender, MouseEventArgs e)
-        {
-
-
-
-        }
-
+        int LastIMG = 0;
         private void button60_Click(object sender, EventArgs e)
         {
 
-            if (listView1.FocusedItem != null)
+            if (button60.Text != "Start Image")
             {
-                int idx = listView1.SelectedIndices[0]; //початковий індекс з масиву
-                for (int Q = 0; Q < MosaicDTlist.Count; Q++)
+                button60.Text = "Start Image";
+                button60.ForeColor = Color.Black;
+                
+                try
                 {
-                    MosaicsTeach.Images.Add(MosaicDTlist[idx].Img[0].ToBitmap());
-                    MosaicsTeachGrey.Add(MosaicDTlist[idx].Img[0]);
-                    listView2.LargeImageList = MosaicsTeach;
-                    listView2.Items.Add(new ListViewItem { ImageIndex = ImagCouAnn, Text = "Images",  /*nema imag*/ });
-                    ImagCouAnn++;
-                    idx++;
-                }
-            }
-            else { Help.Mesag("You need to select several images from the mosaic"); }
+                    if (listView1.FocusedItem != null)
+                    {
+                        int idx = listView1.SelectedIndices[0]; //початковий індекс з масиву
+                    
+
+                        for (int Q = LastIMG; Q < idx+1; Q++)
+                        {
+                            MosaicsTeach.Images.Add(MosaicDTlist[Q].Img[0].ToBitmap());
+                            MosaicsTeachGrey.Add(MosaicDTlist[Q].Img[0]);
+                            listView2.LargeImageList = MosaicsTeach;
+                            listView2.Items.Add(new ListViewItem { ImageIndex = ImagCouAnn, Text = "Images",  /*nema imag*/ });
+                            ImagCouAnn++;
+                         
+                        }
+                    }
+                    else { Help.Mesag("You need to select several images from the mosaic"); }
+                }catch { }
+                LastIMG = 0;
+            }else { 
+                button60.Text = "Last Image";
+                button60.ForeColor = Color.DarkRed;
+                LastIMG = listView1.SelectedIndices[0]; }
+
         }
 
         private void button16_Click(object sender, EventArgs e)
@@ -1746,9 +1813,9 @@ namespace C2S150_ML
 
         private void timer3_Tick(object sender, EventArgs e)
         {
-    
 
 
+            if (CAMERA_INSTAL) {
             if (coutTim == 1)
             {
                 Flow.ProcessLoadImagesFunction();
@@ -1770,21 +1837,21 @@ namespace C2S150_ML
                 coutTim = 0;
 
 
-                GAIN1.Enabled = DLS.Devis.Status[DLS.Master];
-                GAIN2.Enabled = DLS.Devis.Status[DLS.Slave];
+                GAIN.Enabled = DLS.Devis.Status[ID];
+               // GAIN2.Enabled = DLS.Devis.Status[DLS.Slave];
 
-                if ((GAIN1.Value <= 10) && (GAIN1.Value >= 1))
-                {
-                    if (GAIN1.Value != (decimal)DLS.Devis.Gain[DLS.Master]) { GAIN1_Click(null, null); }
+                if ((SETS.Data.GEIN1 <= 10) && (SETS.Data.GEIN1 >= 1)){
+
+                    if (SETS.Data.GEIN1 != (decimal)DLS.Devis.Gain[DLS.Master]) { DLS.SetGain((double)SETS.Data.GEIN1, DLS.Master); }
     
-                } else { GAIN1.Value = (decimal)DLS.Devis.Gain[DLS.Master]; }
+                } else { SETS.Data.GEIN1 = (decimal)DLS.Devis.Gain[DLS.Master]; }
 
 
-                if ((GAIN2.Value <= 10) && (GAIN2.Value >= 1))
-                {
-                    if (GAIN2.Value != (decimal)DLS.Devis.Gain[DLS.Slave]) { GAIN2_Click(null, null); }
+                if ((SETS.Data.GEIN2 <= 10) && (SETS.Data.GEIN2 >= 1)) {
 
-                }else { GAIN2.Value = (decimal)DLS.Devis.Gain[DLS.Slave]; }
+                    if (SETS.Data.GEIN2 != (decimal)DLS.Devis.Gain[DLS.Slave]) { DLS.SetGain((double)SETS.Data.GEIN2, DLS.Slave); }
+
+                }else { SETS.Data.GEIN2 = (decimal)DLS.Devis.Gain[DLS.Slave]; }
 
 
                 // Завантаження Вирівнювання Фону
@@ -1795,15 +1862,22 @@ namespace C2S150_ML
                 Enabled = true;
             }
 
-
+            } else { timer3.Enabled = false; Enabled = true;   }
 
                 coutTim++;
         }
 
         private void GAIN1_Click(object sender, EventArgs e)
         {
-            try { 
-            DLS.SetGain((double)GAIN1.Value, DLS.Master);
+            try {
+
+
+                if ((GAIN.Value <= 10) && (GAIN.Value >= 1))
+                {
+                    DLS.SetGain((double)GAIN.Value, ID);
+
+                } else { GAIN.Value = (decimal)DLS.Devis.Gain[ID]; }
+
             } catch {      Help.Mesag("Reset Program"); }
            
       
@@ -2193,22 +2267,22 @@ namespace C2S150_ML
                // DLS.SetGain((double)GAIN1.Value, DLS.Master);
                 //DLS.SetGain((double)GAIN2.Value, DLS.Slave);
 
-                GAIN1.Enabled = DLS.Devis.Status[DLS.Master];
-                GAIN2.Enabled = DLS.Devis.Status[DLS.Slave];
+                GAIN.Enabled = DLS.Devis.Status[ID];
+                //GAIN2.Enabled = DLS.Devis.Status[DLS.Slave];
 
-                if ((GAIN1.Value <= 10) && (GAIN1.Value >= 1))
+                if ((SETS.Data.GEIN1 <= 10) && (SETS.Data.GEIN1 >= 1))
                 {
-                    if (GAIN1.Value != (decimal)DLS.Devis.Gain[DLS.Master]) { GAIN1_Click(null, null); }
+                    if (SETS.Data.GEIN1 != (decimal)DLS.Devis.Gain[DLS.Master]) { DLS.SetGain((double)SETS.Data.GEIN1, DLS.Master); }
 
-                }  else { GAIN1.Value = (decimal)DLS.Devis.Gain[DLS.Master]; }
+                }  else { SETS.Data.GEIN1 = (decimal)DLS.Devis.Gain[DLS.Master]; }
               
 
 
-                if ((GAIN2.Value <= 10) && (GAIN2.Value >= 1))
+                if ((SETS.Data.GEIN2 <= 10) && (SETS.Data.GEIN2 >= 1))
                 {
-                    if (GAIN2.Value != (decimal)DLS.Devis.Gain[DLS.Slave]) { GAIN2_Click(null, null); }
+                    if (SETS.Data.GEIN2 != (decimal)DLS.Devis.Gain[DLS.Slave]) { DLS.SetGain((double)SETS.Data.GEIN2, DLS.Slave); }
 
-                }else { GAIN2.Value = (decimal)DLS.Devis.Gain[DLS.Slave]; }
+                }else { SETS.Data.GEIN2 = (decimal)DLS.Devis.Gain[DLS.Slave]; }
 
 
                 // Завантаження Вирівнювання Фону
@@ -2237,17 +2311,7 @@ namespace C2S150_ML
         }
 
 
-        private void GAIN2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                DLS.SetGain((double)GAIN2.Value, DLS.Slave);
-            }
-            catch
-            {
-                Help.Mesag("Reset Program");
-            }
-        }
+      
 
 
 
@@ -2447,6 +2511,28 @@ namespace C2S150_ML
             }
         }
 
+        private void button7_Click(object sender, EventArgs e)
+        {
+            DialogResult result = DialogResult.Yes;
+            result = MessageBox.Show("Do you want to change the average background value? This value should be used when aligning the background. And setting the GAIN level on two cameras. After changing the average background, you need to make changes in the Blobs detection settings", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+
+            if (result == DialogResult.Yes)
+            {
+                SetMid.Text = MidPixel.Text;
+            }
+        }
+
+        private void button27_Click_2(object sender, EventArgs e)
+        {
+            DialogResult result = DialogResult.Yes;
+            result = MessageBox.Show("Do you want to change default gain value?  After changing the average background, you need to make changes in the Blobs detection settings", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            if (result == DialogResult.Yes)
+            {
+                SetGain.Text = GainMidl.Text;
+            }
+        }
 
     }
 

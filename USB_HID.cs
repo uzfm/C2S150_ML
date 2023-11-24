@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 //using HidLibrary;
@@ -194,7 +194,7 @@ namespace C2S150_ML
                 static Button Flaps16 = new Button();
                 static Button Flaps17 = new Button();
 
-                static Timer TimerFlepsColour = new Timer();
+                static System.Timers.Timer TimerFlepsColour = new System.Timers.Timer();
 
 
                 static public void FlepsLightInstal(
@@ -225,7 +225,7 @@ namespace C2S150_ML
                     // Встановлення інтервалу в мілісекундах (100 мілісекунд)
                     TimerFlepsColour.Interval = 100;
                     // Додавання обробника події Tick
-                    TimerFlepsColour.Tick += TimerFlepsColourTick;
+                    TimerFlepsColour.Elapsed += TimerFlepsColourTick;
                     // Активація таймера
                     TimerFlepsColour.Enabled = true;
                     TimerFlepsColour.Start();
@@ -386,9 +386,9 @@ namespace C2S150_ML
                     {
 
                         SetFlaps = false;
-                        Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
-                        Buffer_USB_RX[REG_31] = OUTPUT1_BIT;
-                        Buffer_USB_RX[REG_32] = OUTPUT2_BIT; //32
+                        //Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
+                        //Buffer_USB_RX[REG_31] = OUTPUT1_BIT;
+                        //Buffer_USB_RX[REG_32] = OUTPUT2_BIT; //32
 
                         HID_Write();
                         OUTPUT0_BIT = 0;
@@ -442,7 +442,7 @@ namespace C2S150_ML
                 {
                     if (ON_OFF) { OUTPUT3_BIT |= BIT6_SET; } else { OUTPUT3_BIT &= BIT6_RES; }
                     Buffer_USB_RX[REG_33] = OUTPUT3_BIT; 
-                    ///HID_Write();
+                    HID_Write();
                 }
 
                 // ON - OFF  GREEN
@@ -501,13 +501,13 @@ namespace C2S150_ML
                     if (!Data.Light_IR) { OUTPUT3_BIT |= BIT3_SET; }
 
 
-                    Buffer_USB_RX[REG_33] = OUTPUT3_BIT;   //28 OUT
+                   // Buffer_USB_RX[REG_33] = OUTPUT3_BIT;   //28 OUT
 
-                    Buffer_USB_RX[30] = 0;
-                    Buffer_USB_RX[31] = 0;
-                    Buffer_USB_RX[32] &= BIT0_RES;
-                    Buffer_USB_RX[32] &= BIT1_RES;
-                    Buffer_USB_RX[32] &= BIT2_RES;
+                    //Buffer_USB_RX[30] = 0;
+                    //Buffer_USB_RX[31] = 0;
+                    //Buffer_USB_RX[32] &= BIT0_RES;
+                    //Buffer_USB_RX[32] &= BIT1_RES;
+                    //Buffer_USB_RX[32] &= BIT2_RES;
 
                     HID_Write();
                 }
@@ -523,13 +523,13 @@ namespace C2S150_ML
                     OUTPUT3_BIT &= BIT2_RES;
                     OUTPUT3_BIT &= BIT3_RES;
 
-                    Buffer_USB_RX[REG_30] = 0;
-                    Buffer_USB_RX[REG_31] = 0;
-                    OUTPUT2_BIT &= BIT0_RES;
-                    OUTPUT2_BIT &= BIT1_RES;
-                    OUTPUT2_BIT &= BIT2_RES;
+                    //Buffer_USB_RX[REG_30] = 0;
+                    //Buffer_USB_RX[REG_31] = 0;
+                    //OUTPUT2_BIT &= BIT0_RES;
+                    //OUTPUT2_BIT &= BIT1_RES;
+                    //OUTPUT2_BIT &= BIT2_RES;
+                    //Buffer_USB_RX[REG_33] = OUTPUT3_BIT;   //28 OUT
 
-                    Buffer_USB_RX[REG_33] = OUTPUT3_BIT;   //28 OUT
                     HID_Write();
                 }
 
@@ -544,7 +544,7 @@ namespace C2S150_ML
                 static public void OFF()
                 {
                     OUTPUT2_BIT &= BIT5_RES;
-                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    //Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
 
                 }
@@ -552,7 +552,7 @@ namespace C2S150_ML
                 static public void ON()
                 {
                     OUTPUT2_BIT |= BIT5_SET;
-                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    //Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
                 }
 
@@ -567,7 +567,7 @@ namespace C2S150_ML
                 static public void OFF()
                 {
                     OUTPUT2_BIT &= BIT7_RES;
-                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    //Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
 
                 }
@@ -575,7 +575,7 @@ namespace C2S150_ML
                 static public void ON()
                 {
                     OUTPUT2_BIT |= BIT7_SET;
-                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    //Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
                 }
 
@@ -588,7 +588,7 @@ namespace C2S150_ML
                 static public void OFF()
                 {
                     OUTPUT2_BIT &= BIT6_RES;
-                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    //Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
 
                 }
@@ -596,7 +596,7 @@ namespace C2S150_ML
                 static public void ON()
                 {
                     OUTPUT2_BIT |= BIT6_SET;
-                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    //Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
                 }
             }
@@ -607,7 +607,7 @@ namespace C2S150_ML
                 static public void OFF()
                 {
                     OUTPUT2_BIT &= BIT4_RES;
-                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                    //Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
 
                 }
@@ -615,7 +615,7 @@ namespace C2S150_ML
                 static public void ON()
                 {
                     OUTPUT2_BIT |= BIT4_SET;
-                    Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
+                   // Buffer_USB_RX[REG_32] = OUTPUT2_BIT;
                     HID_Write();
                 }
 
@@ -1043,6 +1043,10 @@ namespace C2S150_ML
         private static async void HID_Write()
         {
 
+            Buffer_USB_RX[REG_30] = OUTPUT0_BIT;
+            Buffer_USB_RX[REG_31] = OUTPUT1_BIT;
+            Buffer_USB_RX[REG_32] = OUTPUT2_BIT;   //32
+            Buffer_USB_RX[REG_33] = OUTPUT3_BIT;   //28 OUT
 
             Buffer_USB_RX[0] = (byte)2;
             try
@@ -1052,7 +1056,7 @@ namespace C2S150_ML
                 {
                     await HIDstream.WriteAsync(Buffer_USB_RX, 0, 64);
                 }
-                else { Help.Mesag("device is disconnected"); }
+              
             }
             catch {// Help.Mesag("USB sending problems");
             }
@@ -1065,7 +1069,7 @@ namespace C2S150_ML
 
 
 
-        public void HID_Read()
+        public static async void HID_Read()
         {
             while (Flow.PotocStartUSB)
             {
@@ -1077,12 +1081,13 @@ namespace C2S150_ML
                 if (HidStatus == true)
                 {
 
-                   
 
-                    HIDstream.Read(Buffer_USB_TX, 0, 64);
-             
+
+                    await HIDstream.ReadAsync(Buffer_USB_TX, 0, 64);
+                    Thread.Sleep(50); // Затримка в 1 секунду
+
                 }
-                else { Help.Mesag("device is disconnected"); }
+                
 
             }
         }

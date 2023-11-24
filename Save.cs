@@ -27,7 +27,10 @@ namespace C2S150_ML
         public class Data_Serializable
         {
 
-            public bool BlobsInvert        { get; set; }
+            public bool[] BlobsInvert = new bool[2] { false, false};
+
+            public bool   BIN_Analysis { get; set; }
+
             public bool MosaicRealTime     { get; set; }
             public int  MaxImagesMmosaic   { get; set; }
             public bool LiveVideoOFF       { get; set; }
@@ -46,6 +49,8 @@ namespace C2S150_ML
             public int LimitinGraphPoints { get; set; }
             public int UpdateVisibleArea { get; set; }
             public int AxisYMaxValue { get; set; }
+            public decimal [] SetMid  = new decimal[2];
+            public decimal [] SetGain = new decimal[2];
 
             // Camera Getings
             public bool CameraAnalis_1 { get; set; }

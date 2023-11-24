@@ -155,7 +155,8 @@ namespace C2S150_ML
 
             if ((PotocUSB == null) || (PotocHID.ThreadState == System.Threading.ThreadState.Stopped))
             {
-                PotocUSB = new Thread(USB. HID_Read);
+                PotocUSB = new Thread(USB_HID. HID_Read);
+
                 PotocUSB.Priority = ThreadPriority.Lowest;
                 PotocUSB.Name = "USB";
                 // запускаем поток
@@ -357,7 +358,7 @@ namespace C2S150_ML
                 System.Diagnostics.ProcessStartInfo startInfo = new ProcessStartInfo();
                 _process = null;
 
-                startInfo = new System.Diagnostics.ProcessStartInfo(@"../../../../../MachineLearning\bin\Debug\net5.0-windows\TenserflowKeras.exe");
+                startInfo = new System.Diagnostics.ProcessStartInfo(@"../../../../MachineLearning\bin\Debug\net5.0-windows\TenserflowKeras.exe");
 
                 startInfo.ArgumentList.Add(ModelName);
                 startInfo.ArgumentList.Add(DataPath);
