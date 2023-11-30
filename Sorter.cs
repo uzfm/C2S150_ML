@@ -94,6 +94,16 @@ namespace C2S150_ML
             ///   START File
             STGS.Read();
             TextBoxSemplTyp.Text = STGS.DT.SampleType;
+
+            if (TextBoxSemplTyp.Text == "ETFE_AGC_9905") { TextBoxSemplTyp.ForeColor = Color.DarkBlue; }
+            if (TextBoxSemplTyp.Text == "FEP_DYNEON_1405") { TextBoxSemplTyp.ForeColor = Color.DarkRed; }
+
+            if (TextBoxSemplTyp.Text == "ETFE_AGC_9901") { TextBoxSemplTyp.ForeColor = Color.Blue; }
+            if (TextBoxSemplTyp.Text == "FEP_DYNEON_1401") { TextBoxSemplTyp.ForeColor = Color.Red; }
+
+            if (TextBoxSemplTyp.Text == "ETFE_AGC_9900") { TextBoxSemplTyp.ForeColor = Color.DarkSlateGray; }
+            if (TextBoxSemplTyp.Text == "FEP_DYNEON_1400") { TextBoxSemplTyp.ForeColor = Color.Gray; }
+
             // ModelML.Text = STGS.DT.Name_Model;
 
 
@@ -2065,9 +2075,10 @@ namespace C2S150_ML
 
                 foreach (var i in pathSmpl)
                 {
-    
+                           
                     comboBoxSetingsName.Items.Add(i);
                     textBoxСreateSample.Items.Add(i);
+
                     NemSmpls[x++] = i;
                 }
 
@@ -2122,7 +2133,19 @@ namespace C2S150_ML
                 {
 
                     TextBoxSemplTyp.Text = comboBoxSetingsName.Text;
-                     comboBoxSetingsName.Items.Clear();
+
+                    if (TextBoxSemplTyp.Text == "ETFE_AGC_9905")   { TextBoxSemplTyp.ForeColor = Color.DarkBlue; }
+                    if (TextBoxSemplTyp.Text == "FEP_DYNEON_1405") { TextBoxSemplTyp.ForeColor = Color.DarkRed; }
+
+                    if (TextBoxSemplTyp.Text == "ETFE_AGC_9901") { TextBoxSemplTyp.ForeColor = Color.Blue; }
+                    if (TextBoxSemplTyp.Text == "FEP_DYNEON_1401") { TextBoxSemplTyp.ForeColor = Color.Red; }
+
+                    if (TextBoxSemplTyp.Text == "ETFE_AGC_9900")   { TextBoxSemplTyp.ForeColor = Color.DarkSlateGray; }
+                    if (TextBoxSemplTyp.Text == "FEP_DYNEON_1400") { TextBoxSemplTyp.ForeColor = Color.Gray;  }
+
+
+
+                    comboBoxSetingsName.Items.Clear();
 
          
                   //  result = MessageBox.Show("Apply new settings '" + comboBoxSetingsName.Text + "' ?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Information);

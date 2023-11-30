@@ -1383,7 +1383,7 @@ namespace C2S150_ML
             // 
             this.groupBox31.Controls.Add(this.MaxImagesMmosaic);
             this.groupBox31.Controls.Add(this.LabelMaxImagesMmosaic);
-            this.groupBox31.Location = new System.Drawing.Point(617, 97);
+            this.groupBox31.Location = new System.Drawing.Point(657, 97);
             this.groupBox31.Name = "groupBox31";
             this.groupBox31.Size = new System.Drawing.Size(177, 61);
             this.groupBox31.TabIndex = 2004;
@@ -1427,7 +1427,7 @@ namespace C2S150_ML
             // 
             this.groupBox32.Controls.Add(this.LiveViewDelay);
             this.groupBox32.Controls.Add(this.label16);
-            this.groupBox32.Location = new System.Drawing.Point(617, 32);
+            this.groupBox32.Location = new System.Drawing.Point(657, 32);
             this.groupBox32.Name = "groupBox32";
             this.groupBox32.Size = new System.Drawing.Size(177, 61);
             this.groupBox32.TabIndex = 2023;
@@ -1465,7 +1465,7 @@ namespace C2S150_ML
             // MosaicRealTime
             // 
             this.MosaicRealTime.AutoSize = true;
-            this.MosaicRealTime.Location = new System.Drawing.Point(657, 170);
+            this.MosaicRealTime.Location = new System.Drawing.Point(697, 170);
             this.MosaicRealTime.Name = "MosaicRealTime";
             this.MosaicRealTime.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.MosaicRealTime.Size = new System.Drawing.Size(137, 20);
@@ -1595,33 +1595,33 @@ namespace C2S150_ML
             this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.groupBox5.Location = new System.Drawing.Point(363, 23);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(242, 121);
+            this.groupBox5.Size = new System.Drawing.Size(274, 121);
             this.groupBox5.TabIndex = 2016;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Settings name";
             // 
             // TextBoxSemplTyp
             // 
+            this.TextBoxSemplTyp.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.TextBoxSemplTyp.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.TextBoxSemplTyp.ForeColor = System.Drawing.Color.Black;
             this.TextBoxSemplTyp.Location = new System.Drawing.Point(17, 30);
             this.TextBoxSemplTyp.Name = "TextBoxSemplTyp";
             this.TextBoxSemplTyp.ReadOnly = true;
             this.TextBoxSemplTyp.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.TextBoxSemplTyp.Size = new System.Drawing.Size(199, 31);
+            this.TextBoxSemplTyp.Size = new System.Drawing.Size(251, 31);
             this.TextBoxSemplTyp.TabIndex = 2006;
-            this.TextBoxSemplTyp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TextBoxSemplTyp.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // comboBoxSetingsName
             // 
-            this.comboBoxSetingsName.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.comboBoxSetingsName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboBoxSetingsName.FormattingEnabled = true;
             this.comboBoxSetingsName.ItemHeight = 24;
-            this.comboBoxSetingsName.Location = new System.Drawing.Point(17, 74);
+            this.comboBoxSetingsName.Location = new System.Drawing.Point(19, 74);
             this.comboBoxSetingsName.Name = "comboBoxSetingsName";
             this.comboBoxSetingsName.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.comboBoxSetingsName.Size = new System.Drawing.Size(199, 32);
+            this.comboBoxSetingsName.Size = new System.Drawing.Size(249, 32);
             this.comboBoxSetingsName.TabIndex = 2005;
             this.comboBoxSetingsName.TextChanged += new System.EventHandler(this.comboBoxSetingsName_TextChanged);
             this.comboBoxSetingsName.Click += new System.EventHandler(this.comboBoxSetingsName_Click);

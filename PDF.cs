@@ -659,7 +659,7 @@ namespace C2S150_ML
                 paragraph.Style = "Reference";
                         paragraph.Style.AsQueryable();
                         paragraph.Format.Alignment = ParagraphAlignment.Left;
-                        paragraph.AddFormattedText(" Images with contaminations -  "+ report.IMG.Count.ToString() + "  PCS", TextFormat.NotItalic);
+                if (PDF.Data.ShowImageInReport) { paragraph.AddFormattedText(" Images with contaminations -  " + report.IMG.Count.ToString() + "  PCS", TextFormat.NotItalic); }
                 
                 paragraph.AddSpace(60);
                 paragraph.Format.Font.Size =    16;
